@@ -791,7 +791,7 @@ class Request
     {
         $ip = $this->server->get('REMOTE_ADDR');
 
-        if (!self::$trustedProxies) {
+        if (!$this->isFromTrustedProxy()) {
             return array($ip);
         }
 
@@ -957,7 +957,7 @@ class Request
      */
     public function getPort()
     {
-        if (self::$trustedProxies) {
+        if ($this->isFromTrustedProxy()) {
             if (self::$trustedHeaders[self::HEADER_CLIENT_PORT] && $port = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PORT])) {
                 return $port;
             }
@@ -975,7 +975,7 @@ class Request
             }
 
             if (false !== $pos) {
-                return intval(substr($host, $pos + 1));
+                return (int) substr($host, $pos + 1);
             }
 
             return 'https' === $this->getScheme() ? 443 : 80;
@@ -1138,7 +1138,7 @@ class Request
      */
     public function isSecure()
     {
-        if (self::$trustedProxies && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && $proto = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PROTO])) {
+        if ($this->isFromTrustedProxy() && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && $proto = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PROTO])) {
             return in_array(strtolower(current(explode(',', $proto))), array('https', 'on', 'ssl', '1'));
         }
 
@@ -1166,7 +1166,7 @@ class Request
      */
     public function getHost()
     {
-        if (self::$trustedProxies && self::$trustedHeaders[self::HEADER_CLIENT_HOST] && $host = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_HOST])) {
+        if ($this->isFromTrustedProxy() && self::$trustedHeaders[self::HEADER_CLIENT_HOST] && $host = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_HOST])) {
             $elements = explode(',', $host);
 
             $host = $elements[count($elements) - 1];
@@ -1549,7 +1549,7 @@ class Request
         foreach (array_keys($languages) as $lang) {
             if (strstr($lang, '-')) {
                 $codes = explode('-', $lang);
-                if ($codes[0] == 'i') {
+                if ('i' === $codes[0]) {
                     // Language not listed in ISO 639 that are not variants
                     // of any listed language, which can be registered with the
                     // i-prefix, such as i-cherokee
@@ -1558,7 +1558,7 @@ class Request
                     }
                 } else {
                     for ($i = 0, $max = count($codes); $i < $max; $i++) {
-                        if ($i == 0) {
+                        if ($i === 0) {
                             $lang = strtolower($codes[0]);
                         } else {
                             $lang .= '_'.strtoupper($codes[$i]);
@@ -1852,5 +1852,10 @@ class Request
         }
 
         return false;
+    }
+
+    private function isFromTrustedProxy()
+    {
+        return self::$trustedProxies && IpUtils::checkIp($this->server->get('REMOTE_ADDR'), self::$trustedProxies);
     }
 }
