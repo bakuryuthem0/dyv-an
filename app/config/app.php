@@ -114,6 +114,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Gloudemans\Shoppingcart\ShoppingcartServiceProvider',
+		'Intervention\Image\ImageServiceProvider',
 
 	),
 
@@ -180,6 +181,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Cart'            => 'Gloudemans\Shoppingcart\Facades\Cart',
+		'Image' 		  => 'Intervention\Image\Facades\Image',
 
 	),
 
