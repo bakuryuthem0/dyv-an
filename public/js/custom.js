@@ -20,6 +20,28 @@ jQuery(document).ready(function($) {
 			});
 	}
 	setInterval(cambiarFondo, 10000);
+	$('.navicon').click(function(event){
+		if($('.hidden-container').hasClass('container-in'))
+		{
+			$('.container-in').removeClass('container-in');
+
+		}else
+		{
+			$('.hidden-container').addClass('container-in');
+		}
+		if ($('.navicon').hasClass('navicon-in')) {
+			$('.navicon-in').removeClass('navicon-in');
+			$('.navicon-in-col').removeClass('navicon-in-col');
+			$('.active').removeClass('active');
+			$('.si-in').removeClass('si-in');
+		}else
+		{
+			$('.navicon').addClass('navicon-in');
+			$('header').addClass('active');
+			$('.nav-bar > .icon').addClass('navicon-in-col');
+			$('.no-in').addClass('si-in');
+		}
+	});
 });
 jQuery(document).ready(function($) {
 	$('.logout').click(function(event) {
@@ -29,6 +51,7 @@ jQuery(document).ready(function($) {
 		}
 	});	
 });
+
 
 jQuery(document).ready(function($) {
 	/*-------------------------------------------registro de usuario-------------------------------------------*/
