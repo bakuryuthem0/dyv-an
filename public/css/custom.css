@@ -49,11 +49,14 @@
               transform: scale(1.5);
     }
 }
-
+a,a:hover,a:focus,a.btn:hover
+{
+  color: white;
+}
 body,html
 {
   font-size: 76.66%;
-  color:#404040;
+  color:white;
   overflow: hidden;
 
 }
@@ -75,6 +78,14 @@ header.active
 {
   width: 25%;
 }
+legend
+{
+  color: white;
+}
+.alert-danger
+{
+  background-image: none !important;
+}
 .carousel {
   position: absolute;
   width: 100%;
@@ -90,6 +101,14 @@ header.active
        -o-transition: all .25s linear;
           transition: all .25s linear;
   
+}
+.fa
+{
+  color: pink;
+}
+.formulario
+{
+  margin-bottom: 2em;
 }
 .front
 {
@@ -179,6 +198,7 @@ header.active
 .container-in
 {
   width: 70%;
+  overflow: auto;
 }
 .contRed
 {
@@ -190,12 +210,14 @@ header.active
 .contenido
 {
   margin-top: 2em;
-  height: 75%;
   min-height: 500px;
   position: absolute;
-  bottom: 0;
+  padding: 2em;
 }
-
+.idiomas
+{
+  text-align: center;
+}
 .titulo
 {
   height: 20%;
@@ -289,6 +311,11 @@ header.active
 .redes
 {
     text-align: center;
+}
+.responseDanger
+{
+  display: none;
+  opacity: 0;
 }
 .row
 {

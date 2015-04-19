@@ -51,7 +51,13 @@ jQuery(document).ready(function($) {
 		}
 	});	
 });
-
+jQuery(document).ready(function($) {
+	$('.inputFondoNegro').keydown(function(event) {
+		$('.alert-danger').animate({'opacity':0}, 500,function(){
+		$(this).remove();
+	})
+	});
+});
 
 jQuery(document).ready(function($) {
 	/*-------------------------------------------registro de usuario-------------------------------------------*/

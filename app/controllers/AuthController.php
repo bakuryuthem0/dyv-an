@@ -21,7 +21,7 @@ class AuthController extends BaseController {
 		$title = "Inicio de Sesión";
 		if (Auth::check())
         {
-            return Redirect::to('inicio');
+            return Redirect::to(Lang::get('lang.menu_index_route'));
         }
 
 		return View::make('login')->with('title',$title);
@@ -69,9 +69,9 @@ class AuthController extends BaseController {
 	}
 	public function getRegister()
 	{
-		$title = 'Registro de usuario';
-		$estados = Estados::get();
-		return View::make('indexs.register')->with('title',$title)->with('estados',$estados);
+		$title = Lang::get('lang.titulo_3');
+		$departamentos = Department::all();
+		return View::make('indexs.register')->with('title',$title)->with('departamentos',$departamentos);
 	}
 	public function postRegister()
 	{
@@ -90,27 +90,16 @@ class AuthController extends BaseController {
 
 		);
 		$messages = array(
-			'required' => ':attribute es obligatoria',
-			'min'      => ':attribute debe ser mas largo',
-			'email'    => 'Debe introducir un email válido',
-			'unique'   => ':attribute ya existe',
-			'confirmed'=> 'La contraseña no concuerdan'
+			'username.required' =>Lang::get('lang.required'),
+			'min'	   =>Lang::get('lang.min'),
+			'unique'   =>Lang::get('lang.unique'),
+			'email'	   =>Lang::get('lang.email'),
+			'confirmed'=>Lang::get('lang.confirmed'),
 		);
-		$custom = array(
-			'username' 			=> 'EL campo nombre de usuario',
-			'pass'    	 		=> 'El campo contraseña',
-			'pass_confirmation' => 'El campo confirmacion de la contraseña',
-			'name'              => 'El campo nombre',
-			'lastname'          => 'El campo apellido',
-			'email' 			=> 'El campo email',
-			'dir'  			    => 'El campo departamento',
-			'estado'			=> 'El campo estado',
-			'municipio'			=> 'El campo municipio',
-			'g-recaptcha-response' => 'El captcha'
-		);
-		$validator = Validator::make($input, $rules, $messages,$custom);
+		
+		$validator = Validator::make($input, $rules, $messages);
 		if ($validator->fails()) {
-			return Redirect::to('registro')->withErrors($validator)->withInput();
+			return Redirect::back()->withErrors($validator)->withInput();
 		}
 		$codigo = md5(rand());
 		$user = new User;

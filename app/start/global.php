@@ -79,5 +79,7 @@ App::down(function()
 | definitions instead of putting them all in the main routes file.
 |
 */
-
+if (Session::has('language')) {
+	App::setLocale(Session::get('language'));
+}
 require app_path().'/filters.php';

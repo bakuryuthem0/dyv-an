@@ -14,7 +14,20 @@ class HomeController extends BaseController {
 	|	Route::get('/', 'HomeController@showWelcome');
 	|
 	*/
-
+	public function changeLang($lang)
+	{
+		if ($lang == "español" || $lang == "spanish"){
+			Session::set('language', 'es');
+			return Redirect::to('inicio');
+		}elseif($lang == "ingles" || $lang == "english")
+		{
+			Session::set('language', 'en');
+			return Redirect::to('home');
+		}elseif($lang == "portugues" || $lang == "portuguese")
+		{
+			Session::set('language', 'po');
+		}
+	}
 	public function getFront()
 	{
 		$title = "Portada";
@@ -22,8 +35,7 @@ class HomeController extends BaseController {
 	}
 	public function getIndex()
 	{
-		$title = "Inicio";
-		
+		$title  = Lang::get('lang.title_index');
 		return View::make('indexs.index')
 		->with('title',$title);
 	}
@@ -32,7 +44,7 @@ class HomeController extends BaseController {
 		if (Session::has('success')) {
 			Session::reflash();
 		}
-		$title ="Iniciar sesión";
+		$title = Lang::get('lang.menu_login');
 		return View::make('indexs.login')->with('title',$title);
 	}
 	public function getShowItem($id)
@@ -199,7 +211,7 @@ class HomeController extends BaseController {
 	}
 	public function getContact()
 	{
-		$title = "Contactenos";
+		$title = Lang::get('lang.menu_contact');
 		return View::make('indexs.contact')
 		->with('title',$title);
 	}

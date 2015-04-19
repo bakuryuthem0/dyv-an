@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="hidden-container">
-  <div class="titulo"><h1>Productos</h1></div>
+  <div class="titulo"><h1>{{ Lang::get('lang.titulo_1') }}</h1></div>
   <div class="contenido">
     contenido
   </div>

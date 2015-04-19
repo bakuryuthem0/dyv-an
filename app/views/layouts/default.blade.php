@@ -20,7 +20,7 @@
         {{ HTML::style('css/custom.css') }}
         {{ HTML::style('js/slick/slick.css') }}
         {{ HTML::style('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css') }}
-          <script src='https://www.google.com/recaptcha/api.js'></script>
+          <script src="https://www.google.com/recaptcha/api.js?hl={{ Session::get('lang','es') }}"></script>
     </head>
     <body>
       <div class="carousel">
@@ -60,13 +60,17 @@
             <div class="clearfix"></div>
             <div class="col-xs-12 contMenu no-in">
               <ul class="menu textoGrande">
-                <li>Inicio</li>
-                <li>Iniciar sesión</li>
-                <li>Registrame</li>
-                <li>Contactenos</li>
+                <li><a href="{{ URL::to(Lang::get('lang.menu_index_route')) }}">{{ Lang::get('lang.menu_index') }}</a></li>
+                <li><a href="{{ URL::to(Lang::get('lang.menu_login_route')) }}">{{ Lang::get('lang.menu_login') }}</a></li>
+                <li><a href="{{ URL::to(Lang::get('lang.menu_register_route')) }}">{{ Lang::get('lang.menu_register') }}</a></li>
+                <li><a href="{{ URL::to(Lang::get('lang.menu_contact_route')) }}">{{ Lang::get('lang.menu_contact') }}</a></li>
               </ul>
             </div>
-            <div class="idiomas no-in"></div>
+            <div class="idiomas no-in">
+              <a href="{{ URL::to(Lang::get('lang.change_lang_es')) }}" class="btn">{{ Lang::get('lang.lang_es') }}</a>
+              <a href="{{ URL::to(Lang::get('lang.change_lang_en')) }}" class="btn">{{ Lang::get('lang.lang_en') }}</a>
+              <a href="{{ URL::to(Lang::get('lang.change_lang_po')) }}" class="btn">{{ Lang::get('lang.lang_po') }}</a>
+            </div>
             <div class="redes no-in">
               <div class="contRed" style="padding:1em 1.5em;"><i class="fa fa-facebook fa-3x"></i></div>
               <div class="contRed"><i class="fa fa-twitter fa-3x"></i></div>
@@ -83,7 +87,7 @@
       @yield('content')
         
         <div class="col-xs-12 footerTerm">
-              <p class="textoPromedio"><i class="fa fa-copyright"></i> 2015 dyv-an , c.a. J-40566930-6 | Todos los derechos reservados.<br> Desarrolado por <a href="{{ URL::to('http://tecnographic.com.ve') }}" target="_blank">Tecnographic Venezuela c.a.</a></p>
+              <p class="textoPromedio">{{ Lang::get('lang.footer_info') }} </p>
             </div>
         {{ HTML::script("http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js") }}
         <script>window.jQuery || document.write('<script src="js/jquery.js"><\/script>')</script>
