@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{{ $title; }}</title>
+        <title>{{ $title }}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/jpg" href="{{ asset('images/favicon.jpg') }}" />
@@ -28,11 +28,11 @@
           <div class="back"><img src="{{ asset('images/ny2.jpg') }}" /></div>
           <div class="back"><img src="{{ asset('images/ny3.jpg') }}" /></div>
       </div>
-      <header>
+      <header @if($title != "Home" && $title != "Inicio")class="active"@endif>
         <nav>
           <div class="nav-bar">
-            <div class="col-xs-12 icon">
-              <i class="fa fa-bars navicon"></i>
+            <div class="col-xs-12 icon @if($title != 'Home' && $title != 'Inicio')navicon-in-col@endif">
+              <i class="fa fa-bars navicon @if($title != 'Home' && $title != 'Inicio')navicon-in@endif"></i>
             </div>
             <div class="col-xs-12">
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -58,7 +58,7 @@
                 </svg>
             </div>
             <div class="clearfix"></div>
-            <div class="col-xs-12 contMenu no-in">
+            <div class="col-xs-12 contMenu no-in @if($title != 'Home' && $title != 'Inicio')si-in@endif">
               <ul class="menu textoGrande">
                 <li><a href="{{ URL::to(Lang::get('lang.menu_index_route')) }}">{{ Lang::get('lang.menu_index') }}</a></li>
                 <li><a href="{{ URL::to(Lang::get('lang.menu_login_route')) }}">{{ Lang::get('lang.menu_login') }}</a></li>
@@ -66,12 +66,12 @@
                 <li><a href="{{ URL::to(Lang::get('lang.menu_contact_route')) }}">{{ Lang::get('lang.menu_contact') }}</a></li>
               </ul>
             </div>
-            <div class="idiomas no-in">
+            <div class="idiomas no-in @if($title != 'Home' && $title != 'Inicio')si-in@endif">
               <a href="{{ URL::to(Lang::get('lang.change_lang_es')) }}" class="btn">{{ Lang::get('lang.lang_es') }}</a>
               <a href="{{ URL::to(Lang::get('lang.change_lang_en')) }}" class="btn">{{ Lang::get('lang.lang_en') }}</a>
               <a href="{{ URL::to(Lang::get('lang.change_lang_po')) }}" class="btn">{{ Lang::get('lang.lang_po') }}</a>
             </div>
-            <div class="redes no-in">
+            <div class="redes no-in @if($title != 'Home' && $title != 'Inicio')si-in@endif">
               <div class="contRed" style="padding:1em 1.5em;"><i class="fa fa-facebook fa-3x"></i></div>
               <div class="contRed"><i class="fa fa-twitter fa-3x"></i></div>
               <div class="contRed" style="padding: 1.1em 1.4em;"><i class="fa fa-instagram fa-3x"></i></div>

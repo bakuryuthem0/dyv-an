@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<div class="hidden-container">
+<div class="hidden-container container-in">
   <div class="titulo"><h1>{{ Lang::get('lang.titulo_2') }}</h1></div>
   <div class="contenido">
     <form action="{{ URL::to('iniciar-sesion/autenticar') }}" method="POST">

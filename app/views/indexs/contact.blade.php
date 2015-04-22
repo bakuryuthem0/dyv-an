@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-<div class="hidden-container">
+<div class="hidden-container container-in">
   <div class="titulo"><h1>{{ Lang::get('lang.titulo_4') }}</h1></div>
   <div class="contenido">
     <legend>{{ Lang::get('lang.form_text4') }}</legend>
