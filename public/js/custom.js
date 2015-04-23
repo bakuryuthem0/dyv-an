@@ -58,49 +58,16 @@ jQuery(document).ready(function($) {
 	})
 	});
 });
-
 jQuery(document).ready(function($) {
-	/*-------------------------------------------registro de usuario-------------------------------------------*/
-	var estado = $('#estado');
-	estado.change(function(event) {
-		if ($(this).val() != "") {
-			var id = estado.val();
-			$.ajax({
-				url: 'registro/buscar-municipio',
-				type: 'POST',
-				data: {'id': id},
-				success:function(response)
-				{
-					$('.optionModel').remove();
-					for (var i = 0 ; i < response.length; i++) {
-						$('#municipio').append('<option class="optionModel" value="'+response[i].id+'">'+response[i].nombre+'</option>');
-					};
-
-					var mun = $('#municipio');
-					mun.change(function(event) {
-						var id = $(this).val();
-						$.ajax({
-							url: 'registro/buscar-parroquia',
-							type: 'POST',
-							data: {'id': id},
-							success:function(response)
-							{
-								$('.optionModelParr').remove();
-								for (var i = 0 ; i < response.length; i++) {
-									$('#parroquia').append('<option class="optionModelParr" value="'+response[i].id+'">'+response[i].nombre+'</option>');
-								};
-							
-							}
-						})
-					});
-				}
-			})
-
-			
-		}
+	$('.btnMdfShow').click(function(event) {
+		$(this).css({
+			'display':'none'
+		});
+		$('.mdfForm').addClass('mdfFormShow').removeClass('mdfForm');
+		$('.mdfText').addClass('mdfFormText').removeClass('mdfText');
 	});
+	
 });
-
 /*olvide la contraseña esto me ayuda*/
 jQuery(document).ready(function($) {
 	$('.forgot').click(function(event) {
@@ -400,9 +367,9 @@ jQuery(document).ready(function($) {
 		to = boton.attr('data-url-value');
 		$.ajax({
 			//casa
-			url: '/guacamaya/public/'+to,
+			url: '/dyv-an/public/'+to,
 			//trabajo
-			//url: '/prueba/guacamaya/public/'+to,
+			//url: '/prueba/dyv-an/public/'+to,
 			type: 'POST',
 			dataType: 'json',
 			data: {'id':boton.val() },
@@ -453,9 +420,9 @@ jQuery(document).ready(function($) {
 		var to = boton.attr('data-url-value');
 			$.ajax({
 				//casa
-				url: '/guacamaya/public/'+to,
+				url: '/dyv-an/public/'+to,
 				//trabajo
-				//url: '/prueba/guacamaya/public/'+to,
+				//url: '/prueba/dyv-an/public/'+to,
 				type: 'POST',
 				dataType: 'json',
 				data: {'id':boton.val() },
@@ -529,9 +496,9 @@ jQuery(document).ready(function($) {
 		if (x) {
 			$.ajax({
 				//casa
-				url: '/guacamaya/public/vaciar-carrito',
+				url: '/dyv-an/public/vaciar-carrito',
 				//trabajo
-				//url: '/prueba/guacamaya/public/vaciar-carrito',
+				//url: '/prueba/dyv-an/public/vaciar-carrito',
 				type: 'POST',
 				dataType: 'json',
 				beforeSend:function()
@@ -617,9 +584,9 @@ jQuery(document).ready(function($) {
 					var row = '<tr class="carItems">';
 	                  row = row+'<td class="carItem" id="'+response.id+'">';
 	                    //casa
-	                    row = row+'<img src="/guacamaya/public/images/items/'+response.img+'" class="carImg">';
+	                    row = row+'<img src="/dyv-an/public/images/items/'+response.img+'" class="carImg">';
 	                    //trabajo
-	                  //row = row+'<img src="/prueba/guacamaya/public/images/items/'+response.img+'" class="carImg">';
+	                  //row = row+'<img src="/prueba/dyv-an/public/images/items/'+response.img+'" class="carImg">';
 	                  row = row+'</td>';
 	                  row = row+'<td class="carItem">';
 	                    row = row+response.name;
@@ -692,9 +659,9 @@ jQuery(document).ready(function($) {
 			if (x) {
 				$.ajax({
 					//casa
-					url: '/guacamaya/public/quitar-item',
+					url: '/dyv-an/public/quitar-item',
 					//trabajo
-					//url: '/prueba/guacamaya/public/quitar-item',
+					//url: '/prueba/dyv-an/public/quitar-item',
 					type: 'POST',
 					dataType: 'json',
 					data: {'id':boton.val() },
@@ -747,9 +714,9 @@ jQuery(document).ready(function($) {
 		{
 			$.ajax({
 					//casa
-					url: '/guacamaya/public/actualizar-al-carrito',
+					url: '/dyv-an/public/actualizar-al-carrito',
 					//trabajo
-					//url: '/prueba/guacamaya/public/actualizar-al-carrito',
+					//url: '/prueba/dyv-an/public/actualizar-al-carrito',
 					type: 'POST',
 					dataType: 'json',
 					data: {
@@ -1252,6 +1219,92 @@ jQuery(document).ready(function($) {
 		$('.nitModal').html(nit);
 	});
 });
+
+
+//cart plugin
+jQuery(document).ready(function($){
+	//if you change this breakpoint in the style.css file (or _layout.scss if you use SASS), don't forget to update this value as well
+	var $L = 1200,
+		$menu_navigation = $('#main-nav'),
+		$cart_trigger = $('#cd-cart-trigger'),
+		$hamburger_icon = $('#cd-hamburger-menu'),
+		$lateral_cart = $('#cd-cart'),
+		$shadow_layer = $('#cd-shadow-layer');
+
+	//open lateral menu on mobile
+	$hamburger_icon.on('click', function(event){
+		event.preventDefault();
+		//close cart panel (if it's open)
+		$lateral_cart.removeClass('speed-in');
+		toggle_panel_visibility($menu_navigation, $shadow_layer, $('body'));
+	});
+
+	//open cart
+	$cart_trigger.on('click', function(event){
+		event.preventDefault();
+		//close lateral menu (if it's open)
+		$menu_navigation.removeClass('speed-in');
+		toggle_panel_visibility($lateral_cart, $shadow_layer, $('body'));
+	});
+
+	//close lateral cart or lateral menu
+	$shadow_layer.on('click', function(){
+		$shadow_layer.removeClass('is-visible');
+		// firefox transitions break when parent overflow is changed, so we need to wait for the end of the trasition to give the body an overflow hidden
+		if( $lateral_cart.hasClass('speed-in') ) {
+			$lateral_cart.removeClass('speed-in').on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
+				$('body').removeClass('overflow-hidden');
+			});
+			$menu_navigation.removeClass('speed-in');
+		} else {
+			$menu_navigation.removeClass('speed-in').on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
+				$('body').removeClass('overflow-hidden');
+			});
+			$lateral_cart.removeClass('speed-in');
+		}
+	});
+
+	//move #main-navigation inside header on laptop
+	//insert #main-navigation after header on mobile
+	move_navigation( $menu_navigation, $L);
+	$(window).on('resize', function(){
+		move_navigation( $menu_navigation, $L);
+		
+		if( $(window).width() >= $L && $menu_navigation.hasClass('speed-in')) {
+			$menu_navigation.removeClass('speed-in');
+			$shadow_layer.removeClass('is-visible');
+			$('body').removeClass('overflow-hidden');
+		}
+
+	});
+});
+
+function toggle_panel_visibility ($lateral_panel, $background_layer, $body) {
+	if( $lateral_panel.hasClass('speed-in') ) {
+		// firefox transitions break when parent overflow is changed, so we need to wait for the end of the trasition to give the body an overflow hidden
+		$lateral_panel.removeClass('speed-in').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
+			$body.removeClass('overflow-hidden');
+		});
+		$background_layer.removeClass('is-visible');
+
+	} else {
+		$lateral_panel.addClass('speed-in').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
+			$body.addClass('overflow-hidden');
+		});
+		$background_layer.addClass('is-visible');
+	}
+}
+
+function move_navigation( $navigation, $MQ) {
+	if ( $(window).width() >= $MQ ) {
+		$navigation.detach();
+		$navigation.appendTo('header');
+	} else {
+		$navigation.detach();
+		$navigation.insertAfter('header');
+	}
+}
+
 
 /*Plugin*/
 jQuery(document).ready(function($){

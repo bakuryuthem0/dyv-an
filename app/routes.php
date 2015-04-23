@@ -11,15 +11,15 @@
 |
 */
 Route::get('/', 'HomeController@getFront');
-Route::get(Lang::get('lang.menu_index_route'), 'HomeController@getIndex');
-Route::get(Lang::get('lang.menu_contact_route'),'HomeController@getContact');
+Route::get('inicio', 'HomeController@getIndex');
+Route::get('contacto','HomeController@getContact');
 Route::post('contactenos','HomeController@postContact');
 
-Route::get(Lang::get('lang.change_lang'),'HomeController@changeLang');
+Route::get('cambiar-lenguaje/{lang}','HomeController@changeLang');
 
 Route::group(array('before' =>'no_auth'),function()
 {
-	Route::get(Lang::get('lang.menu_login_route'),'HomeController@getLogin');
+	Route::get('iniciar-sesion','AuthController@getLogin');
 	Route::post('iniciar-sesion/autenticar','AuthController@postLogin');
 });
 
@@ -35,6 +35,7 @@ Route::post('administrador/iniciar-sesion/autenticar','AdminController@postLogin
 
 Route::group(array('before' =>'auth'),function()
 {
+	Route::get('mi-perfil','UserController@getProfile');
 	/*Rutas del carrito*/
 	Route::post('articulo/agregar-al-carrito','ItemController@getItem');
 	Route::post('vaciar-carrito', 'ItemController@dropCart');
@@ -141,8 +142,8 @@ Route::group(array('before' =>'auth'),function()
 
 Route::post('chequear/email','AuthController@postEmailCheck');
 Route::get('cerrar-sesion','AuthController@logOut');
-Route::get(Lang::get('lang.menu_register_route'), 'AuthController@getRegister');
+Route::get('registro', 'AuthController@getRegister');
 Route::get('registro/verificar-codigo/{username}/{codigo}', 'AuthController@getCode');
-Route::post(Lang::get('lang.regiter_send'),'AuthController@postRegister');
+Route::post('registro/enviar','AuthController@postRegister');
 Route::post('registro/buscar-municipio','AuthController@getState');
 Route::post('registro/buscar-parroquia','AuthController@getParroquia');

@@ -17,14 +17,13 @@ class AuthController extends BaseController {
 
 	public function getLogin()
 	{
-
 		$title = "Inicio de Sesión";
 		if (Auth::check())
         {
-            return Redirect::to(Lang::get('lang.menu_index_route'));
+            return Redirect::to('inicio');
         }
 
-		return View::make('login')->with('title',$title);
+		return View::make('indexs.login')->with('title',$title);
 
 	}
 	public function postLogin()
@@ -47,7 +46,6 @@ class AuthController extends BaseController {
 			'password' 	=> $input['password']
 
 		);
-		$pass = User::where('username','=',$input['username'])->pluck('password');
 		if (Auth::attempt($userdata,$valor)) {
 			if (Auth::user()->role == 1) {
 				return Redirect::to('administrador/inicio');	
@@ -79,13 +77,15 @@ class AuthController extends BaseController {
 		$rules = array(
 			'username'   			 => 'required|min:4|unique:usuario',
 			'pass'      		 	 => 'required|min:6|confirmed',
+			'cedula'			 	 => 'required',
 			'pass_confirmation'      => 'required',
 			'name'       			 => 'required|min:4',
 			'lastname'   			 => 'required|min:4',
 			'email'      			 => 'required|email|unique:usuario',
+			'city'     			 	 => 'required',
 			'dir' 			 		 => 'required',
-			'estado'				 => 'required',
-			'municipio'				 => 'required',
+			'dir2' 			 		 => 'required',
+			'department'			 => 'required',
 			'g-recaptcha-response'   => 'required',
 
 		);
@@ -107,17 +107,16 @@ class AuthController extends BaseController {
 		$user->password    	 = Hash::make($input['pass']);
 		$user->email    	 = $input['email'];
 		$user->nombre    	 = $input['name'];
+		$user->dir 			 = $input['dir'];
+		$user->dir2 			 = $input['dir2'];
 		$user->apellido 	 = $input['lastname'];
-		$user->estado  		 = $input['estado'];
-		$user->municipio     = $input['municipio'];
-		$user->role 		 = 3;
-		if (!empty($input['parroquia'])) {
-			$user->parroquia  		 = $input['parroquia'];	
-		}
+		$user->cedula  		 = $input['cedula'];
+		$user->city  	   	 = $input['city'];
+		$user->department  	 = $input['department'];
 		if (!empty($input['telefono'])) {
 			$user->telefono = $input['telefono'];
 		}
-		$user->role          = 'Usuario';
+		$user->role          = 3;
 		
 		if ($user->save()) {
 			Session::flash('success', 'Su cuenta fue creada satisfractoriamente, inicie sesión para disfrutar de nuestros servicios.');
@@ -193,7 +192,7 @@ class AuthController extends BaseController {
 
 			  	if ($user[0]->save()) {
 			  		Mail::send('emails.passNew', $data, function ($message) use ($pass,$email){
-					    $message->subject('Correo de restablecimiento de contraseña guacamayastores.com.ve');
+					    $message->subject('Correo de restablecimiento de contraseña dyv-an.com');
 					    $message->to($email);
 					});
 					return Response::json(array('type' => 'success','msg' => 'Se ha enviado un email con una clave provisional.'));

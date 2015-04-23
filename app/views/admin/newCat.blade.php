@@ -6,7 +6,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			
-			<div class="col-xs-8 contForm contdeColor contCentrado" style="margin-top:2em;">
+			<div class="col-xs-8 contCentrado" style="margin-top:2em;">
 				@if (Session::has('error'))
 				<div class="col-xs-6">
 					<div class="alert alert-danger">
@@ -16,7 +16,7 @@
 				</div>
 				<div class="clearfix"></div>
 				@endif
-				<div class="col-xs-12">
+				<div class="col-xs-12 textoNegro">
 					<div class="col-xs-12">
 						<legend>Nueva categoria</legend>
 						<p class="textoPromedio">Llene el siguiente formulario para registrar una nueva categorias.</p>
@@ -24,7 +24,7 @@
 					</div>						
 				</div>
 				<form action="{{ URL::to('categoria/nueva/enviar') }}" id="formRegister" method="POST">
-					<div class="col-xs-12 formulario">
+					<div class="col-xs-12 formulario textoNegro">
 						<div class="col-xs-12 inputRegister">
 							<p class="textoPromedio">Nombre de la categoria:</p>
 							<p class="bg-info textoPromedio" style="padding:0.5em;text-align:center;">* Nombre para las busquedas(sin acento)</p>
@@ -41,7 +41,7 @@
 							@endif
 						</div>
 					</div>
-					<div class="col-xs-12 formulario">
+					<div class="col-xs-12 formulario textoNegro">
 						<div class="col-xs-12 inputRegister">
 							<p class="textoPromedio">Título de la categoría:</p>
 							<p class="bg-info textoPromedio" style="padding:0.5em;text-align:center;">* Título para mostrar la categoria (puede tener acento)</p>

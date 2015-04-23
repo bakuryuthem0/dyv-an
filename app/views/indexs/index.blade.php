@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-<div class="hidden-container">
+<div class="hidden-container @if(Auth::check())container-in@endif">
   <div class="titulo"><h1>{{ Lang::get('lang.titulo_1') }}</h1></div>
   <div class="contenido">
     contenido

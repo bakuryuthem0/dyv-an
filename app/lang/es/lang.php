@@ -5,6 +5,8 @@
 		/*Menu*/
 	    "menu_index" 				=> "Inicio",
 	    "menu_login"    			=> "Iniciar Sesión",
+	    "menu_logout"    			=> "Cerrar Sesión",
+	    "menu_profile"    			=> "Mi Perfil",
 	    "menu_register"   			=> "Registrame",
 	    "menu_contact"   			=> "Contactenos",
 	    "lang_es"					=> "Español",
@@ -49,16 +51,6 @@
 	    /*btn*/
 	    "btn_send"					=> "Enviar",
 	    "btn_erase"					=> "Borrar",
-	    /*Rutas*/
-	    "change_lang"				=> "cambiar-lenguaje/{lang}",
-	    "change_lang_es"			=> "cambiar-lenguaje/español",
-	    "change_lang_en"			=> "cambiar-lenguaje/ingles",
-	    "change_lang_po"			=> "cambiar-lenguaje/portugues",
-	    "menu_index_route" 			=> "inicio",
-	    "menu_login_route" 			=> "iniciar-sesion",
-	    "menu_register_route"		=> "registro",
-	    "regiter_send"				=> "registro/enviar",
-	    "menu_contact_route"		=> "contacto",
 	    /*Validations*/
 	    "required"					=> "El campo es obligatorio",
 	    'min'      					=> 'El campo debe ser mas largo',

@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'prueba@guacamayastores.com.ve', 'name' => 'guacamayastores.com.ve'),
+	'from' => array('address' => 'prueba@dyv-an.com', 'name' => 'dyv-an.com'),
 
 	/*
 	|--------------------------------------------------------------------------

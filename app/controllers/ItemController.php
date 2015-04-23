@@ -170,7 +170,7 @@ class ItemController extends BaseController {
 	}
 	public function getProcesePurchase($id)
 	{
-		$title = "Metodo de pago | guacamayastores.com.ve";
+		$title = "Metodo de pago | dyv-an.com";
 		$fac = Facturas::find($id);
 		$x 	 = FacturaItem::where('factura_id','=',$id)->sum('item_qty');
 		$aux = FacturaItem::where('factura_id','=',$id)->get(array('item_id','item_qty'));
@@ -237,7 +237,7 @@ class ItemController extends BaseController {
 			$to_Email = 'ejemplo@gmail.com';
 			Mail::send('emails.newPayment', $data, function($message) use ($input,$to_Email,$subject)
 			{
-				$message->to($to_Email)->from('sistema@guacamayastores.com.ve')->subject($subject);
+				$message->to($to_Email)->from('sistema@dyv-an.com')->subject($subject);
 			});
 			Session::flash('success', 'Pago enviado, pronto procesaremos su pago');
 			return Redirect::to('usuario/mis-compras');

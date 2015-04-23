@@ -5,17 +5,14 @@ class UserController extends Controller {
 	
 	public function getProfile()
 	{
-		$title ="Cambiar Perfil | guacamayastores.com.ve";
+		$title ="Cambiar Perfil | dyv-an.com";
 
 		$user = User::find(Auth::user()->id);
-		$estados = Estados::get();
-		$mun     = Municipios::get();
-		$par     = Parroquias::get();
+		$dep = Department::get();
 		if (!empty($user) && $user != "" && !is_null($user) ) {
 			return View::make('user.profile')
 			->with('title',$title)
-			->with('estados',$estados)
-			->with('user',$user);
+			->with('dep',$dep);
 		}		
 		
 	}
@@ -67,7 +64,7 @@ class UserController extends Controller {
 	}
 	public function getMyPurchases()
 	{
-		$title = "Mis compras | guacamayastores.com.ve";
+		$title = "Mis compras | dyv-an.com";
 		$fac = Facturas::where('user_id','=',Auth::user()->id)->orderBy('id','DESC')->get();
 		return View::make('user.myPurchases')
 		->with('title',$title)

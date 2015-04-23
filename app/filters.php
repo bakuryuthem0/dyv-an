@@ -32,10 +32,24 @@ App::after(function($request, $response)
 | integrates HTTP Basic authentication for quick, simple checking.
 |
 */
-
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::guest('login');
+	if (!Auth::check()){ 
+		return Redirect::to('iniciar-sesion');
+	}
+});
+Route::filter('no_auth', function()
+{
+	if (Auth::check()){ 
+		return Redirect::to('inicio');
+	}
+});
+Route::filter('check_role', function()
+{
+	if ( (Auth::getUser()->role != 1) )
+	{
+		return Redirect::to('inicio');		
+	} 
 });
 
 

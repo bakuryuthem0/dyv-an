@@ -28,11 +28,11 @@
           <div class="back"><img src="{{ asset('images/ny2.jpg') }}" /></div>
           <div class="back"><img src="{{ asset('images/ny3.jpg') }}" /></div>
       </div>
-      <header @if($title != "Home" && $title != "Inicio")class="active"@endif>
+      <header @if($title != "Home" && $title != "Inicio" || Auth::check())class="active"@endif>
         <nav>
           <div class="nav-bar">
-            <div class="col-xs-12 icon @if($title != 'Home' && $title != 'Inicio')navicon-in-col@endif">
-              <i class="fa fa-bars navicon @if($title != 'Home' && $title != 'Inicio')navicon-in@endif"></i>
+            <div class="col-xs-12 icon @if($title != 'Home' && $title != 'Inicio' || Auth::check())navicon-in-col@endif">
+              <i class="fa fa-bars navicon @if($title != 'Home' && $title != 'Inicio' || Auth::check())navicon-in@endif"></i>
             </div>
             <div class="col-xs-12">
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -58,20 +58,25 @@
                 </svg>
             </div>
             <div class="clearfix"></div>
-            <div class="col-xs-12 contMenu no-in @if($title != 'Home' && $title != 'Inicio')si-in@endif">
+            <div class="col-xs-12 contMenu no-in @if($title != 'Home' && $title != 'Inicio' || Auth::check())si-in@endif">
               <ul class="menu textoGrande">
-                <li><a href="{{ URL::to(Lang::get('lang.menu_index_route')) }}">{{ Lang::get('lang.menu_index') }}</a></li>
-                <li><a href="{{ URL::to(Lang::get('lang.menu_login_route')) }}">{{ Lang::get('lang.menu_login') }}</a></li>
-                <li><a href="{{ URL::to(Lang::get('lang.menu_register_route')) }}">{{ Lang::get('lang.menu_register') }}</a></li>
-                <li><a href="{{ URL::to(Lang::get('lang.menu_contact_route')) }}">{{ Lang::get('lang.menu_contact') }}</a></li>
+                <li><a href="{{ URL::to('inicio') }}">{{ Lang::get('lang.menu_index') }}</a></li>
+                @if(!Auth::check())
+                <li><a href="{{ URL::to('iniciar-sesion') }}">{{ Lang::get('lang.menu_login') }}</a></li>
+                <li><a href="{{ URL::to('registro') }}">{{ Lang::get('lang.menu_register') }}</a></li>
+                @else
+                <li><a href="{{ URL::to('mi-perfil') }}">{{ Lang::get('lang.menu_profile') }}</a></li>
+                <li><a href="{{ URL::to('cerrar-sesion') }}">{{ Lang::get('lang.menu_logout') }}</a></li>
+                @endif
+                <li><a href="{{ URL::to('contacto') }}">{{ Lang::get('lang.menu_contact') }}</a></li>
               </ul>
             </div>
-            <div class="idiomas no-in @if($title != 'Home' && $title != 'Inicio')si-in@endif">
-              <a href="{{ URL::to(Lang::get('lang.change_lang_es')) }}" class="btn">{{ Lang::get('lang.lang_es') }}</a>
-              <a href="{{ URL::to(Lang::get('lang.change_lang_en')) }}" class="btn">{{ Lang::get('lang.lang_en') }}</a>
-              <a href="{{ URL::to(Lang::get('lang.change_lang_po')) }}" class="btn">{{ Lang::get('lang.lang_po') }}</a>
+            <div class="idiomas no-in @if($title != 'Home' && $title != 'Inicio' || Auth::check())si-in@endif">
+              <a href="{{ URL::to('cambiar-lenguaje/español') }}" class="btn">{{ Lang::get('lang.lang_es') }}</a>
+              <a href="{{ URL::to('cambiar-lenguaje/ingles') }}" class="btn">{{ Lang::get('lang.lang_en') }}</a>
+              <a href="{{ URL::to('cambiar-lenguaje/portugues') }}" class="btn">{{ Lang::get('lang.lang_po') }}</a>
             </div>
-            <div class="redes no-in @if($title != 'Home' && $title != 'Inicio')si-in@endif">
+            <div class="redes no-in @if($title != 'Home' && $title != 'Inicio' || Auth::check())si-in@endif">
               <div class="contRed" style="padding:1em 1.5em;"><i class="fa fa-facebook fa-3x"></i></div>
               <div class="contRed"><i class="fa fa-twitter fa-3x"></i></div>
               <div class="contRed" style="padding: 1.1em 1.4em;"><i class="fa fa-instagram fa-3x"></i></div>
@@ -84,11 +89,31 @@
           </div>
         </nav>
       </header>
-      @yield('content')
+      <div id="cd-cart-trigger"><a class="cd-img-replace" href="#0"><i class="fa fa-shopping-cart fa-5x"></i></a></div>
+      <div id="cd-shadow-layer"></div>
+      <div id="cd-cart">
+        <h2>Cart</h2>
+        <ul class="cd-cart-items">
+          <li>
+            <!-- ... -->
+          </li>
+       
+          <li>
+            <!-- ... -->
+          </li>
+        </ul> <!-- cd-cart-items -->
+       
+        <div class="cd-cart-total">
+          <p>Total <span>$39.96</span></p>
+        </div> <!-- cd-cart-total -->
+       
+        <a href="#0" class="checkout-btn">Checkout</a>
         
-        <div class="col-xs-12 footerTerm">
-              <p class="textoPromedio">{{ Lang::get('lang.footer_info') }} </p>
-            </div>
+        <p class="cd-go-to-cart"><a href="#0">Go to cart page</a></p>
+      </div> <!-- cd-cart -->
+      @yield('content')
+      
+
         {{ HTML::script("http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js") }}
         <script>window.jQuery || document.write('<script src="js/jquery.js"><\/script>')</script>
         {{ HTML::script('js/bootstrap.min.js') }}

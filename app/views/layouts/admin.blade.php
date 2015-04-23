@@ -21,8 +21,8 @@
         {{ HTML::style('js/slick/slick.css') }}
         {{ HTML::style('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css') }}
     </head>
-    <body>
-        <header>
+    <body class="admin">
+        <header class="admin">
             <nav class="navbar navbar-default" style="position:initial;">
               <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->

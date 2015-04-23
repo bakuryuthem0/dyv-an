@@ -17,7 +17,7 @@ class AdminController extends BaseController {
 
 	public function getLogin()
 	{
-		$title = "Administrador | guacamayastores.com.ve";
+		$title = "Administrador | dyv-an.com";
 		return View::make('admin.login')->with('title',$title);
 	}
 	public function postLogin()
@@ -62,12 +62,12 @@ class AdminController extends BaseController {
 	}
 	public function getIndex()
 	{
-		$title = "Inicio administrador | guacamayastores.com.ve";
+		$title = "Inicio administrador | dyv-an.com";
 		return View::make('admin.index')->with('title',$title);
 	}
 	public function getNewItem()
 	{
-		$title = "Nuevo articulo | guacamayastores.com.ve";
+		$title = "Nuevo articulo | dyv-an.com";
 		$cat = Cat::where('deleted','=',0)
 		->get();
 		return View::make('admin.newItem')
@@ -598,7 +598,7 @@ class AdminController extends BaseController {
 		$user = new User;
 		$user->username = $input['adminUser'];
 		$user->password = Hash::make($input['pass']);
-		$user->email    = $input['adminUser'].'@guacamayastores.com.ve';
+		$user->email    = $input['adminUser'].'@dyv-an.com';
 		$user->role     = 1;
 
 		if ($user->save()) {
@@ -607,8 +607,8 @@ class AdminController extends BaseController {
 				'createBy' => Auth::user()->username
 			);
 			Mail::send('emails.newAdmin', $data, function ($message) use ($input){
-				    $message->subject('Correo creacion de usuario guacamayastores.com.ve');
-				    $message->to('someemail@guacamayastores.com.ve');
+				    $message->subject('Correo creacion de usuario dyv-an.com');
+				    $message->to('someemail@dyv-an.com');
 				});
 			Session::flash('success', 'El usuario fue creado satisfactoriamente');
 			return Redirect::to('administrador/crear-nuevo');
@@ -1069,7 +1069,7 @@ class AdminController extends BaseController {
 	}
 	public function getPayment()
 	{
-		$title = "Pagos | guacamayastores.com.ve";
+		$title = "Pagos | dyv-an.com";
 		$fac = Facturas::where('pagada','=',-1)->orderBy('id','DESC')->get();
 		return View::make('admin.showPayment')
 		->with('title',$title)
@@ -1077,7 +1077,7 @@ class AdminController extends BaseController {
 	}
 	public function getPurchases($id)
 	{
-		$title = "Ver factura | guacamayastores.com.ve";
+		$title = "Ver factura | dyv-an.com";
 
 		$fac = Facturas::find($id);
 		$x 	 = FacturaItem::where('factura_id','=',$id)->sum('item_qty');
@@ -1113,8 +1113,8 @@ class AdminController extends BaseController {
 				'fecha'	   => date('d-m-Y',time())
 			);
 			Mail::send('emails.aprob', $data, function ($message) use ($id){
-				    $message->subject('Correo de confirmación guacamayastores.com.ve');
-				    $message->to('someemail@guacamayastores.com.ve');
+				    $message->subject('Correo de confirmación dyv-an.com');
+				    $message->to('someemail@dyv-an.com');
 			});
 			return Response::json(array('type' => 'success','msg' => 'Pago Aprovado correctamente.'));
 		}else
@@ -1137,8 +1137,8 @@ class AdminController extends BaseController {
 				'motivo'   => $motivo,
 			);
 			Mail::send('emails.reject', $data, function ($message) use ($id,$motivo){
-				    $message->subject('Correo de confirmación guacamayastores.com.ve');
-				    $message->to('someemail@guacamayastores.com.ve');
+				    $message->subject('Correo de confirmación dyv-an.com');
+				    $message->to('someemail@dyv-an.com');
 			});
 			return Response::json(array('type' => 'success','msg' => 'Pago Aprovado correctamente.'));
 		}else
@@ -1149,7 +1149,7 @@ class AdminController extends BaseController {
 	public function getPaymentAproved()
 	{
 		$title = "Pagos aprobados";
-		$title = "Pagos | guacamayastores.com.ve";
+		$title = "Pagos | dyv-an.com";
 		$fac = Facturas::join('usuario','usuario.id','=','facturas.user_id')->where('facturas.pagada','=',1)
 		->leftJoin('estado','usuario.estado','=','estado.id')
 		->leftJoin('municipio','usuario.municipio','=','municipio.id')

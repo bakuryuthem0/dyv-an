@@ -18,15 +18,14 @@ class HomeController extends BaseController {
 	{
 		if ($lang == "español" || $lang == "spanish"){
 			Session::set('language', 'es');
-			return Redirect::to('inicio');
 		}elseif($lang == "ingles" || $lang == "english")
 		{
 			Session::set('language', 'en');
-			return Redirect::to('home');
 		}elseif($lang == "portugues" || $lang == "portuguese")
 		{
 			Session::set('language', 'po');
 		}
+		return Redirect::back();
 	}
 	public function getFront()
 	{
@@ -39,14 +38,7 @@ class HomeController extends BaseController {
 		return View::make('indexs.index')
 		->with('title',$title);
 	}
-	public function getLogin()
-	{
-		if (Session::has('success')) {
-			Session::reflash();
-		}
-		$title = Lang::get('lang.menu_login');
-		return View::make('indexs.login')->with('title',$title);
-	}
+
 	public function getShowItem($id)
 	{
 		$art = Items::find($id);

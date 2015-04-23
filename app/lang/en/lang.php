@@ -5,6 +5,8 @@ return array(
 		/*Menu*/
 	    "menu_index" 				=> "Home",
 	    "menu_login"    			=> "Login",
+	    "menu_logout"    			=> "Log out",
+	    "menu_profile"    			=> "My Profile",
 	    "menu_register"   			=> "Register",
 	    "menu_contact"   			=> "Contact us",
 	    "lang_es"					=> "Spanish",
@@ -49,16 +51,7 @@ return array(
 	    /*btn*/
 	    "btn_send"					=> "Send",
 	    "btn_erase"					=> "Erase",
-	    /*Rutas*/
-	    "change_lang"				=> "change-language/{lang}",
-	    "change_lang_es"			=> "change-language/spanish",
-	    "change_lang_en"			=> "change-language/english",
-	    "change_lang_po"			=> "change-language/portuguese",
-	    "menu_index_route" 			=> "home",
-	    "menu_login_route" 			=> "login",
-	    "menu_register_route"		=> "register",
-	    "regiter_send"				=> "register/send",
-	    "menu_contact_route"		=> "contact-us",
+
 	     /*Validations*/
 	    "required"					=> "Field its required",
 	    'min'      					=> 'the field must be longer',

@@ -20,7 +20,7 @@
 						<hr>
 					</div>						
 				</div>
-				<form action="{{ URL::to(Lang::get('lang.regiter_send')) }}" id="formRegister" method="POST">
+				<form action="{{ URL::to('registro/enviar') }}" id="formRegister" method="POST">
 					<div class="col-xs-12 formulario">
 						<div class="col-xs-6 inputRegister">
 							<p class="textoPromedio">(*) {{ Lang::get('lang.form_username') }}:</p>
@@ -75,8 +75,8 @@
 						</div>
 						<div class="col-xs-6 inputRegister">
 							{{ Form::text('cedula', Input::old('cedula'),array('class' => 'form-control inputFondoNegro','placeholder' => Lang::get('lang.form_cedula'),'required' => 'required')) }}
-							@if ($errors->has('email'))
-								 @foreach($errors->get('email') as $err)
+							@if ($errors->has('cedula'))
+								 @foreach($errors->get('cedula') as $err)
 								 	<div class="alert alert-danger">
 								 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 								 		<p class="textoPromedio">{{ $err }}</p>
@@ -233,8 +233,17 @@
 						<div class="col-xs-6 inputRegister">
 							
 							<div class="g-recaptcha" data-sitekey="6LdEiwUTAAAAAINrrnq7GRyTrMXOrqU8kpm4hUhL"></div>
+							<div class="clearfix"></div>
+							@if ($errors->has('g-recaptcha-response'))
+									
+									 @foreach($errors->get('g-recaptcha-response') as $err)
+									 	<div class="alert alert-danger">
+									 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+									 		<p class="textoPromedio">{{ $err }}</p>
+									 	</div>
+									 @endforeach
 						</div>
-						
+							@endif
 					</div>
 					<div class="col-xs-12 formulario">
 						<div class="col-xs-6 imgLiderUp">
