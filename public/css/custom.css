@@ -57,14 +57,19 @@ body,html
 {
   font-size: 76.66%;
   color:white;
-  overflow: hidden;
+  
 
+}
+body
+{
+  overflow: hidden;
 }
 body.admin
 {
   padding-top: 10%;
+  overflow: scroll;
 }
-.textoNegro  *
+.textoNegro  *,.textoNegro
 {
   color: #777 !important;
 }

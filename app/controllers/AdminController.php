@@ -312,17 +312,35 @@ class AdminController extends BaseController {
 		$input = Input::all();
 		$rules = array(
 			'name_cat' => 'required',
-			'desc_cat' => 'required'
+			'desc_cat' => 'required',
+			'img'	   => 'required|image|max:3000'
 		);
-		$msg = array('required' => 'El campo :attribute es obligatorio');
+		$msg = array(
+			'required' => 'El campo :attribute es obligatorio',
+			'image'	   => 'El archivo debe ser una imagen',
+			'max'	   => 'El archivo debe tener un maximo de 3Mb'
+			);
 		$attr = array('name_cat' => 'nombre','desc_cat' =>'título');
 		$validator = Validator::make($input, $rules, $msg, $attr);
 		if ($validator->fails()) {
 			return Redirect::to('categoria/nueva')->withErrors($validator)->withInput();
 		}
+		$file = Input::file('img');
+		$img = Image::make($file);
+		$img->interlace();
+		if ($img->width() > $img->height()) {
+			$img->widen(200);
+		}else
+		{
+			$img->heighten(200);
+		}
+		$blank = Image::make('images/b200.jpg')
+		->insert($img,'center')
+		->save('images/categorias/'.$file->getClientOriginalName());
 		$cat = new Cat;
 		$cat->cat_nomb = $input['name_cat'];
 		$cat->cat_desc = $input['desc_cat'];
+		$cat->img 	   = $file->getClientOriginalName();
 		if ($cat->save()) {
 			Session::flash('success', 'Categoría creada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
@@ -353,17 +371,38 @@ class AdminController extends BaseController {
 		$input = Input::all();
 		$rules = array(
 			'name_cat' => 'required',
-			'desc_cat' => 'required'
+			'img'	   => 'required|image|max:3000'
 		);
-		$msg = array('required' => 'El campo :attribute es obligatorio');
+		$msg = array(
+			'required' => 'El campo :attribute es obligatorio',
+			'image'	   => 'El archivo debe ser una imagen',
+			'max'	   => 'El archivo debe tener un maximo de 3Mb'
+		);
 		$attr = array('name_cat' => 'nombre','desc_cat' =>'título');
 		$validator = Validator::make($input, $rules, $msg, $attr);
 		if ($validator->fails()) {
 			return Redirect::to('administrador/ver-categoria/'.$id)->withErrors($validator)->withInput();
 		}
+
+		$file = Input::file('img');
+		$img = Image::make($file);
+		$img->interlace();
+		if ($img->width() > $img->height()) {
+			$img->widen(200);
+		}else
+		{
+			$img->heighten(200);
+		}
+		$blank = Image::make('images/b200.jpg')
+		->insert($img,'center')
+		->save('images/categorias/'.$file->getClientOriginalName());
+
 		$cat = Cat::find($id);
 		$cat->cat_nomb = $input['name_cat'];
 		$cat->cat_desc = $input['desc_cat'];
+		if (Input::hasFile('img')) {
+			$cat->img = $file->getClientOriginalName();
+		}
 		if ($cat->save()) {
 			Session::flash('success', 'Categoría modificada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
