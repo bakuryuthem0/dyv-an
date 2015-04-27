@@ -16,15 +16,15 @@
 				</div>
 				<div class="clearfix"></div>
 				@endif
-				<div class="col-xs-12">
+				<div class="col-xs-12 textoNegro">
 					<div class="col-xs-12">
 						<legend>Nueva sub-categoría</legend>
 						<p class="textoPromedio">Llene el siguiente formulario para registrar una nueva sub-categorías.</p>
 						<hr>
 					</div>						
 				</div>
-				<form action="{{ URL::to('sub-categoria/nueva/enviar') }}" id="formRegister" method="POST">
-					<div class="col-xs-12 formulario">
+				<form action="{{ URL::to('sub-categoria/nueva/enviar') }}" id="formRegister" method="POST" enctype="multipart/form-data">
+					<div class="col-xs-12 formulario textoNegro">
 						<div class="col-xs-12 inputRegister">
 							<p class="textoPromedio">Categoría:</p>
 						</div>
@@ -45,7 +45,7 @@
 							@endif
 						</div>
 					</div>
-					<div class="col-xs-12 formulario">
+					<div class="col-xs-12 formulario textoNegro">
 						<div class="col-xs-12 inputRegister">
 							<p class="textoPromedio">Nombre de la sub-categoría:</p>
 							<p class="bg-info textoPromedio" style="padding:0.5em;text-align:center;">* Nombre para las busquedas(sin acentro)</p>
@@ -62,7 +62,7 @@
 							@endif
 						</div>
 					</div>
-					<div class="col-xs-12 formulario">
+					<div class="col-xs-12 formulario textoNegro">
 						<div class="col-xs-12 inputRegister">
 							<p class="textoPromedio">Título de la sub-categoría:</p>
 							<p class="bg-info textoPromedio" style="padding:0.5em;text-align:center;">* Título para mostrar la sub-categoría (puede tener acentro)</p>
@@ -79,7 +79,23 @@
 							@endif
 						</div>
 					</div>
-
+					<div class="col-xs-12 formulario textoNegro">
+						<div class="col-xs-12 inputRegister">
+							<p class="textoPromedio">Imagen de portada:</p>
+							<p class="bg-info textoPromedio" style="padding:0.5em;text-align:center;">* Debe seleccionar una imagen</p>
+						</div>
+						<div class="col-xs-12 inputRegister">
+							<input type="file" name="img" class="textoPromedio">
+							@if ($errors->has('img'))
+								 @foreach($errors->get('img') as $err)
+								 	<div class="alert alert-danger">
+								 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								 		<p class="textoPromedio">{{ $err }}</p>
+								 	</div>
+								 @endforeach
+							@endif
+						</div>
+					</div>
 					<div class="col-xs-12 formulario">
 						<div class="col-xs-6 imgLiderUp">
 							<input type="submit" id="enviar" name="enviar" value="Enviar" class="btn btn-success btnAlCien">

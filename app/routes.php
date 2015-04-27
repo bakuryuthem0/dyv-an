@@ -101,6 +101,7 @@ Route::group(array('before' =>'auth'),function()
 		//nuevo
 		Route::get('color/nuevo', 'AdminController@getNewColor');
 		Route::post('color/nuevo/enviar','AdminController@postNewColor');
+		Route::get('talla/nueva','AdminController@getNewTalla');
 		//ver
 		Route::get('colores/ver-colores', 'AdminController@getModifyColor');
 		//Modificar

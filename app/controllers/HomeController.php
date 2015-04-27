@@ -34,9 +34,11 @@ class HomeController extends BaseController {
 	}
 	public function getIndex()
 	{
+		$slides = Slides::where('active','=',1)->where('deleted','=',0)->get();
 		$title  = Lang::get('lang.title_index');
 		return View::make('indexs.index')
-		->with('title',$title);
+		->with('title',$title)
+		->with('slides',$slides);
 	}
 
 	public function getShowItem($id)

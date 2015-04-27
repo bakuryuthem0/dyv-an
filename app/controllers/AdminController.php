@@ -313,34 +313,20 @@ class AdminController extends BaseController {
 		$rules = array(
 			'name_cat' => 'required',
 			'desc_cat' => 'required',
-			'img'	   => 'required|image|max:3000'
 		);
 		$msg = array(
 			'required' => 'El campo :attribute es obligatorio',
-			'image'	   => 'El archivo debe ser una imagen',
-			'max'	   => 'El archivo debe tener un maximo de 3Mb'
 			);
 		$attr = array('name_cat' => 'nombre','desc_cat' =>'título');
 		$validator = Validator::make($input, $rules, $msg, $attr);
 		if ($validator->fails()) {
 			return Redirect::to('categoria/nueva')->withErrors($validator)->withInput();
 		}
-		$file = Input::file('img');
-		$img = Image::make($file);
-		$img->interlace();
-		if ($img->width() > $img->height()) {
-			$img->widen(200);
-		}else
-		{
-			$img->heighten(200);
-		}
-		$blank = Image::make('images/b200.jpg')
-		->insert($img,'center')
-		->save('images/categorias/'.$file->getClientOriginalName());
+		
 		$cat = new Cat;
 		$cat->cat_nomb = $input['name_cat'];
 		$cat->cat_desc = $input['desc_cat'];
-		$cat->img 	   = $file->getClientOriginalName();
+
 		if ($cat->save()) {
 			Session::flash('success', 'Categoría creada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
@@ -517,20 +503,71 @@ class AdminController extends BaseController {
 	{
 		$input = Input::all();
 		$rules = array(
-			'cat' 		  => 'required',
-			'name_subcat'  => 'required',
-			'desc_subcat' => 'required'
+			'cat' 		 	=> 'required',
+			'name_subcat'  	=> 'required',
+			'desc_subcat' 	=> 'required',
+			'img'		   	=> 'required|image|max:3000'
+
 		);
-		$msg = array('required' => 'El campo :attribute es obligatorio');
+		$msg = array(
+			'required' => 'El campo :attribute es obligatorio',
+			'image'	   => 'El archivo debe ser una imagen',
+			'max'	   => 'El archivo debe tener un maximo de 3Mb'
+		);
+
 		$attr = array('cat' => 'categoría','name_subcat' => 'nombre','desc_subcat' =>'título');
 		$validator = Validator::make($input, $rules, $msg, $attr);
 		if ($validator->fails()) {
 			return Redirect::to('categoria/nueva-sub-categoria')->withErrors($validator)->withInput();
 		}
+		$auxImg = '';
+		$file = Input::file('img');
+		if (file_exists('images/categorias/'.$file->getClientOriginalName())) {
+			//guardamos la imagen en public/imgs con el nombre original
+            $i = 0;//indice para el while
+            //separamos el nombre de la img y la extensión
+            $info = explode(".",$file->getClientOriginalName());
+            //asignamos de nuevo el nombre de la imagen completo
+            $miImg = $file->getClientOriginalName();
+            //mientras el archivo exista iteramos y aumentamos i
+            while(file_exists('images/slides-top/'.$miImg)){
+                $i++;
+                $miImg = $info[0]."(".$i.")".".".$info[1];              
+            }
+            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
+            $file->move("images/categorias/",$miImg);
+            $img = Image::make('images/categorias/'.$miImg);
+            $img->interlace()
+	           ->save('images/categorias/'.$miImg);
+            if($miImg != $file->getClientOriginalName()){
+            	$auxImg = $miImg;
+            }
+		}else
+		{
+			$file->move("images/categorias/",$file->getClientOriginalName());
+			$img = Image::make('images/categorias/'.$file->getClientOriginalName());
+            $img->interlace()
+            ->save('images/categorias/'.$file->getClientOriginalName());
+            $auxImg = $file->getClientOriginalName();
+		}
+		$img = Image::make('images/categorias/'.$file->getClientOriginalName());
+		$img->interlace();
+		if ($img->width() > $img->height()) {
+			$img->widen(200);
+		}else
+		{
+			$img->heighten(200);
+		}
+		$blank = Image::make('images/b200.jpg')
+		->insert($img,'center')
+		->save('images/categorias/'.$file->getClientOriginalName());
+
 		$subcat = new SubCat;
 		$subcat->cat_id 	= $input['cat'];
-		$subcat->sub_nomb = $input['name_subcat'];
-		$subcat->sub_desc = $input['desc_subcat'];
+		$subcat->sub_nomb 	= $input['name_subcat'];
+		$subcat->sub_desc 	= $input['desc_subcat'];
+		$subcat->img 	   	= $auxImg;
+
 		if ($subcat->save()) {
 			Session::flash('success', 'Sub-categoría creada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
@@ -539,6 +576,13 @@ class AdminController extends BaseController {
 			Session::flash('error', 'Error al guardar la nueva sub-categoría.');
 			return Redirect::to('categoria/nueva-sub-categoria');
 		}
+	}
+
+	public function getNewTalla()
+	{
+		$title = "Nueva talla";
+		return View::make('admin.newTalla')
+		->with('title',$title);
 	}
 	public function getModifySubCat()
 	{
@@ -1190,9 +1234,6 @@ class AdminController extends BaseController {
 		$title = "Pagos aprobados";
 		$title = "Pagos | dyv-an.com";
 		$fac = Facturas::join('usuario','usuario.id','=','facturas.user_id')->where('facturas.pagada','=',1)
-		->leftJoin('estado','usuario.estado','=','estado.id')
-		->leftJoin('municipio','usuario.municipio','=','municipio.id')
-		->leftJoin('parroquia','usuario.parroquia','=','parroquia.id')
 		->orderBy('facturas.id','DESC')
 		->get(array(
 			'facturas.id',
@@ -1205,9 +1246,6 @@ class AdminController extends BaseController {
 			'usuario.apellido',
 			'usuario.telefono',
 			'usuario.email',
-			'estado.nombre as est',
-			'municipio.nombre as mun',
-			'parroquia.nombre as par'
 		));
 		$type = "apr";
 		return View::make('admin.showPayment')

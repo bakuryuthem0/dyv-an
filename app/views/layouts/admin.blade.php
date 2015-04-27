@@ -98,6 +98,24 @@
                           </li>
                           <li class="dropdown-submenu">
                             <a href="#" >
+                              Tallas
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                              <li>
+                                <a href="{{ URL::to('talla/nueva') }}">
+                                  <i class="fa fa-plus"></i> Nueva
+                                </a>
+                              </li>
+                              <li>
+                                <a href="{{ URL::to('talla/ver-tallas') }}">
+                                  <i class="fa fa-money"></i>
+                                  Modificar
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li class="dropdown-submenu">
+                            <a href="#" >
                               Articulos
                             </a>
                             <ul class="dropdown-menu" role="menu">
@@ -166,26 +184,6 @@
                               
                             </ul>
                           </li>
-                          <li class="dropdown-submenu">
-                            <a href="#">Publicidad</a>
-                            <ul class="dropdown-menu" role="menu">
-                              <li>
-                                <a href="{{ URL::to('administrador/nueva-publicidad') }}">
-                                  Agregar Publicidad
-                                </a>
-                              </li>
-                            </ul>
-                          </li>
-                           <li class="dropdown-submenu">
-                            <a href="#">Promociones</a>
-                            <ul class="dropdown-menu" role="menu">
-                              <li>
-                                <a href="{{ URL::to('administrador/nueva-promocion') }}">
-                                  Agregar Promociones
-                                </a>
-                              </li>
-                            </ul>
-                          </li>
                         </ul>
                       </li> 
                       <li class="textoPromedio"><a href="{{ URL::to('cerrar-sesion') }}" class="logout">Cerrar sesión</a></li>
@@ -220,15 +218,6 @@
           ga('send', 'pageview');
 
         </script>
-        <!--Start of Zopim Live Chat Script-->
-        <script type="text/javascript">
-        window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
-        d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
-        _.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute('charset','utf-8');
-        $.src='//v2.zopim.com/?2qPOZqZ2IaypF8Jd7TLchBaYy0CjQwsP';z.t=+new Date;$.
-        type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
-        </script>
-        <!--End of Zopim Live Chat Script-->
        @yield('postscript')
     </body>
 </html>

@@ -58,23 +58,7 @@
 							@endif
 						</div>
 					</div>
-					<div class="col-xs-12 formulario textoNegro">
-						<div class="col-xs-12 inputRegister">
-							<p class="textoPromedio">Imagen de portada:</p>
-							<p class="bg-info textoPromedio" style="padding:0.5em;text-align:center;">* Debe seleccionar una imagen</p>
-						</div>
-						<div class="col-xs-12 inputRegister">
-							<input type="file" name="img" class="textoPromedio">
-							@if ($errors->has('img'))
-								 @foreach($errors->get('img') as $err)
-								 	<div class="alert alert-danger">
-								 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-								 		<p class="textoPromedio">{{ $err }}</p>
-								 	</div>
-								 @endforeach
-							@endif
-						</div>
-					</div>
+					
 					<div class="col-xs-12 formulario">
 						<div class="col-xs-6 imgLiderUp">
 							<input type="submit" id="enviar" name="enviar" value="Enviar" class="btn btn-success btnAlCien">
