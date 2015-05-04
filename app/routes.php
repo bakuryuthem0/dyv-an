@@ -17,6 +17,11 @@ Route::post('contactenos','HomeController@postContact');
 
 Route::get('cambiar-lenguaje/{lang}','HomeController@changeLang');
 
+
+Route::get('articulos/categoria/{id}','HomeController@getCaTbuscar');
+Route::get('articulos/sub-categoria/{id}','HomeController@getSubCatBuscar');
+
+Route::post('articulos/categoria/cargar-item','HomeController@postItemLoad');
 Route::group(array('before' =>'no_auth'),function()
 {
 	Route::get('iniciar-sesion','AuthController@getLogin');
@@ -102,6 +107,11 @@ Route::group(array('before' =>'auth'),function()
 		Route::get('color/nuevo', 'AdminController@getNewColor');
 		Route::post('color/nuevo/enviar','AdminController@postNewColor');
 		Route::get('talla/nueva','AdminController@getNewTalla');
+		Route::post('talla/nueva/enviar','AdminController@postNewTalla');
+		Route::get('talla/ver-tallas','AdminController@getShowTallas');
+		Route::post('talla/eliminar','AdminController@postElimTalla');
+		Route::get('administrador/ver-tallas/{id}','AdminController@getMdfTalla');
+		Route::post('talla/modificar/enviar/{id}','AdminController@postMdfTalla');
 		//ver
 		Route::get('colores/ver-colores', 'AdminController@getModifyColor');
 		//Modificar

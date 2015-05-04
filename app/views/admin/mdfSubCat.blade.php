@@ -23,7 +23,7 @@
 						<hr>
 					</div>						
 				</div>
-				<form action="{{ URL::to('administrador/ver-sub-categoria/modificar/'.$subcat->id) }}" id="formRegister" method="POST">
+				<form action="{{ URL::to('administrador/ver-sub-categoria/modificar/'.$subcat->id) }}" id="formRegister" method="POST" enctype="multipart/form-data">
 					<div class="col-xs-12 formulario">
 						<div class="col-xs-12 inputRegister">
 							<p class="textoPromedio">Categoría:</p>
@@ -98,7 +98,7 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td><img src="{{ asset('images/categorias/'.$cat->img) }}"></td>
+											<td><img src="{{ asset('images/categorias/'.$subcat->img) }}"></td>
 											<td style="vertical-align:middle;"><input type="file" name="img" class="textoPromedio"></td>
 										</tr>
 									</tbody>

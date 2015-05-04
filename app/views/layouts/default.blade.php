@@ -24,9 +24,7 @@
     </head>
     <body>
       <div class="carousel">
-          <div class="front"><img src="{{ asset('images/ny1.jpg') }}"/></div>
-          <div class="back"><img src="{{ asset('images/ny2.jpg') }}" /></div>
-          <div class="back"><img src="{{ asset('images/ny3.jpg') }}" /></div>
+          {{ ShowSlides::show() }}
       </div>
       <header @if($title != "Home" && $title != "Inicio" || Auth::check())class="active"@endif>
         <nav>

@@ -1,61 +1,80 @@
 @extends('layouts.default')
 
 @section('content')
-<div class="row" style="margin-top:2em;">
-  <div class="container">
-    <div class="col-xs-12">
-      <div class="col-xs-2">
-        <div class="col-xs-12 contdeColor">
-          <legend>Categorías</legend>
-          @foreach($cat as $c)
-            <label class="textoPromedio"><i class="fa fa-plus-circle iconToggle" data-toggle="collapse" href="#expand{{ $c->id }}"></i> 
-              <a href="{{ URL::to('categorias/'.$c->id) }}" style="color:black;">{{ $c->cat_nomb }}</a></label>
-            <ul class="collapse textoPromedio" id="expand{{ $c->id }}">
-              @foreach($subcat[$c->id] as $j => $s)
-                @if(isset($subcat[$c->id][$j]))
-                  <li>
-                    <a href="{{ URL::to('categorias/'.str_replace(' ','-',$subcat[$c->id][$j]['sub_nomb']).'/'.$subcat[$c->id][$j]['id']) }}" style="color:black;">{{ $subcat[$c->id][$j]['sub_nomb'] }}</a>
-                    </li>
-                @endif  
-              @endforeach
-              
-            </ul>
-          @endforeach
-        </div>
-     
-      </div>
-      <div class="col-xs-10 contdeColor" style="padding-right: 0px;">
-        @if(count($art)>0)
-        @if(!isset($type))
-        <div class="alert alert-success">
-          <p class="textoPromedio" style="text-align:center;">Resultados encontrados para <strong>{{ $busq }}</strong></p>
-        </div>
-        @else
-          <h2 style="text-align:center;">{{ $busq }}</h2>
-        @endif
-
-        @foreach($art as $a)
-          <a href="{{ URL::to('articulo/'.$a->id) }}">
-            <div class="col-xs-3 contArtPrinc">
+<div class="hidden-container @if(Auth::check())container-in@endif">
+  <div class="titulo">
+    <h1>
+      {{ $busq }} <a href="{{ URL::previous() }}" class="btn btn-volver" style="float:right;">Volver</a>
+    </h1>
+  </div>
+  <div class="contenido">
+     @foreach($art as $a)
+            <div class="col-xs-3 contArtPrinc" data-id="{{ $a->id }}" data-toggle="modal" data-target="#showItem">
               <img src="{{ asset('images/items/'.$a->image) }}" class="imgArtPrinc imgPrinc">
               <ul class="textoPromedio ulNoStyle">
                 <li>
-                  <label style="color:black;">{{ $a->item_nomb.' - Cod: '.$a->item_cod }}</label>
+                  <label>{{ $a->item_nomb.' - Cod: '.$a->item_cod }}</label>
                 </li>
                 <li>
-                  <p style="color:red;">Bs.{{ $a->item_precio }}</p>
+                  <p>Bs.{{ $a->item_precio }}</p>
                 </li>
               </ul>
             </div>
-          </a>
         @endforeach
-        @else
-          <div class="alert alert-warning">
-              <p class="textoPromedio" style="text-align:center;">No se encontraron articulos {{ 'para: <strong>'.$busq.'</strong>' }}</p>
+  </div>
+</div>
+
+<div class="modal fade" id="showItem" tabindex="-1" role="dialog" aria-labelledby="showItem" aria-hidden="true">
+  <div class="showItemContent modal-dialog imgLiderUp">
+    <div class="modal-content">
+      <div class="col-xs-12">
+        <div class="col-xs-12 contCentrado contdeColor">
+          <legend class="ItemTitle textoNegro"></legend>
+          <div class="col-xs-4 textoPromedio contDescItem">
+            <div class="col-xs-12" style="word-break: break-word;">
+              <label class="description textoNegro">Descripción</label>
+              <div class="contDescription textoNegro"></div>
+            </div>
           </div>
-        @endif
+          <div class="col-xs-4 contImageItem">
+                 
+          </div>
+          <div class="col-xs-4 textoPromedio ">
+            <div class="col-xs-12">
+              <label class="textoNegro">PRECIO EN GUACAMAYA STORES:</label>
+            </div>
+            <div class="col-xs-12 formulario">
+              <label class="textoNegro">Talla</label>
+              <select class="choose form-control">
+                <option value="">Seleccione una talla</option>
+              </select>
+            </div>
+            <div class="col-xs-12 formulario">
+              <label class="textoNegro">Color</label>
+              <ul class="colores">
+                <li class="removable textoNegro">Elija una talla</li>
+              </ul>
+              <input type="hidden" class="values" value="" data-misc-id="">
+            </div>
+            
+            @if(Auth::check() && Auth::user()->role != 1)
+            <div class="col-xs-12 formulario">
+                <button class="btn btn-danger btnAgg" data-toggle="modal" data-target="#addCart" data-cod-value="" data-price-value="" data-name-value="" value="">Agregar al carrito.</button>
+            </div>
+            @else
+            <div class="col-xs-12 formulario">
+                <button class="btn btn-danger" data-toggle="modal" data-target="#loginModal">Agregar al carrito.</button>
+            </div>
+            @endif
+          </div>
+        </div>
+        <div class="col-xs-12 contImagesMini"></div>
       </div>
+      <div class="clearfix"></div>
     </div>
   </div>
+</div>
+<div class="contLoading">
+  <img src="{{ asset('images/loading.gif') }}">
 </div>
 @stop

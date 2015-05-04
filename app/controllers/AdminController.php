@@ -91,7 +91,6 @@ class AdminController extends BaseController {
 			'item_cod'  => 'required|unique:item',
 			'item_nomb' => 'required|min:4',
 			'item_desc' => 'required|min:4',
-			'item_stock'=> 'required|min:1'
 		);
 		$msg = array(
 			'required' => 'El campo :attribute es obligatorio',
@@ -104,7 +103,6 @@ class AdminController extends BaseController {
 			'item_cod'   => 'artículo',
 			'item_nomb'  => 'artículo',
 			'item_desc'  => 'artículo',
-			'item_stock' => 'cantidad de artículos'
 		);
 		$validation = Validator::make($input, $rules, $msg, $attr);
 		if ($validation->fails()) {
@@ -120,7 +118,6 @@ class AdminController extends BaseController {
 			$item->item_cod   = $input['item_cod'];
 			$item->item_nomb  = $input['item_nomb'];
 			$item->item_desc  = $input['item_desc'];
-			$item->item_stock = $input['item_stock'];
 			$item->item_precio= $input['item_precio'];
 			$item->save();
 			$id = $item->id;
@@ -251,17 +248,19 @@ class AdminController extends BaseController {
 	{
 		$input = Input::all();
 		$rules = array(
-			'talla' => 'required',
-			'color' => 'required'
+			'item_stock' 	=> 'required|min:1',
+			'talla' 		=> 'required',
+			'color' 		=> 'required'
 		);
 		$msg = array('required' => 'El campo :attribute es obligatorio');
 		$validator = Validator::make($input, $rules,$msg);
 		if ($validator->fails()) {
-			return Redirect::to('administrador/nuevo-articulo/continuar/'.$input['art'].'/'.$input['misc'])->withErrors($Validator);
+			return Redirect::to('administrador/nuevo-articulo/continuar/'.$input['art'].'/'.$input['misc'])->withErrors($validator);
 		}
 		$misc = Misc::find($input['misc']);
 		$misc->item_talla = $input['talla'];
 		$misc->item_color = $input['color'];
+		$misc->item_stock = $input['item_stock'];
 		if ($misc->save()) {
 			$misc = new Misc;
 			$misc->item_id = $input['art'];
@@ -272,17 +271,19 @@ class AdminController extends BaseController {
 	public function postSaveNew(){
 		$input = Input::all();
 		$rules = array(
-			'talla' => 'required',
-			'color' => 'required'
+			'item_stock' => 'required',
+			'talla' 	 => 'required',
+			'color' 	 => 'required'
 		);
 		$msg = array('required' => 'El campo :attribute es obligatorio');
 		$validator = Validator::make($input, $rules,$msg);
 		if ($validator->fails()) {
-			return Redirect::to('administrador/nuevo-articulo/continuar/'.$input['art'].'/'.$input['misc'])->withErrors($Validator);
+			return Redirect::to('administrador/nuevo-articulo/continuar/'.$input['art'].'/'.$input['misc'])->withErrors($validator);
 		}
 		$misc = Misc::find($input['misc']);
 		$misc->item_talla = $input['talla'];
 		$misc->item_color = $input['color'];
+		$misc->item_stock = $input['item_stock'];
 		if ($misc->save()) {
 			Session::flash('success', 'Articulo creado correctamente.');
 			return Redirect::to('administrador/inicio');
@@ -294,12 +295,99 @@ class AdminController extends BaseController {
 		$art = Items::where('deleted','=',0)->get(array(
 			'item.item_cod',
 			'item.item_nomb',
-			'item.item_stock',
 			'item.id'
 		));
 		return View::make('admin.showArt')
 		->with('title',$title)
 		->with('art',$art);
+	}
+	public function getNewTalla()
+	{
+		$title = "Nueva Talla";
+		return View::make('admin.newTalla')
+		->with('title',$title);
+	}
+	public function postNewTalla()
+	{
+		$inp = Input::all();
+		$rules = array(
+			'name_talla' => 'required',
+			'desc_talla' => 'required'
+		);
+		$msg = array(
+			'required' => 'El campo es obligatorio'
+		);
+		$validator = Validator::make($inp, $rules, $msg);
+		if ($validator->fails()) {
+			
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+		$talla = New Tallas;
+
+		$talla->talla_nomb = $inp['name_talla'];
+		$talla->talla_desc = $inp['desc_talla'];
+		if ($talla->save()) {
+			Session::flash('success','Talla creada satisfactoriamente');
+			return Redirect::to('administrador/inicio');
+		}else
+		{
+			Session::flash('danger', 'Error al crear la talla');
+			return Redirect::back();
+		}
+	}
+	public function getShowTallas()
+	{
+		$title = "Ver tallas";
+		$tallas = Tallas::where('deleted','=',0)->get();
+		return View::make('admin.showTallas')
+		->with('talla',$tallas)
+		->with('title',$title);
+	}
+	public function postElimTalla()
+	{
+		if (Request::ajax()) {
+			$id = Input::get('id');
+			$tallas = Tallas::find($id);
+			$tallas->deleted = 1;
+			$tallas->save();
+			return Response::json(array('type' => 'success','msg' => 'Categoría eliminada correctamente'));
+		}
+	}
+	public function getMdfTalla($id)
+	{
+		$talla = Tallas::find($id);
+		$title = "Modificar talla: ".$talla->talla_nomb;
+		return View::make('admin.mdfTalla')
+		->with('title',$title)
+		->with('talla',$talla);
+	}
+	public function postMdfTalla($id)
+	{
+		$inp = Input::all();
+		$rules = array(
+			'name_talla' => 'required',
+			'desc_talla' => 'required'
+		);
+		$msg = array(
+			'required' => 'El campo es obligatorio'
+		);
+		$validator = Validator::make($inp, $rules, $msg);
+		if ($validator->fails()) {
+			
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+		$talla = Tallas::find($id);
+
+		$talla->talla_nomb = $inp['name_talla'];
+		$talla->talla_desc = $inp['desc_talla'];
+		if ($talla->save()) {
+			Session::flash('success','Talla modificada satisfactoriamente');
+			return Redirect::to('administrador/inicio');
+		}else
+		{
+			Session::flash('danger', 'Error al modificar la talla');
+			return Redirect::back();
+		}
 	}
 	public function getNewCat()
 	{
@@ -312,21 +400,17 @@ class AdminController extends BaseController {
 		$input = Input::all();
 		$rules = array(
 			'name_cat' => 'required',
-			'desc_cat' => 'required',
+			'desc_cat' => 'required'
 		);
-		$msg = array(
-			'required' => 'El campo :attribute es obligatorio',
-			);
+		$msg = array('required' => 'El campo :attribute es obligatorio');
 		$attr = array('name_cat' => 'nombre','desc_cat' =>'título');
 		$validator = Validator::make($input, $rules, $msg, $attr);
 		if ($validator->fails()) {
 			return Redirect::to('categoria/nueva')->withErrors($validator)->withInput();
 		}
-		
 		$cat = new Cat;
 		$cat->cat_nomb = $input['name_cat'];
 		$cat->cat_desc = $input['desc_cat'];
-
 		if ($cat->save()) {
 			Session::flash('success', 'Categoría creada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
@@ -357,38 +441,17 @@ class AdminController extends BaseController {
 		$input = Input::all();
 		$rules = array(
 			'name_cat' => 'required',
-			'img'	   => 'required|image|max:3000'
+			'desc_cat' => 'required'
 		);
-		$msg = array(
-			'required' => 'El campo :attribute es obligatorio',
-			'image'	   => 'El archivo debe ser una imagen',
-			'max'	   => 'El archivo debe tener un maximo de 3Mb'
-		);
+		$msg = array('required' => 'El campo :attribute es obligatorio');
 		$attr = array('name_cat' => 'nombre','desc_cat' =>'título');
 		$validator = Validator::make($input, $rules, $msg, $attr);
 		if ($validator->fails()) {
 			return Redirect::to('administrador/ver-categoria/'.$id)->withErrors($validator)->withInput();
 		}
-
-		$file = Input::file('img');
-		$img = Image::make($file);
-		$img->interlace();
-		if ($img->width() > $img->height()) {
-			$img->widen(200);
-		}else
-		{
-			$img->heighten(200);
-		}
-		$blank = Image::make('images/b200.jpg')
-		->insert($img,'center')
-		->save('images/categorias/'.$file->getClientOriginalName());
-
 		$cat = Cat::find($id);
 		$cat->cat_nomb = $input['name_cat'];
 		$cat->cat_desc = $input['desc_cat'];
-		if (Input::hasFile('img')) {
-			$cat->img = $file->getClientOriginalName();
-		}
 		if ($cat->save()) {
 			Session::flash('success', 'Categoría modificada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
@@ -503,24 +566,23 @@ class AdminController extends BaseController {
 	{
 		$input = Input::all();
 		$rules = array(
-			'cat' 		 	=> 'required',
+			'cat' 		  	=> 'required',
 			'name_subcat'  	=> 'required',
 			'desc_subcat' 	=> 'required',
-			'img'		   	=> 'required|image|max:3000'
-
+			'img'			=> 'required|image',	
 		);
 		$msg = array(
-			'required' => 'El campo :attribute es obligatorio',
-			'image'	   => 'El archivo debe ser una imagen',
-			'max'	   => 'El archivo debe tener un maximo de 3Mb'
+			'required' => 'El campo es obligatorio',
+			'image'	   => 'El archivo debe ser una imagen'
 		);
-
-		$attr = array('cat' => 'categoría','name_subcat' => 'nombre','desc_subcat' =>'título');
-		$validator = Validator::make($input, $rules, $msg, $attr);
+		$validator = Validator::make($input, $rules, $msg);
 		if ($validator->fails()) {
 			return Redirect::to('categoria/nueva-sub-categoria')->withErrors($validator)->withInput();
 		}
-		$auxImg = '';
+		$subcat = new SubCat;
+		$subcat->cat_id   = $input['cat'];
+		$subcat->sub_nomb = $input['name_subcat'];
+		$subcat->sub_desc = $input['desc_subcat'];
 		$file = Input::file('img');
 		if (file_exists('images/categorias/'.$file->getClientOriginalName())) {
 			//guardamos la imagen en public/imgs con el nombre original
@@ -530,44 +592,43 @@ class AdminController extends BaseController {
             //asignamos de nuevo el nombre de la imagen completo
             $miImg = $file->getClientOriginalName();
             //mientras el archivo exista iteramos y aumentamos i
-            while(file_exists('images/slides-top/'.$miImg)){
+            while(file_exists('images/categorias/'.$miImg)){
                 $i++;
                 $miImg = $info[0]."(".$i.")".".".$info[1];              
             }
             //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
             $file->move("images/categorias/",$miImg);
             $img = Image::make('images/categorias/'.$miImg);
-            $img->interlace()
+            if ($img->width() > $img->height()) {
+				$img->widen(300);
+			}else
+			{
+				$img->heighten(300);
+			}
+			$blank = Image::make('images/b200.jpg');
+			$blank->insert($img,'center')
+	           ->interlace()
 	           ->save('images/categorias/'.$miImg);
             if($miImg != $file->getClientOriginalName()){
-            	$auxImg = $miImg;
+            	$subcat->img = $miImg;
             }
 		}else
 		{
 			$file->move("images/categorias/",$file->getClientOriginalName());
 			$img = Image::make('images/categorias/'.$file->getClientOriginalName());
-            $img->interlace()
+            if ($img->width() > $img->height()) {
+				$img->widen(300);
+			}else
+			{
+				$img->heighten(300);
+			}
+			$blank = Image::make('images/b200.jpg');
+			$blank->insert($img,'center')
+			->interlace()
             ->save('images/categorias/'.$file->getClientOriginalName());
-            $auxImg = $file->getClientOriginalName();
+            $subcat->img = $file->getClientOriginalName();
 		}
-		$img = Image::make('images/categorias/'.$file->getClientOriginalName());
-		$img->interlace();
-		if ($img->width() > $img->height()) {
-			$img->widen(200);
-		}else
-		{
-			$img->heighten(200);
-		}
-		$blank = Image::make('images/b200.jpg')
-		->insert($img,'center')
-		->save('images/categorias/'.$file->getClientOriginalName());
-
-		$subcat = new SubCat;
-		$subcat->cat_id 	= $input['cat'];
-		$subcat->sub_nomb 	= $input['name_subcat'];
-		$subcat->sub_desc 	= $input['desc_subcat'];
-		$subcat->img 	   	= $auxImg;
-
+		
 		if ($subcat->save()) {
 			Session::flash('success', 'Sub-categoría creada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
@@ -576,13 +637,6 @@ class AdminController extends BaseController {
 			Session::flash('error', 'Error al guardar la nueva sub-categoría.');
 			return Redirect::to('categoria/nueva-sub-categoria');
 		}
-	}
-
-	public function getNewTalla()
-	{
-		$title = "Nueva talla";
-		return View::make('admin.newTalla')
-		->with('title',$title);
 	}
 	public function getModifySubCat()
 	{
@@ -630,6 +684,53 @@ class AdminController extends BaseController {
 		$subcat->cat_id   = $input['cat'];
 		$subcat->sub_nomb = $input['name_subcat'];
 		$subcat->sub_desc = $input['desc_subcat'];
+		if (Input::hasFile('img')) {
+			$file = Input::file('img');
+			if (file_exists('images/categorias/'.$file->getClientOriginalName())) {
+				//guardamos la imagen en public/imgs con el nombre original
+	            $i = 0;//indice para el while
+	            //separamos el nombre de la img y la extensión
+	            $info = explode(".",$file->getClientOriginalName());
+	            //asignamos de nuevo el nombre de la imagen completo
+	            $miImg = $file->getClientOriginalName();
+	            //mientras el archivo exista iteramos y aumentamos i
+	            while(file_exists('images/categorias/'.$miImg)){
+	                $i++;
+	                $miImg = $info[0]."(".$i.")".".".$info[1];              
+	            }
+	            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
+	            $file->move("images/categorias/",$miImg);
+	            $img = Image::make('images/categorias/'.$miImg);
+	            if ($img->width() > $img->height()) {
+					$img->widen(300);
+				}else
+				{
+					$img->heighten(300);
+				}
+				$blank = Image::make('images/b200.jpg');
+				$blank->insert($img,'center')
+		           ->interlace()
+		           ->save('images/categorias/'.$miImg);
+	            if($miImg != $file->getClientOriginalName()){
+	            	$subcat->img = $miImg;
+	            }
+			}else
+			{
+				$file->move("images/categorias/",$file->getClientOriginalName());
+				$img = Image::make('images/categorias/'.$file->getClientOriginalName());
+	            if ($img->width() > $img->height()) {
+					$img->widen(300);
+				}else
+				{
+					$img->heighten(300);
+				}
+				$blank = Image::make('images/b200.jpg');
+				$blank->insert($img,'center')
+				->interlace()
+	            ->save('images/categorias/'.$file->getClientOriginalName());
+	            $subcat->img = $file->getClientOriginalName();
+			}
+		}
 		if ($subcat->save()) {
 			Session::flash('success', 'Sub-categoría modificada satisfactoriamente.');
 			return Redirect::to('administrador/inicio');
@@ -882,30 +983,152 @@ class AdminController extends BaseController {
 		$title ="Nueva promocion";
 		return View::make('admin.newPromotion')->with('title',$title);
 	}
+	public function getPosPromotion($pos)
+	{
+		$title = "Modificar promocion";
+		$prom = Publicidad::where('position','=',$pos)->first();
+		return View::make('admin.mdfProm')
+		->with('title',$title)
+		->with('prom',$prom);
+	}
+	public function postProcPub()
+	{
+		$id = Input::get('pos');
+		$inp = Input::all();
+		$prom = Publicidad::find($id);
+		if (Input::hasFile('img')) {
+			$file = Input::file('img');
+			if (file_exists('images/pub/'.$file->getClientOriginalName())) {
+				//guardamos la imagen en public/imgs con el nombre original
+	            $i = 0;//indice para el while
+	            //separamos el nombre de la img y la extensión
+	            $info = explode(".",$file->getClientOriginalName());
+	            //asignamos de nuevo el nombre de la imagen completo
+	            $miImg = $file->getClientOriginalName();
+	            //mientras el archivo exista iteramos y aumentamos i
+	            while(file_exists('images/pub/'.$miImg)){
+	                $i++;
+	                $miImg = $info[0]."(".$i.")".".".$info[1];              
+	            }
+	            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
+	            $file->move("images/pub/",$miImg);
+				$img = Image::make('images/pub/'.$miImg);
+				if ($img->width() > $img->height()) {
+					$img->widen(200);
+				}else
+				{
+					$img->heighten(200);
+				}
+				$blank = Image::make('images/blank2.jpg');
+				$blank->insert($img,'center')
+	           ->interlace()
+	           ->save('images/pub/'.$miImg);
+	            if($miImg != $file->getClientOriginalName()){
+	            	$prom->image = $miImg;
+	            }
+			}else
+			{
+				$file->move("images/pub/",$file->getClientOriginalName());
+				$img = Image::make('images/pub/'.$file->getClientOriginalName());
+				if ($img->width() > $img->height()) {
+					$img->widen(200);
+				}else
+				{
+					$img->heighten(200);
+				}
+				$blank = Image::make('images/blank2.jpg');
+		        $blank->insert($img,'center')
+	            ->interlace()
+            	->save('images/pub/'.$file->getClientOriginalName());
+				
+				
+	          	$prom->image = $file->getClientOriginalName();
+			}
+		}
+		if (!empty($inp['descuento'])) {
+			$prom->percent = $inp['descuento'];		
+		}
+		if (Input::has('active')) {
+			$prom->active = 1;
+		}else
+		{			
+			$prom->active = 0;
+			$items = Items::where('deleted','=',0)->where('item_prom','=',$prom->id)->get();
+			foreach($items as $i)
+			{
+				$i->item_prom = 0;
+				$i->save();
+			}
+		}
+		if ($prom->save()) {
+			Session::flash('success', 'Promocion editada satisfactoriamente.');
+			return Redirect::to('administrador/promocion/agregar-quitar-articulos/'.$id);
+		}else
+		{
+			Session::flash('error', 'Error al guardar la promocion');
+			return Redirect::back();
+		}
+	}
+	public function getAddDelItemProm($id)
+	{
+		$title = "Agregar/Quitar items";
+		$prom = Publicidad::find($id);
+		$b = Items::where('deleted','=','0')
+		->where(function($query) use ($id)
+		{
+			$query->where('item_prom','=',0)
+			->orWhere('item_prom','=',$id);
+		})
+		->get(array('item_cod','id','item_prom'));
+		$item = array();
+		$i = 0;
+		foreach($b as $a){
+			$aux		= Misc::where('item_id','=',$a->id)->where('deleted','=',0)->first();
+			$b->img[$i]	= Images::where('misc_id','=',$aux->id)->where('deleted','=',0)->pluck('image'); 
+			$item[$i] 	= $b;
+			$i++;
+
+		}
+		return View::make('admin.mdfPromItem')
+		->with('title',$title)
+		->with('prom',$prom)
+		->with('items',$item);
+
+	}
+	public function postAddDelItemProm()
+	{
+		$id   = Input::get('id');
+		$val  = Input::get('val');
+		$item = Items::where('id','=',$id)->first();
+		$item->item_prom = $val;
+		if($item->save())
+		{
+			return Response::json(array('type' => 'success','msg' => 'Articulo agregado satisfactoriamente.'));
+		}else
+		{
+			return Response::json(array('type' => 'danger','msg' => 'Error al agregar el articulo.'));
+		}
+	}
 	public function postNewPub()
 	{
 		$input = Input::all();
 		$rules = array(
 			'img'  		=> 'required|image|max:2000',
-			'item' 		=> 'required|exists:item,item_cod,deleted,0',
 			'position'  => 'required'
 		);
 		$msg = array(
 			'required' => ':attribute es obligatorio',
 			'image'	   => ':attribute debe ser una imagen',
 			'max'	   => 'La imagen no debe ser mayor a 2Mb',
-			'exists'   => 'El articulo no existe o a sido borrado'
 		);
 		$attr = array(
 			'img' 	=> 'El campo imagen',
-			'item'  => 'El campo codigo del articulo',
 			'position' => 'Error al enviar algunos datos'
 		);
 		$validator = Validator::make($input, $rules, $msg, $attr);
 		if ($validator->fails()) {
 			return Redirect::back()->withErrors($validator);
 		}
-		$id = Items::where('item_cod','=',$input['item'])->pluck('id');
 		if ($input['position'] == 'top') {
 			$pub = Publicidad::find(1);
 		}elseif($input['position'] == 'left')
@@ -914,91 +1137,19 @@ class AdminController extends BaseController {
 		}elseif($input['position'] == 'right')
 		{
 			$pub = Publicidad::find(3);
-		}elseif($input['position'] == 'first')
-		{
-			$pub = Publicidad::find(4);
-		}elseif($input['position'] == 'second')
-		{
-			$pub = Publicidad::find(5);
 		}
 
-		$file = Input::file('img');
-		if (file_exists('images/pub/'.$file->getClientOriginalName())) {
-			//guardamos la imagen en public/imgs con el nombre original
-            $i = 0;//indice para el while
-            //separamos el nombre de la img y la extensión
-            $info = explode(".",$file->getClientOriginalName());
-            //asignamos de nuevo el nombre de la imagen completo
-            $miImg = $file->getClientOriginalName();
-            //mientras el archivo exista iteramos y aumentamos i
-            while(file_exists('images/pub/'.$miImg)){
-                $i++;
-                $miImg = $info[0]."(".$i.")".".".$info[1];              
-            }
-            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
-            $file->move("images/pub/",$miImg);
-            if($input['position'] == 'first' || $input['position'] == 'second')
-			{
-				$img = Image::make('images/pub/'.$miImg);
-				if ($img->width() > 200) {
-					$img->widen(200);
-				}elseif($img->height() > 200)
-				{
-					$img->heighten(200);
-				}
-				$blank = Image::make('images/blank2.jpg');
-				$blank->insert($img,'center')
-	           ->interlace()
-	           ->save('images/pub/'.$miImg);
-			}else
-			{
-	            $img = Image::make('images/pub/'.$miImg)
-		           ->interlace()
-		           ->save('images/pub/'.$miImg);
-			}
-            if($miImg != $file->getClientOriginalName()){
-            	$pub->image = $miImg;
-            }
-		}else
-		{
-			$file->move("images/pub/",$file->getClientOriginalName());
-			if($input['position'] == 'first' || $input['position'] == 'second')
-			{
-				$img = Image::make('images/pub/'.$file->getClientOriginalName());
-				if ($img->width > 200) {
-					$img->widen(200);
-				}elseif($img->height() > 200)
-				{
-					$img->heighten(200);
-				}
-				$blank = Image::make('images/blank2.jpg');
-		        $blank->insert($img,'center')
-	            ->interlace()
-            	->save('images/pub/'.$file->getClientOriginalName());
-			}else
-			{
-	            $img = Image::make('images/pub/'.$file->getClientOriginalName())->interlace()
-            	->save('images/pub/'.$file->getClientOriginalName());
-			}
-			
-          	$pub->image = $file->getClientOriginalName();
-		}
-		$pub->item_id = $id;
+		
 		if($pub->save())
 		{
-			if($input['position'] == 'first' || $input['position'] == 'second')
-			{
-				$url = "administrador/nueva-promocion";
-			}else
-			{
-				$url = "administrador/nueva-publicidad";
-			}
+		
+			$url = "administrador/nueva-publicidad";
 			Session::flash('success','Publicidad guardada correctamente');
 			return Redirect::to($url);
 		}else
 		{
 			Session::flash('danger','Error al guardar la publicidad');
-			return Redirect::to($url);
+			return Redirect::back();
 		}
 	}
 	public function postElimItem()
@@ -1025,10 +1176,16 @@ class AdminController extends BaseController {
 	public function getMdfItem($id)
 	{
 		$item = Items::find($id);
-		$misc = Misc::where('item_id','=',$item->id)->first();
-		$images = Images::where('misc_id','=',$misc->id)->where('deleted','=',0)->get();
+		$misc = Misc::where('item_id','=',$item->id)->get();
+		$aux = array();
+		$j = 0;
+		foreach ($misc as $m) {
+			$aux[$j] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get();
+			$j++;
+		}
+		$item->img = $aux;
+		
 		$item->misc = $misc;
-		$item->img  = $images;
 		$title = "Modificar articulo: ".$item->item_nomb;
 
 		$cat = Cat::where('deleted','=',0)->get();
@@ -1058,14 +1215,8 @@ class AdminController extends BaseController {
 		if ($validator->fails()) {
 			return Redirect::back()->withErrors($validation);
 		}
-		$misc = Misc::find($inp['misc']);
 		$item = Items::find($inp['item']);
-		if (!empty($inp['color'])) {
-			$misc->item_color = $inp['color'];
-		}
-		if (!empty($inp['talla'])) {
-			$misc->item_talla = $inp['talla'];
-		}
+
 		if (!empty($inp['cat'])) {
 			$item->item_cat = $inp['cat'];
 		}
@@ -1085,6 +1236,41 @@ class AdminController extends BaseController {
 		{
 			Session::flash('dager', 'Error al modificar el articulo.');
 			return Redirect::back();
+		}
+	}
+	public function postMdfMisc()
+	{
+		$inp = Input::all();
+		$misc = Misc::find($inp['misc']);
+		if (!empty($inp['talla']) && $inp['talla'] != $misc->item_talla) {
+			$misc->item_talla = $inp['talla'];
+		}elseif (!empty($inp['color']) && $inp['color'] != $misc->item_color) {
+			$misc->item_color = $inp['color'];
+		}
+		if($misc->save())
+		{
+			Session::flash('success', 'Articulo modificado satisfactoriamente.');
+			return Redirect::back();
+		}else
+		{
+			Session::flash('dager', 'Error al modificar el articulo.');
+			return Redirect::back();
+		}
+
+	}
+	public function postElimImg()
+	{
+		$id = Input::get('id');
+		$img = Images::find($id);
+		$img->deleted = 1;
+		if($img->save())
+		{
+			$image = $img->image;
+			File::delete('images/items/'.$image);
+			return Response::json(array('type' => 'success','msg' => 'Imagen borrada satisfactoriamente.'));
+		}else
+		{
+			return Response::json(array('type' => 'danger','msg' => 'Error al guardar la imagen.'));
 		}
 	}
 	public function changeItemImagen()
@@ -1153,10 +1339,60 @@ class AdminController extends BaseController {
 	public function getPayment()
 	{
 		$title = "Pagos | dyv-an.com";
-		$fac = Facturas::where('pagada','=',-1)->orderBy('id','DESC')->get();
+		$fac = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
+		->join('usuario','usuario.id','=','facturas.user_id')
+		->leftJoin('estado','usuario.estado','=','estado.id')
+		->leftJoin('municipio','usuario.municipio','=','municipio.id')
+		->leftJoin('parroquia','usuario.parroquia','=','parroquia.id')
+		->leftJoin('bancos','bancos.id','=','facturas.banco')
+		->where('pagada','=',-1)->orderBy('facturas.id','DESC')
+		->get(
+			array(
+				'usuario.id as user_id',
+				'usuario.username',
+				'usuario.dir as user_dir',
+				'usuario.nombre',
+				'usuario.apellido',
+				'usuario.telefono',
+				'usuario.email',
+				'estado.nombre as est',
+				'municipio.nombre as mun',
+				'parroquia.nombre as par',
+				'facturas.*',
+				'direcciones.email',
+				'direcciones.dir as dir_name',
+				'bancos.banco'
+			)
+		);
+		$facNot  = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
+		->join('usuario','usuario.id','=','facturas.user_id')
+		->leftJoin('estado','usuario.estado','=','estado.id')
+		->leftJoin('municipio','usuario.municipio','=','municipio.id')
+		->leftJoin('parroquia','usuario.parroquia','=','parroquia.id')
+		->where('facturas.deleted','=',0)
+		->where('facturas.created_at','<=',date('Y-m-d',(time()-(86400*5))))
+		->where('pagada','=',0)->orderBy('facturas.id','DESC')
+		->get(
+			array(
+				'usuario.id as user_id',
+				'usuario.username',
+				'usuario.dir as user_dir',
+				'usuario.nombre',
+				'usuario.apellido',
+				'usuario.telefono',
+				'usuario.email',
+				'estado.nombre as est',
+				'municipio.nombre as mun',
+				'parroquia.nombre as par',
+				'facturas.*',
+				'direcciones.email',
+				'direcciones.dir as dir_name',
+			)
+		);
 		return View::make('admin.showPayment')
 		->with('title',$title)
-		->with('fac',$fac);
+		->with('fac',$fac)
+		->with('facNot',$facNot);
 	}
 	public function getPurchases($id)
 	{
@@ -1196,7 +1432,42 @@ class AdminController extends BaseController {
 				'fecha'	   => date('d-m-Y',time())
 			);
 			Mail::send('emails.aprob', $data, function ($message) use ($id){
-				    $message->subject('Correo de confirmación dyv-an.com');
+				    $message->subject('Correo de aviso dyv-an.com');
+				    $message->to('someemail@dyv-an.com');
+			});
+			return Response::json(array('type' => 'success','msg' => 'Pago Aprovado correctamente.'));
+		}else
+		{
+			return Response::json(array('type' => 'danger','msg' => 'Error al aprovar el pago.'));
+		}
+	}
+	public function postPaymentElim()
+	{
+		$id = Input::get('id');
+		$motivo = Input::get('motivo');
+		$fac = Facturas::find($id);
+		$fi  = FacturaItem::where('factura_id','=',$fac->id)->get();
+		foreach ($fi as $f) {
+			$item = Misc::where('item_id','=',$f->item_id)
+			->where('item_talla','=',$f->item_talla)
+			->where('item_color','=',$f->item_color)
+			->first();
+			$item->item_stock = $item->item_stock+$f->item_qty;
+			$item->save();
+
+		}
+		$fac->deleted = 1;
+		$fac->save();
+		$user = User::find($fac->user_id);
+		if ($fac->save()) {
+			$data = array(
+				'username' => Auth::user()->username,
+				'fac'  	   => $id,
+				'fecha'	   => date('d-m-Y',time()),
+				'motivo'   => $motivo,
+			);
+			Mail::send('emails.reject', $data, function ($message) use ($id,$motivo){
+				    $message->subject('Correo de aviso dyv-an.com');
 				    $message->to('someemail@dyv-an.com');
 			});
 			return Response::json(array('type' => 'success','msg' => 'Pago Aprovado correctamente.'));
@@ -1220,7 +1491,7 @@ class AdminController extends BaseController {
 				'motivo'   => $motivo,
 			);
 			Mail::send('emails.reject', $data, function ($message) use ($id,$motivo){
-				    $message->subject('Correo de confirmación dyv-an.com');
+				    $message->subject('Correo de aviso dyv-an.com');
 				    $message->to('someemail@dyv-an.com');
 			});
 			return Response::json(array('type' => 'success','msg' => 'Pago Aprovado correctamente.'));
@@ -1233,24 +1504,232 @@ class AdminController extends BaseController {
 	{
 		$title = "Pagos aprobados";
 		$title = "Pagos | dyv-an.com";
-		$fac = Facturas::join('usuario','usuario.id','=','facturas.user_id')->where('facturas.pagada','=',1)
-		->orderBy('facturas.id','DESC')
-		->get(array(
-			'facturas.id',
-			'facturas.num_trans',
-			'facturas.dir',
-			'usuario.id as user_id',
-			'usuario.username',
-			'usuario.dir as user_dir',
-			'usuario.nombre',
-			'usuario.apellido',
-			'usuario.telefono',
-			'usuario.email',
-		));
+		$fac = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
+		->join('usuario','usuario.id','=','facturas.user_id')
+		->leftJoin('estado','usuario.estado','=','estado.id')
+		->leftJoin('municipio','usuario.municipio','=','municipio.id')
+		->leftJoin('parroquia','usuario.parroquia','=','parroquia.id')
+		->leftJoin('bancos','bancos.id','=','facturas.banco')
+		->where('pagada','=',1)->orderBy('facturas.id','DESC')
+		->get(
+			array(
+				'usuario.id as user_id',
+				'usuario.username',
+				'usuario.dir as user_dir',
+				'usuario.nombre',
+				'usuario.apellido',
+				'usuario.telefono',
+				'usuario.email',
+				'estado.nombre as est',
+				'municipio.nombre as mun',
+				'parroquia.nombre as par',
+				'facturas.*',
+				'direcciones.email',
+				'direcciones.dir as dir_name',
+				'bancos.banco'
+			)
+		);
 		$type = "apr";
 		return View::make('admin.showPayment')
 		->with('title',$title)
 		->with('fac',$fac)
 		->with('type',$type);
+	}
+	public function getNewBank()
+	{
+		$title = "Nuevo banco";
+		return View::make('admin.newBank')
+		->with('title',$title);
+	}
+	public function postNewBank()
+	{
+		$inp 	= Input::all();
+		$rules  = array(
+			'banco' 		=> 'required',
+			'numCuenta'		=> 'required',
+			'tipoCuenta'	=> 'required',
+			'img'			=> 'required|image|max:3000'
+		);
+
+		$msg 	= array(
+			'required'	=> 'El campo es obligatorio',
+			'image'		=> 'El archivo debe ser una imagen',
+			'max'		=> 'El archivo no debe tener mas de 3Mb'
+		);
+		$validator = Validator::make($inp,$rules,$msg);
+		if ($validator->fails()) {
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+
+		$banco = new Bancos;
+		$banco->banco 		= $inp['banco'];
+		$banco->num_cuenta	= $inp['numCuenta'];
+		$banco->tipo 		= $inp['tipoCuenta'];
+		$file = Input::file('img');
+		if (file_exists('images/bancos/'.$file->getClientOriginalName())) {
+			//guardamos la imagen en public/imgs con el nombre original
+            $i = 0;//indice para el while
+            //separamos el nombre de la img y la extensión
+            $info = explode(".",$file->getClientOriginalName());
+            //asignamos de nuevo el nombre de la imagen completo
+            $miImg = $file->getClientOriginalName();
+            //mientras el archivo exista iteramos y aumentamos i
+            while(file_exists('images/bancos/'. $miImg)){
+                $i++;
+                $miImg = $info[0]."(".$i.")".".".$info[1];              
+            }
+            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
+            $file->move("images/bancos/",$miImg);
+            $blank = Image::make('images/blank400x200.jpg');
+
+            $img = Image::make('images/bancos/'.$miImg);
+            if ($img->width() > $img->height()) {
+            	$img->widen(400);
+            }else
+            {
+            	$img->heighten(200);
+            }
+            
+	        $blank->insert($img,'center')
+	           ->interlace()
+	           ->save('images/bancos/'.$miImg);
+            if($miImg != $file->getClientOriginalName()){
+            	$banco->imagen = $miImg;
+            }
+		}else
+		{
+			$file->move("images/bancos/",$file->getClientOriginalName());
+			$blank = Image::make('images/blank.jpg');
+			$img = Image::make('images/bancos/'.$file->getClientOriginalName());
+            if ($img->width() > $img->height()) {
+            	$img->widen(400);
+            }else
+            {
+            	$img->heighten(200);
+            }
+
+            $blank->insert($img,'center')
+           ->interlace()
+           ->save('images/bancos/'.$file->getClientOriginalName());
+           $banco->imagen = $file->getClientOriginalName();
+		}
+		if ($banco->save()) {
+			Session::flash('success', 'Banco creado satisfactoriamente');
+			return Redirect::to('administrador/editar-banco');
+		}else
+		{
+			Session::flash('error','Error al crear el banco');
+			return Redirect::back();
+		}
+	}
+	public function getEditBank()
+	{
+		$title = "Editar bancos";
+		$bancos = Bancos::where('deleted','=',0)->get();
+		return View::make('admin.editBanks')
+		->with('title',$title)
+		->with('bancos',$bancos);
+	}
+	public function getEditBankId($id)
+	{
+		$title ="Editar banco";
+		$banco = Bancos::find($id);
+		return View::make('admin.editBankSelf')
+		->with('title',$title)
+		->with('banco',$banco);
+	}
+	public function postEditBankId($id)
+	{
+		$inp 	= Input::all();
+		$rules  = array(
+			'banco' 		=> 'required',
+			'numCuenta'		=> 'required',
+			'tipoCuenta'	=> 'required'
+		);
+
+		$msg 	= array(
+			'required'	=> 'El campo es obligatorio'
+		);
+		$validator = Validator::make($inp,$rules,$msg);
+		if ($validator->fails()) {
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+
+		$banco 				= Bancos::find($id);
+		$banco->banco 		= $inp['banco'];
+		$banco->num_cuenta	= $inp['numCuenta'];
+		$banco->tipo 		= $inp['tipoCuenta'];
+		if (Input::hasFile('img')) {
+			$file = Input::file('img');
+			if (file_exists('images/bancos/'.$file->getClientOriginalName())) {
+				//guardamos la imagen en public/imgs con el nombre original
+	            $i = 0;//indice para el while
+	            //separamos el nombre de la img y la extensión
+	            $info = explode(".",$file->getClientOriginalName());
+	            //asignamos de nuevo el nombre de la imagen completo
+	            $miImg = $file->getClientOriginalName();
+	            //mientras el archivo exista iteramos y aumentamos i
+	            while(file_exists('images/bancos/'. $miImg)){
+	                $i++;
+	                $miImg = $info[0]."(".$i.")".".".$info[1];              
+	            }
+	            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
+	            $file->move("images/bancos/",$miImg);
+	            $blank = Image::make('images/blank400x200.jpg');
+
+	            $img = Image::make('images/bancos/'.$miImg);
+	            if ($img->width() > $img->height()) {
+	            	$img->widen(600);
+	            }else
+	            {
+	            	$img->heighten(300);
+	            }
+	            
+		        $blank->insert($img,'center')
+		           ->interlace()
+		           ->save('images/bancos/'.$miImg);
+	            if($miImg != $file->getClientOriginalName()){
+	            	$banco->imagen = $miImg;
+	            }
+			}else
+			{
+				$file->move("images/bancos/",$file->getClientOriginalName());
+				$blank = Image::make('images/blank.jpg');
+				$img = Image::make('images/bancos/'.$file->getClientOriginalName());
+	            if ($img->width() > $img->height()) {
+	            	$img->widen(600);
+	            }else
+	            {
+	            	$img->heighten(300);
+	            }
+
+	            $blank->insert($img,'center')
+	           ->interlace()
+	           ->save('images/bancos/'.$file->getClientOriginalName());
+	           $banco->imagen = $file->getClientOriginalName();
+			}
+		}
+		if ($banco->save()) {
+			Session::flash('success', 'Banco creado satisfactoriamente');
+			return Redirect::to('administrador/editar-banco');
+		}else
+		{
+			Session::flash('error','Error al crear el banco');
+			return Redirect::back();
+		}
+	}
+	public function postElimBank()
+	{
+		if (Request::ajax()) {
+			$id = Input::get('id');
+			$banco = Bancos::find($id);
+			$banco->deleted = 1;
+			if ($banco->save()) {
+				return Response::json(array('type' => 'success','msg' => 'Banco eliminado satisfactoriamente'));
+			}else
+			{
+				return Response::json(array('type' => 'danger','msg' => 'Error al eliminar el banco'));
+			}
+		}
 	}
 }

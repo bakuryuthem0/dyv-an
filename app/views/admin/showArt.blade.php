@@ -55,7 +55,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<legend>¿Seguro desea eliminar al usuario?</legend>
+				<legend>¿Seguro desea eliminar el articulo?</legend>
 			</div>
 				<div class="modal-body">
 					<p class="textoPromedio">Esta acción es irreversible, si desea continuar precione eliminar</p>

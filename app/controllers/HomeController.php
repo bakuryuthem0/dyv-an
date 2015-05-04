@@ -34,73 +34,61 @@ class HomeController extends BaseController {
 	}
 	public function getIndex()
 	{
-		$slides = Slides::where('active','=',1)->where('deleted','=',0)->get();
 		$title  = Lang::get('lang.title_index');
+		$cats   = Cat::where('deleted','=',0)->get();
+		$i = 0;
+		$cat = array();
+		foreach ($cats as $c) {
+			$aux = SubCat::where('cat_id','=',$c->id)->where('deleted','=',0)->get();
+			$c->subcat = $aux;
+			$cat[$i] = $c;
+		}
 		return View::make('indexs.index')
 		->with('title',$title)
-		->with('slides',$slides);
+		->with('cats',$cat);
 	}
 
-	public function getShowItem($id)
+	public function postItemLoad()
 	{
-		$art = Items::find($id);
-		$a = new stdClass;
-		$a->id = $art->id;
-		$a->item_nomb 		= $art->item_nomb;
-		$a->item_stock		= $art->item_stock;
-		$a->item_desc 		= $art->item_desc;
-		$a->item_cod 	 	= $art->item_cod;
-		$a->item_precio 	= $art->item_precio;
-		$a->misc 			= array();
-		$a->tallas    		= array();
-		$a->colores   		= array();
-		//$misc    			= Misc::where('item_id','=',$art->id)->first();
-		$misc    			= Misc::where('item_id','=',$art->id)->get();
-		$aux = array();
-		$i = 0;
-		foreach ($misc as $m ) {
-			$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get();
-			$i++;
-		}
-		$a->images   	 	= $aux;
-		
-		$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('item_talla'));
-		$c = Misc::where('item_id','=',$art->id)->get(array('item_color','item_talla'));
-		$a->tallas = $t;
-		$a->colores= $c;
-		$tallas  = Tallas::get();
-		$colores = Colores::get();
+		if (Request::ajax()) {
+			$id = Input::get('id');
+			$art = Items::find($id);
+			$a = new stdClass;
+			$a->id = $art->id;
+			$a->item_nomb 		= $art->item_nomb;
+			$a->item_stock		= $art->item_stock;
+			$a->item_desc 		= $art->item_desc;
+			$a->item_cod 	 	= $art->item_cod;
+			$a->item_precio 	= $art->item_precio;
+			$a->misc 			= array();
+			$a->tallas    		= array();
+			$a->colores   		= array();
+			$misc    			= Misc::where('item_id','=',$art->id)->get();
+			$aux = array();
+			$i = 0;
+			foreach ($misc as $m ) {
+				$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get();
 
-		$title = $art->item_nomb;
-		if (Auth::check() && Auth::user()->role == 1) {
-			$layout = 'admin';
-		}else
-		{
-			$layout = 'default';
+				$i++;
+			}
+			$a->images   	 	= $aux;
+			return Response::json($a);
+			$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('item_talla'));
+			$c = Misc::where('item_id','=',$art->id)->get(array('item_color','item_talla'));
+			$a->tallas = $t;
+			$a->colores= $c;
+			$tallas  = Tallas::get();
+			$colores = Colores::get();
+
+			$tallas = Tallas::get();
+			$colores = Colores::get();		
+			return Response::json($a);
 		}
-		$option = array();
-		$tallas = Tallas::get();
-		$colores = Colores::get();		
-		return View::make('indexs.artSelf')
-		->with('title',$title)
-		->with('art',$a)
-		->with('layout',$layout)
-		->with('tallas',$tallas)
-		->with('colores',$colores);
-	
 	}
 	public function getCaTbuscar($id)
 	{
 		$auxcat = Cat::find($id);
 		$title = "Busqueda por categoria: ".$auxcat->cat_desc;
-		$cat = Cat::where('deleted','=',0)->get(array('categorias.id','categorias.cat_nomb'));
-		
-		$subcat = array();
-		foreach($cat as $c)
-		{
-			$aux = SubCat::where('cat_id','=',$c->id)->where('deleted','=',0)->get();
-			$subcat[$c->id] = $aux->toArray();
-		}
 		$art = Items::leftJoin('miscelanias as m','m.item_id','=','item.id')
 		->leftJoin('images as i','m.id','=','i.misc_id')
 		->groupBy('item.id')
@@ -114,28 +102,16 @@ class HomeController extends BaseController {
 				'item.item_cod',
 				'i.image'
 			));
-		$type = "hola";
 		return View::make('indexs.busq')
 		->with('title',$title)
 		->with('art',$art)
-		->with('cat',$cat)
-		->with('subcat',$subcat)
-		->with('type',$type)
 		->with('busq',$auxcat->cat_desc);
 	}
-	public function getSubCatBuscar($subcat,$id)
+	public function getSubCatBuscar($id)
 	{
 
 		$auxcat = SubCat::find($id);
 		$title = "Busqueda por categoria: ".$auxcat->sub_desc;
-		$cat = Cat::where('deleted','=',0)->get(array('categorias.id','categorias.cat_nomb'));
-		
-		$subcat = array();
-		foreach($cat as $c)
-		{
-			$aux = SubCat::where('cat_id','=',$c->id)->where('deleted','=',0)->get();
-			$subcat[$c->id] = $aux->toArray();
-		}
 		$art = Items::leftJoin('miscelanias as m','m.item_id','=','item.id')
 		->leftJoin('images as i','m.id','=','i.misc_id')
 		->groupBy('item.id')
@@ -154,8 +130,6 @@ class HomeController extends BaseController {
 		return View::make('indexs.busq')
 		->with('title',$title)
 		->with('art',$art)
-		->with('cat',$cat)
-		->with('subcat',$subcat)
 		->with('busq',$auxcat->sub_desc);
 
 	}

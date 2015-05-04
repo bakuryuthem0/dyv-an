@@ -57,17 +57,16 @@ body,html
 {
   font-size: 76.66%;
   color:white;
-  
-
 }
 body
 {
   overflow: hidden;
 }
-body.admin
+html > body.admin
 {
   padding-top: 10%;
   overflow: scroll;
+  color: #333 !important;
 }
 .textoNegro  *,.textoNegro
 {
@@ -105,6 +104,10 @@ header.active
 legend
 {
   color: white;
+}
+body.admin legend
+{
+  color: black;
 }
 .alert-danger
 {
@@ -244,6 +247,32 @@ legend
   position: absolute;
   padding: 2em;
 }
+.contLoading
+{
+  display: none;
+  opacity: 0;
+  background-color: rgba(0,0,0,0.8);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 100000;
+}
+
+.contLoading > img
+{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
+.inputForm
+{
+  margin-bottom: 2em;
+}
 .idiomas
 {
   text-align: center;
@@ -263,9 +292,20 @@ legend
   width: 100%;
   background-color: rgba(0, 0, 0, 0.75);
 }
+.loading
+{
+  width:25px;
+  height:25px;
+  display: none;
+  opacity: 0;
+}
 .logo
 {
   width: 100%;
+}
+.contArtPrinc
+{
+  cursor: pointer;
 }
 .nav-bar
 {
@@ -308,6 +348,10 @@ legend
          -o-transition: all .25s ease-in-out;
             transition: all .25s ease-in-out;
 }
+.modal-content
+{
+  padding: 2em;
+}
 .no-in
 {
   opacity: 0;
@@ -315,6 +359,10 @@ legend
 .si-in
 {
   opacity: 1;
+}
+.showItemContent
+{
+  width: 80%;
 }
 .nav-bar > .contMenu
 {
@@ -364,38 +412,11 @@ legend
 	margin-left: 0px !important;
 	margin-right: 0px !important;
 }
-.slick-prev, .slick-next
-{
-	background-color: transparent !important;
-	border-radius: 50%;
-  width: auto !important;
-  height: auto !important;
-  min-height: 20px;
-  min-width: 20px;
-}
-.slick-prev{
-	left: 0px !important;
-}
-.slick-next
-{
-	right: 40px !important;
-}
+
 .slick-slide img
 {
-	width: 100%;
+	width:90%;
 }
-.slick-prev:before, .slick-next:before
-{
-  font-size: 50px !important;
-  color: #6EB52F !important;
-  opacity: 0.9 !important;
-}
-.slick-prev:hover:before, .slick-prev:focus:before, .slick-next:hover:before, .slick-next:focus:before
-{
-  opacity: 0.9 !important;
-  color: #6EB52F;
-}
-
 
 .textoPromedio
 {

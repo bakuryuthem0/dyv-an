@@ -321,44 +321,46 @@ jQuery(document).ready(function($) {
 	});
 });
 
-
 jQuery(document).ready(function($) {
-	
-	if ($(window).scrollTop()>0) {
-		$('.miniBanner').stop().animate({
-			'height':0},
+	$('.contArtPrinc').click(function(event) {
+		$('.contArtPrinc').animate({
+			'opacity':0},
 			250);
-		$('#contCarrito').stop().animate({
-			'top': 140},
-			250);
-	}else
-	{
-		$('.miniBanner').stop().animate({
-			'height':50},
-			250);
-		$('#contCarrito').stop().animate({
-			'top': 195},
-			250);
-	}
-	$(window).scroll(function(event) {
-		if ($(window).scrollTop()>0) {
-			$('.miniBanner').stop().animate({
-				'height':0},
-				250);
-			$('#contCarrito').stop().animate({
-				'top': 140},
-				250);
-		}else
-		{
-			$('.miniBanner').stop().animate({
-				'height':50},
-				250);
-			$('#contCarrito').stop().animate({
-				'top': 195},
-				250);
-		}
+		var id = $(this).data('id');
+		$.ajax({
+			url: 'cargar-item',
+			type: 'POST',
+			dataType: 'json',
+			data: {'id': id},
+			beforeSend:function()
+			{
+				$('.contLoading').css({'display':'block'}).animate({
+					'opacity':1},
+					250);
+			},
+			success:function(response)
+			{
+				$('.contLoading').animate({
+					'opacity':0},
+					250, function() {
+					$(this).css({'display':'none'});
+				});
+				console.log(response.images[0])
+				//$('.ItemTitle').html(response.item_nomb+' - '+response.item_cod)
+				//$('.contDescription').html(response.item_desc)
+				//$('.contImageItem').html(response.images[0].image)
+			}
+		})
+	});
+	$('#showItem').on('hide.bs.modal', function(event) {
+		$('.contArtPrinc').animate({
+				'opacity':1},
+		250);	
 	});
 });
+
+/**/
+
 
 jQuery(document).ready(function($) {
 	function doAjax(esto)
@@ -852,6 +854,7 @@ jQuery(document).ready(function($) {
 		
 	});
 	$('.deleteSlide').click(function(event) {
+		$(this).unbind('click')
 		$('.envElim').removeClass('disabled');
 		var id = $(this).val();
 		var fila = $(this);

@@ -11,21 +11,40 @@ class ItemController extends BaseController {
 	{
 		if (Request::ajax()) {
 			$inp = Input::all();
-			$misc = Misc::where('item_id','=',$inp['id'])->where('deleted','=',0)->first();
+			$misc = Misc::where('item_id','=',$inp['id'])->where('item_talla','=',$inp['talla'])->where('item_color','=',$inp['color'])->where('deleted','=',0)->first();
+			$aux = Misc::where('item_id','=',$inp['id'])->where('deleted','=',0)->first();
 
-			$img = Images::where('deleted','!=',1)->where('misc_id','=',$misc->id)->first();
-			Cart::add(array('id' => $inp['id'],'name' => $inp['name'],'qty' => 1,'options' =>array('img' => $img->image),'price' => $inp['price']));
-			$rowid = Cart::search(array('id' => $inp['id']));
+			$img = Images::where('deleted','!=',1)->where('misc_id','=',$aux->id)->first();
+			$talla = Tallas::find($inp['talla']);
+			$color = Colores::find($inp['color']);
+			Cart::add(array(
+				'id' => $inp['id'],
+				'name' => $inp['name'],
+				'qty' => 1,
+				'options' =>array(
+					'misc' 			=> $misc->id, 
+					'img' 			=> $img->image,
+					'talla'			=> $inp['talla'],
+					'talla_desc'	=> $talla->talla_desc,
+					'color'			=> $inp['color'],
+					'color_desc'	=> $color->color_desc
+					),
+				'price' => $inp['price']
+				));
+			$rowid = Cart::search(array('id' => $inp['id'],'options' => array('talla' => $inp['talla'],'color' => $inp['color'])));
 			$item = Cart::get($rowid[0]);
 
+			
 			return Response::json(array(
 				'rowid'		=> $rowid[0],
 				'img' 		=> $img->image,
 				'id' 		=> $item->id,
 				'name' 		=> $item->name,
+				'talla'		=> $talla->talla_desc,
+				'color'		=> $color->color_desc,
 				'qty' 		=> $item->qty,
 				'price' 	=> $item->price,
-				'subtotal'	=>$item->subtotal,
+				'subtotal'	=> $item->subtotal,
 				'cantArt' 	=> Cart::count(),
 				'total' 	=> Cart::total()
 			));
@@ -104,25 +123,38 @@ class ItemController extends BaseController {
 	{
 		$id = Input::get('dir');
 		if ($id == 'user_id') {
-			$dir = array('dir' =>Auth::user()->dir,'email' => Auth::user()->email);
-		}else
-		{
-			$dir = Dir::find($id);
+			$dir = Dir::where('user_id','=',Auth::user()->id)->where('user_dir','=',1)->first();
+			if (count($dir)>0) {
+				$id = $dir->id;
+			}else
+			{
+				$dir = new Dir;
+				$dir->user_id = Auth::user()->id;
+				$dir->email   = Auth::user()->email;
+				$dir->dir 	  = Auth::user()->dir;
+				$dir->user_dir= 1;
+				$dir->save();
+				$id = $dir->id;
+			}
 		}
 		$fac = new Facturas;
 		$fac->user_id =  Auth::user()->id;
-		$fac->dir     = $dir['dir'];
+		$fac->dir     = $id;
 		if($fac->save())
 		{
 			foreach (Cart::content() as $c) {
+				$misc = Misc::find($c->options['misc']);
+				$misc->item_stock = $misc->item_stock-$c->qty;
+				$misc->save();
+
 				$itemFac = new FacturaItem;
 				$itemFac->factura_id = $fac->id;
 				$itemFac->item_id    = $c->id;
 				$itemFac->item_qty	 = $c->qty;
+				$itemFac->item_talla = $c->options['talla'];
+				$itemFac->item_color = $c->options['color'];
+				$itemFac->item_precio= $c->price;
 				$itemFac->save();
-				$item = Items::find($c->id);
-				$item->item_stock = $item->item_stock-$c->qty;
-				$item->save();
 			}
 			Cart::destroy();
 			return Redirect::to('compra/procesar/'.$fac->id);			
@@ -150,18 +182,24 @@ class ItemController extends BaseController {
 		if ($dir->save()) {
 			$fac = new Facturas;
 			$fac->user_id =  Auth::user()->id;
-			$fac->dir 	  = $dir->dir;
+			$fac->dir 	  = $dir->id;
 			if($fac->save())
 			{
+
 				foreach (Cart::content() as $c) {
+					return $c;	
+					$misc = Misc::find($c->options['misc']);
+					$misc->item_stock = $misc->item_stock-$c->qty;
+					$misc->save();
+
 					$itemFac = new FacturaItem;
 					$itemFac->factura_id = $fac->id;
 					$itemFac->item_id    = $c->id;
 					$itemFac->item_qty	 = $c->qty;
+					$itemFac->item_talla = $c->options['talla'];
+					$itemFac->item_color = $c->options['color'];
+					$itemFac->item_precio= $c->price;
 					$itemFac->save();
-					$item = Items::find($c->id);
-					$item->item_stock = $item_stock-$c->qty;
-					$item->save();
 				}
 				Cart::destroy();
 				return Redirect::to('compra/procesar/'.$fac->id);			
@@ -173,15 +211,18 @@ class ItemController extends BaseController {
 		$title = "Metodo de pago | dyv-an.com";
 		$fac = Facturas::find($id);
 		$x 	 = FacturaItem::where('factura_id','=',$id)->sum('item_qty');
-		$aux = FacturaItem::where('factura_id','=',$id)->get(array('item_id','item_qty'));
+		$aux = FacturaItem::where('factura_id','=',$id)->get(array('item_id','item_qty','item_talla','item_color','item_precio'));
 		$i = 0;
 		$auxT = 0;
 		$auxQ = 0;
 		$p = '';
 		foreach ($aux as $a) {
-			$b = Items::find($a->item_id);
+			$b = Items::leftJoin('publicidad','publicidad.id','=','item.item_prom')->where('item.id','=',$a->item_id)->first();
 			$p = $p.$b->item_nomb.', ';
 			$b->qty = $a->item_qty;
+			$b->precio = $a->item_precio;
+			$b->item_talla = Tallas::where('id','=',$a->item_talla)->pluck('talla_desc');
+			$b->item_color = Colores::where('id','=',$a->item_color)->pluck('color_desc');
 			$auxT = $auxT+($b->qty*$b->item_precio);
 			$auxQ = $auxQ+$b->qty;
 			$aux = Misc::where('item_id','=',$a->item_id)->where('deleted','=',0)->first();
@@ -192,7 +233,7 @@ class ItemController extends BaseController {
 		}
 		$total = 0;
 		$method= "hola";
-		$mp = new MP('8718886882978199','K1SlqcrxB2kKnnrhxt6PCyLtC6RuSuux');
+		/*$mp = new MP('8718886882978199','K1SlqcrxB2kKnnrhxt6PCyLtC6RuSuux');
 		$preference_data = array(
     			"items" => array(
        			array(
@@ -203,21 +244,31 @@ class ItemController extends BaseController {
        			)
     			)
 		);
-		$preference = $mp->create_preference ($preference_data);
+		$preference = $mp->create_preference ($preference_data);*/
+		$preference = '';
+		$bancos = Bancos::where('deleted','=',0)->get();
 		return View::make('indexs.showCart')
 		->with('title',$title)
 		->with('method',$method)
 		->with('total',$total)
 		->with('items',$item)
 		->with('preference',$preference)
-		->with('id',$id);
+		->with('id',$id)
+		->with('bancos',$bancos);
 	}
 
 	public function postSendPayment(){
 		$input = Input::all();
 		$id = $input['factId'];
-		$rules = array('transNumber' => 'required|numeric');
-		$messages = array('required' => 'El numero de transacción es obligatorio.','numeric' => 'El campo debe ser un número.');
+		$rules = array(
+			'transNumber' => 'required|numeric',
+			'banco'		  => 'required',
+			'fecha'		  => 'required'
+		);
+		$messages = array(
+			'required' => 'El campo es obligatorio.',
+			'numeric' => 'El campo debe ser un número.',
+			);
 		$validator = Validator::make($input, $rules, $messages);
 		if ($validator->fails()) {
 			return Redirect::back()->withErrors($validator);
@@ -225,6 +276,8 @@ class ItemController extends BaseController {
 		$fac 			= Facturas::find($id);
 
 		$fac->num_trans = $input['transNumber'];
+		$fac->banco 	= $input['banco'];
+		$fac->fech_trans= $input['fecha'];
 		$fac->pagada 	= -1;
 		if ($fac->save()) {
 			$subject = "Correo de administrador";
