@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-<div class="hidden-container @if(Auth::check())container-in@endif">
+<div class="hidden-container container-in">
   <div class="titulo">
     <h1>
       {{ $busq }} <a href="{{ URL::previous() }}" class="btn btn-volver" style="float:right;">Volver</a>
@@ -37,16 +37,17 @@
             </div>
           </div>
           <div class="col-xs-4 contImageItem">
-                 
+                 <img src="" class="imagenPrincipal" data-src="{{ asset('images/items/') }}" data-zoom-image="">
           </div>
           <div class="col-xs-4 textoPromedio ">
             <div class="col-xs-12">
-              <label class="textoNegro">PRECIO EN GUACAMAYA STORES:</label>
+              <label class="textoNegro">PRECIO EN DYV-AN:</label>
             </div>
             <div class="col-xs-12 formulario">
               <label class="textoNegro">Talla</label>
               <select class="choose form-control">
                 <option value="">Seleccione una talla</option>
+                 
               </select>
             </div>
             <div class="col-xs-12 formulario">
@@ -56,14 +57,14 @@
               </ul>
               <input type="hidden" class="values" value="" data-misc-id="">
             </div>
-            
+            {{ Auth::check() }}
             @if(Auth::check() && Auth::user()->role != 1)
             <div class="col-xs-12 formulario">
                 <button class="btn btn-danger btnAgg" data-toggle="modal" data-target="#addCart" data-cod-value="" data-price-value="" data-name-value="" value="">Agregar al carrito.</button>
             </div>
             @else
             <div class="col-xs-12 formulario">
-                <button class="btn btn-danger" data-toggle="modal" data-target="#loginModal">Agregar al carrito.</button>
+                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#loginModal">Agregar al carrito.</a>
             </div>
             @endif
           </div>
@@ -71,6 +72,36 @@
         <div class="col-xs-12 contImagesMini"></div>
       </div>
       <div class="clearfix"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addCart" tabindex="-1" role="dialog" aria-labelledby="modalForggo" aria-hidden="true">
+  <div class="forgotPass modal-dialog imgLiderUp">
+    <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    </div>
+    <div class="textoNegro">
+            <h3>Agregar al carrito </h3>
+        </div>
+        <div class="col-xs-12 formulario textoPromedio">
+        <label>Talla</label>
+        <select class="chooseModal form-control">
+          <option value="">Seleccione una talla</option>
+          
+          
+        </select>
+      </div>
+      <div class="col-xs-12 formulario textoPromedio textoNegro">
+        <label>Color</label>
+        <select class="colorModal form-control">
+          <option value="">Seleccione un color</option>
+        </select>
+      </div>
+      <div class="clearfix"></div>
+      <div class="modal-footer">
+        <button class="btn btn-danger btnAddCart disabled">Agregar</button>
+      </div>
     </div>
   </div>
 </div>

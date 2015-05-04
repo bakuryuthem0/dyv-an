@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-<div class="hidden-container @if(Auth::check())container-in@endif">
+<div class="hidden-container container-in">
   <div class="titulo"><h1>{{ Lang::get('lang.titulo_1') }}</h1></div>
   <div class="contenido">
     @foreach($cats as $c)
@@ -32,7 +32,6 @@
               slidesToShow: 4,
               slidesToScroll: 1,
             });
-            $('.fade').slick()
             
             /*$('.fade').slick({
               dots: true,

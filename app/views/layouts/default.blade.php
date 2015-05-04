@@ -26,11 +26,11 @@
       <div class="carousel">
           {{ ShowSlides::show() }}
       </div>
-      <header @if($title != "Home" && $title != "Inicio" || Auth::check())class="active"@endif>
+      <header class="active">
         <nav>
           <div class="nav-bar">
-            <div class="col-xs-12 icon @if($title != 'Home' && $title != 'Inicio' || Auth::check())navicon-in-col@endif">
-              <i class="fa fa-bars navicon @if($title != 'Home' && $title != 'Inicio' || Auth::check())navicon-in@endif"></i>
+            <div class="col-xs-12 icon navicon-in-col">
+              <i class="fa fa-bars navicon navicon-in"></i>
             </div>
             <div class="col-xs-12">
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -56,25 +56,25 @@
                 </svg>
             </div>
             <div class="clearfix"></div>
-            <div class="col-xs-12 contMenu no-in @if($title != 'Home' && $title != 'Inicio' || Auth::check())si-in@endif">
+            <div class="col-xs-12 contMenu no-in si-in">
               <ul class="menu textoGrande">
                 <li><a href="{{ URL::to('inicio') }}">{{ Lang::get('lang.menu_index') }}</a></li>
                 @if(!Auth::check())
-                <li><a href="{{ URL::to('iniciar-sesion') }}">{{ Lang::get('lang.menu_login') }}</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#loginModal">{{ Lang::get('lang.menu_login') }}</a></li>
                 <li><a href="{{ URL::to('registro') }}">{{ Lang::get('lang.menu_register') }}</a></li>
                 @else
                 <li><a href="{{ URL::to('mi-perfil') }}">{{ Lang::get('lang.menu_profile') }}</a></li>
-                <li><a href="{{ URL::to('cerrar-sesion') }}">{{ Lang::get('lang.menu_logout') }}</a></li>
+                <li><a href="{{ URL::to('cerrar-sesion') }}" class="logout">{{ Lang::get('lang.menu_logout') }}</a></li>
                 @endif
                 <li><a href="{{ URL::to('contacto') }}">{{ Lang::get('lang.menu_contact') }}</a></li>
               </ul>
             </div>
-            <div class="idiomas no-in @if($title != 'Home' && $title != 'Inicio' || Auth::check())si-in@endif">
+            <div class="idiomas no-in si-in">
               <a href="{{ URL::to('cambiar-lenguaje/español') }}" class="btn">{{ Lang::get('lang.lang_es') }}</a>
               <a href="{{ URL::to('cambiar-lenguaje/ingles') }}" class="btn">{{ Lang::get('lang.lang_en') }}</a>
               <a href="{{ URL::to('cambiar-lenguaje/portugues') }}" class="btn">{{ Lang::get('lang.lang_po') }}</a>
             </div>
-            <div class="redes no-in @if($title != 'Home' && $title != 'Inicio' || Auth::check())si-in@endif">
+            <div class="redes no-in si-in">
               <div class="contRed" style="padding:1em 1.5em;"><i class="fa fa-facebook fa-3x"></i></div>
               <div class="contRed"><i class="fa fa-twitter fa-3x"></i></div>
               <div class="contRed" style="padding: 1.1em 1.4em;"><i class="fa fa-instagram fa-3x"></i></div>
@@ -133,6 +133,70 @@
         </script>
         
        @yield('postscript')
-
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="modalForggo" aria-hidden="true">
+          <div class="forgotPass modal-dialog imgLiderUp">
+            <div class="modal-content">
+              <div class="">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              </div>
+              <div class="textoNegro">
+                <legend>Iniciar Sesion</legend>
+              </div>
+              <form action="{{ URL::to('iniciar-sesion/autenticar') }}" method="POST">
+                @if (Session::has('error'))
+                <div class="col-xs-12">
+                  <div class="alert alert-danger textoNegro">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <p class="textoPromedio">{{ Session::get('error') }}</p>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+                @endif
+                <div class="col-xs-12">
+                  <label for="username" class="textoPromedio textoNegro">Nombre de usuario:</label>
+                  {{ Form::text('username','', array('class'=>'form-control','required' => 'required')) }}
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-xs-12">
+                  <label for="pass" class="textoPromedio textoNegro">Contraseña</label>
+                  <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="col-xs-12">
+                  <label for="pass" class="textoPromedio"><a href="#" class="forgot textoNegro" data-toggle="modal" data-target="#changePass">¿Olvidó su contraseña?</a></label>
+                </div>
+                <div class="col-xs-12">
+                  <label for="remember" class="textoPromedio textoNegro">¿Recordar?</label>
+                  <input type="checkbox" name="remember">
+                </div>
+                <div class="col-xs-12">
+                  <input type="submit" name="enviar" value="Enviar" class="btn btn-primary">
+                </div>
+              </form>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="changePass" tabindex="-1" role="dialog" aria-labelledby="modalForggo" aria-hidden="true">
+          <div class="forgotPass modal-dialog imgLiderUp">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              </div>
+                <div class="modal-body textoNegro">
+                    <legend>Recuperar Contraseña</legend>
+                  </div>
+                <div class="modal-footer " style="text-align:center;">
+                  <div class="alert responseDanger">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  </div>
+                  <form methos="POST" action="{{ URL::to('recuperar/password') }}">
+                    <p class="textoPromedio textoNegro">Introduzca el email con el cual creó su cuenta</p>
+                    <input class="form-control emailForgot" name="email" placeholder="Email">
+                    <button class="btn btn-success envForgot" style="margin-top:2em;">Enviar</button> 
+                  </form>
+                </div>
+            </div>
+          </div>
+      </div>
     </body>
 </html>

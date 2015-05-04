@@ -22,6 +22,10 @@ Route::get('articulos/categoria/{id}','HomeController@getCaTbuscar');
 Route::get('articulos/sub-categoria/{id}','HomeController@getSubCatBuscar');
 
 Route::post('articulos/categoria/cargar-item','HomeController@postItemLoad');
+Route::post('articulos/sub-categoria/cargar-item','HomeController@postItemLoad');
+
+Route::post('articulos/sub-categoria/buscar/colores','HomeController@getColors');
+
 Route::group(array('before' =>'no_auth'),function()
 {
 	Route::get('iniciar-sesion','AuthController@getLogin');

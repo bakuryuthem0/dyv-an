@@ -68,6 +68,10 @@ html > body.admin
   overflow: scroll;
   color: #333 !important;
 }
+img
+{
+  width: 100%;
+}
 .textoNegro  *,.textoNegro
 {
   color: #777 !important;
@@ -261,6 +265,8 @@ body.admin legend
 .contLoading > img
 {
   position: absolute;
+  max-width: 100px;
+
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%,-50%);
@@ -276,6 +282,16 @@ body.admin legend
 .idiomas
 {
   text-align: center;
+}
+.imagesSlidesOption
+{
+  display: none;
+  opacity: 0;
+}
+.imgMini 
+{
+  max-width: 100px;
+  display: inline-block;
 }
 .titulo
 {
@@ -443,6 +459,10 @@ body.admin legend
 }
 
 
+/*Zoom*/
+
+
+/**/
 li.disabled
 {
   color: gray;

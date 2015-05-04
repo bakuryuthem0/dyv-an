@@ -9,4 +9,9 @@ Class ShowSlides{
 		}
 
 	}
+	static function showTallas()
+	{
+		$tallas = Tallas::where('deleted','=',0)->get();
+		return $tallas;
+	}
 }

@@ -51,7 +51,7 @@ class AuthController extends BaseController {
 				return Redirect::to('administrador/inicio');	
 			}else
 			{
-				return Redirect::to('inicio');
+				return Redirect::back();
 			}
 		}else
 		{

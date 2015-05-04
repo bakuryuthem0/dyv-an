@@ -56,33 +56,25 @@ class HomeController extends BaseController {
 			$a = new stdClass;
 			$a->id = $art->id;
 			$a->item_nomb 		= $art->item_nomb;
-			$a->item_stock		= $art->item_stock;
 			$a->item_desc 		= $art->item_desc;
 			$a->item_cod 	 	= $art->item_cod;
 			$a->item_precio 	= $art->item_precio;
+
 			$a->misc 			= array();
 			$a->tallas    		= array();
-			$a->colores   		= array();
+			//$misc    			= Misc::where('item_id','=',$art->id)->first();
 			$misc    			= Misc::where('item_id','=',$art->id)->get();
 			$aux = array();
 			$i = 0;
 			foreach ($misc as $m ) {
-				$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get();
-
+				$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->pluck('image');
 				$i++;
 			}
 			$a->images   	 	= $aux;
-			return Response::json($a);
 			$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('item_talla'));
-			$c = Misc::where('item_id','=',$art->id)->get(array('item_color','item_talla'));
 			$a->tallas = $t;
-			$a->colores= $c;
-			$tallas  = Tallas::get();
-			$colores = Colores::get();
-
-			$tallas = Tallas::get();
-			$colores = Colores::get();		
-			return Response::json($a);
+		
+			return Response::json(array('item' => $a,'princ' => $a->images[0],'images' => $aux));
 		}
 	}
 	public function getCaTbuscar($id)
@@ -106,6 +98,14 @@ class HomeController extends BaseController {
 		->with('title',$title)
 		->with('art',$art)
 		->with('busq',$auxcat->cat_desc);
+	}
+	public function getColors()
+	{
+		$id = Input::get('id');
+		$item_id = Input::get('item_id');
+		$col = Misc::join('colores','colores.id','=','miscelanias.item_color')
+		->where('miscelanias.item_id','=',$item_id)->where('miscelanias.item_talla','=',$id)->get();
+		return Response::json($col);
 	}
 	public function getSubCatBuscar($id)
 	{
