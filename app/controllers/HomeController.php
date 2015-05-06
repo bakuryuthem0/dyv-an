@@ -59,22 +59,33 @@ class HomeController extends BaseController {
 			$a->item_desc 		= $art->item_desc;
 			$a->item_cod 	 	= $art->item_cod;
 			$a->item_precio 	= $art->item_precio;
-
-			$a->misc 			= array();
 			$a->tallas    		= array();
-			//$misc    			= Misc::where('item_id','=',$art->id)->first();
 			$misc    			= Misc::where('item_id','=',$art->id)->get();
 			$aux = array();
 			$i = 0;
+			$j = 0;
 			foreach ($misc as $m ) {
-				$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->pluck('image');
-				$i++;
+				$x = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('image'));
+				$aux2[$j] = $m->item_talla;
+				$j++;
+				if (count($x)>1) {
+					foreach ($x as $y) {
+						$aux[$i] = $y->image;
+						$i++;
+					}
+				}else
+				{
+					$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->pluck('image');
+					$i++;
+				}
+				
+				
 			}
 			$a->images   	 	= $aux;
-			$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('item_talla'));
+			$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('id'));
 			$a->tallas = $t;
 		
-			return Response::json(array('item' => $a,'princ' => $a->images[0],'images' => $aux));
+			return Response::json(array('item' => $a,'princ' => $a->images[0],'images' => $aux,'tallas' => $aux2));
 		}
 	}
 	public function getCaTbuscar($id)

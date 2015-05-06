@@ -37,17 +37,22 @@
             </div>
           </div>
           <div class="col-xs-4 contImageItem">
-                 <img src="" class="imagenPrincipal" data-src="{{ asset('images/items/') }}" data-zoom-image="">
+            <div class="cien">
+              <img src="" class="zoomed">
+            </div>
+            <img src="" class="imagenPrincipal" data-src="{{ asset('images/items/') }}" data-zoom-image="">
           </div>
           <div class="col-xs-4 textoPromedio ">
             <div class="col-xs-12">
-              <label class="textoNegro">PRECIO EN DYV-AN:</label>
+              <label class="textoNegro">PRECIO EN DYV-AN:<span class="precio"></span></label>
             </div>
             <div class="col-xs-12 formulario">
               <label class="textoNegro">Talla</label>
-              <select class="choose form-control">
-                <option value="">Seleccione una talla</option>
-                 
+              <select class="choose form-control selectChoose">
+                <option value="" class="seleccioname">Seleccione una talla</option>
+                 @foreach(ShowSlides::showTallas() as $talla)
+                  <option disabled value="{{ $talla->id }}">{{ $talla->talla_nomb.' - '.$talla->talla_desc }}</option>
+                 @endforeach
               </select>
             </div>
             <div class="col-xs-12 formulario">
@@ -86,9 +91,11 @@
         </div>
         <div class="col-xs-12 formulario textoPromedio">
         <label>Talla</label>
-        <select class="chooseModal form-control">
+        <select class="chooseModal form-control selectChoose">
           <option value="">Seleccione una talla</option>
-          
+          @foreach(ShowSlides::showTallas() as $talla)
+          <option disabled value="{{ $talla->id }}">{{ $talla->talla_nomb.' - '.$talla->talla_desc }}</option>
+         @endforeach
           
         </select>
       </div>

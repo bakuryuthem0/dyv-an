@@ -46,7 +46,7 @@ Route::group(array('before' =>'auth'),function()
 {
 	Route::get('mi-perfil','UserController@getProfile');
 	/*Rutas del carrito*/
-	Route::post('articulo/agregar-al-carrito','ItemController@getItem');
+	Route::post('agregar-al-carrito','ItemController@getItem');
 	Route::post('vaciar-carrito', 'ItemController@dropCart');
 	Route::post('quitar-item', 'ItemController@dropItem');
 	Route::post('agregar-item', 'ItemController@addItem');

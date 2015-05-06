@@ -323,11 +323,13 @@ jQuery(document).ready(function($) {
 
 jQuery(document).ready(function($) {
 	$('.contArtPrinc').click(function(event) {
+
 		$('.contArtPrinc').animate({
 			'opacity':0},
 			250);
 		var id = $(this).data('id');
 		if (id != $('.showItemContent').attr('data-modal-id')) {
+			$('.imgMini').remove();
 			$.ajax({
 				url: 'cargar-item',
 				type: 'POST',
@@ -346,27 +348,64 @@ jQuery(document).ready(function($) {
 						250, function() {
 						$(this).css({'display':'none'});
 					});
+					$('.values').val(response['item'].id)
 					for (var i = 0; i < response.images.length; i++) {
 						$('.contImagesMini').append('<img src="../../images/items/'+response.images[i]+'" class="imgMini">');
 					};
+					for (var i = 0; i < response.tallas.length; i++) {
+						$('.selectChoose option[value = '+response.tallas[i]+']').prop('disabled',false);
+					};
 					$('.ItemTitle').html(response['item'].item_nomb+' - '+response['item'].item_cod)
 					$('.contDescription').html(response['item'].item_desc)
-					$('.contImageItem > img').attr('data-zoom-image','../../images/items/'+response.princ)
-					$('.contImageItem > img').attr('src','../../images/items/'+response.princ)
-
-					$('.imagenPrincipal').hover(function() {
-					
-					}, function() {
-						
+					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','../../images/items/'+response.princ)
+					$('.contImageItem > .imagenPrincipal').attr('src','../../images/items/'+response.princ)
+					$('.precio').html(response['item'].item_precio);
+					$('.btnAgg').val(response['item'].id)
+					$('.btnAgg').attr('data-name-value', response['item'].item_nomb);
+					$('.btnAgg').attr('data-price-value', response['item'].item_precio);
+					$('.imagenPrincipal').hover(function(event) {
+						$('.zoomed').attr('src', $(this).attr('src'));
+						$('.zoomed').css({
+							'display':'block'
+						}).stop().animate({'opacity':1}, 250)
+						$(this).stop().animate({'opacity':0}, 250)
+						$(this).mousemove(function(event) {
+							var x = event.pageX - $(this).offset().left;
+							var y = event.pageY - $(this).offset().top;
+							$('.zoomed').css({
+								'transform-origin': x+'px '+y+'px'
+							});
+							
+						});
+					}, function(event) {
+						$('.zoomed').stop().animate({'opacity':0}, 250,function()
+						{
+							$(this).css({
+								'display':'none'
+							})
+						})
+						$(this).stop().animate({'opacity':1}, 250)
+					});
+					$('.imgMini').mouseover(function(event) {
+						var src = $(this).attr('src');
+						if (src != $('.imagenPrincipal').attr('src')) {
+							$('.imagenPrincipal').stop().animate({'opacity':0}, 250,function()
+							{
+								$(this).attr('src', src);
+								$(this).animate({'opacity':1}, 250)
+							})
+						};
 					});
 				}
 			})
 		}
+
 	});
 	$('#showItem').on('hide.bs.modal', function(event) {
 		$('.contArtPrinc').animate({
 				'opacity':1},
 		250);	
+		$('.seleccioname').prop('selected', true)
 	});
 });
 
@@ -556,14 +595,50 @@ jQuery(document).ready(function($) {
 
 		}
 	});
+	$('.choose').change(function(event) {
+		var id = $(this).val();
+		var item_id = $('.values').val();
+		if (id == "") {
+			$('.removable').remove();
+			$('.colores').append('<li class="removable">Elija una talla</li>')
+		}else
+		{
+			$.ajax({
+				url: 'buscar/colores',
+				type: 'POST',
+				dataType: 'json',
+				data: {'id': id,'item_id':item_id},
+				beforeSend:function(){
+					$('.choose').after('<img src="../../images/loading.gif" class="loading">');
+					$('.loading').css({
+						'display': 'block',
+						'margin': '2em auto'
+					}).animate({
+						'opacity': 1},
+						500);
+				},
+				success:function(response){
+					$('.loading').animate({
+						'opacity': 0},
+						500,function(){
+							$(this).remove();
+						});
+					if (response != "undefined" && response.length > 0) {
+						$('.removable').remove();
+						for(var i = 0;i<response.length;i++)
+						{
+							$('.colores').append('<li class="removable" style="color:black;">'+response[i].color_desc+' - '+response[i].item_stock+'</li>')
+						}	
+					};
+				}
+			})		
+		}
+	});
 	$('.btnAgg').click(function(event) {
 		$(this).unbind('click');
-		$('.btn-carrito').unbind('click')
-			var id		= $(this).val();
-			var name  	= $(this).attr('data-name-value');
-			var price 	= $(this).attr('data-price-value');
-
-		jQuery(document).ready(function($) {
+		var name  = $(this).attr('data-name-value');
+		var price = $(this).attr('data-price-value');
+		$('.btnAddCart').val($(this).val())
 		$('.chooseModal').change(function(event) {
 			var id = $(this).val();
 			var item_id = $('.values').val();
@@ -618,6 +693,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 		$('.btnAddCart').click(function(event) {
+			var id = $(this).val();
 			if ($('.colorModal').val() == "" || $('.chooseModal').val() == "") {
 				alert('Debes elegir la talla y el color.')
 			}else
@@ -633,14 +709,18 @@ jQuery(document).ready(function($) {
 					'color'		: color
 				}
 				$.ajax({
-					url: 'agregar-al-carrito',
+					//casa
+					//url: 'dyv-an/public/agregar-al-carrito',
+					//trabajo
+					url: '/prueba/dyv-an/public/agregar-al-carrito',
+
 					type: 'POST',
 					dataType: 'json',
 					data: dataPost,
 					beforeSend:function()
 					{
 						$('.btnAddCart').addClass('disabled');
-						$('.btnAddCart').before('<img src="../images/loading.gif" class="loading">');
+						$('.btnAddCart').before('<img src="../../images/loading.gif" class="loading">');
 						$('.loading').css({
 								'display': 'inline-block'
 							}).animate({
@@ -649,30 +729,20 @@ jQuery(document).ready(function($) {
 					},
 					success:function(response)
 					{
-						
-						$('.btnAdd').click(function(event) {
-							var esto = $(this);
-							doAjax(esto);
-
-						});
-						$('.btnRestar').click(function(event) {
-							var esto = $(this);
-							doAjax(esto);
-
-						});
-						$('.btnQuitar').click(function(event) {
-							var x = confirm('¿Seguro desea quitar el item?');
-							if (x) {
-								var esto = $(this);
-								doQuitarAjax(esto);
-
-							}
+						$('.loading').animate({
+							'opacity': 0},
+						250,function(){
+							$(this).remove();
+							boton.css({
+								'display': 'inline-block'
+							}).animate({
+								'opacity': 1},
+								250);
 						});
 					}
 				})
 			}
 		});
-	});
 		
 	});
 });

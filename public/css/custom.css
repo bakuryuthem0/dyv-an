@@ -275,6 +275,11 @@ body.admin legend
        -o-transform: translate(-50%,-50%);
           transform: translate(-50%,-50%);
 }
+.contImagesMini
+{
+  text-align: center;
+  margin-top: 5em;
+}
 .inputForm
 {
   margin-bottom: 2em;
@@ -288,10 +293,12 @@ body.admin legend
   display: none;
   opacity: 0;
 }
+
 .imgMini 
 {
   max-width: 100px;
   display: inline-block;
+  margin:1em;
 }
 .titulo
 {
@@ -308,6 +315,7 @@ body.admin legend
   width: 100%;
   background-color: rgba(0, 0, 0, 0.75);
 }
+
 .loading
 {
   width:25px;
@@ -460,8 +468,24 @@ body.admin legend
 
 
 /*Zoom*/
-
-
+.zoomed
+{
+  display: none;
+  opacity: 0;
+  -webkit-transform: scale(2);
+     -moz-transform: scale(2);
+      -ms-transform: scale(2);
+       -o-transform: scale(2);
+          transform: scale(2);
+}
+.cien
+{
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 /**/
 li.disabled
 {

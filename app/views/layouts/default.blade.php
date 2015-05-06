@@ -90,19 +90,24 @@
       <div id="cd-cart-trigger"><a class="cd-img-replace" href="#0"><i class="fa fa-shopping-cart fa-5x"></i></a></div>
       <div id="cd-shadow-layer"></div>
       <div id="cd-cart">
-        <h2>Cart</h2>
-        <ul class="cd-cart-items">
+        <h2 class="textoNegro">Cart</h2>
+        <ul class="cd-cart-items textoNegro">
           <li>
-            <!-- ... -->
+            <table>
+              <?php $total = 0;?>
+            @foreach(Cart::content() as $c)
+              <tr>
+                <td>{{ $c->price }}</td><td>{{ $c->name }}</td><td>{{ $c->qty }}</td>
+              </tr>
+              <?php  $total = $total+($c->price*$c->qty);?>
+            @endforeach
+            </table>
           </li>
-       
-          <li>
-            <!-- ... -->
-          </li>
+
         </ul> <!-- cd-cart-items -->
        
-        <div class="cd-cart-total">
-          <p>Total <span>$39.96</span></p>
+        <div class="cd-cart-total textoNegro">
+          <p>Total <span>{{ $total }}</span></p>
         </div> <!-- cd-cart-total -->
        
         <a href="#0" class="checkout-btn">Checkout</a>
