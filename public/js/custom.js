@@ -416,9 +416,9 @@ jQuery(document).ready(function($) {
 		to = boton.attr('data-url-value');
 		$.ajax({
 			//casa
-			url: '/guacamaya/public/'+to,
+			url: '/dyv-an/public/'+to,
 			//trabajo
-			//url: '/prueba/guacamaya/public/'+to,
+			//url: '/prueba/dyv-an/public/'+to,
 			type: 'POST',
 			dataType: 'json',
 			data: {'id':boton.val() },
@@ -469,9 +469,9 @@ jQuery(document).ready(function($) {
 		var to = boton.attr('data-url-value');
 			$.ajax({
 				//casa
-				url: '/guacamaya/public/'+to,
+				url: '/dyv-an/public/'+to,
 				//trabajo
-				//url: '/prueba/guacamaya/public/'+to,
+				//url: '/prueba/dyv-an/public/'+to,
 				type: 'POST',
 				dataType: 'json',
 				data: {'id':boton.val() },
@@ -549,9 +549,9 @@ jQuery(document).ready(function($) {
 		if (x) {
 			$.ajax({
 				//casa
-				url: '/guacamaya/public/vaciar-carrito',
+				//url: '/dyv-an/public/vaciar-carrito',
 				//trabajo
-				//url: '/prueba/guacamaya/public/vaciar-carrito',
+				url: '/prueba/dyv-an/public/vaciar-carrito',
 				type: 'POST',
 				dataType: 'json',
 				beforeSend:function()
@@ -570,7 +570,7 @@ jQuery(document).ready(function($) {
 							}
 					);
 					$('.btn-carrito').addClass('disabled')
-					$('.btnVaciar').after('<img src="../images/loading.gif" class="loading">');
+					$('.btnVaciar').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					
 				},
 				success:function(response)
@@ -586,8 +586,7 @@ jQuery(document).ready(function($) {
 									'opacity': 1},
 									250);
 							});
-					$('.carItems').remove();
-					$('.catnArt').html(0)
+					$('.removable').remove();
 					$('.total').html(0)
 					
 				}
@@ -659,7 +658,10 @@ jQuery(document).ready(function($) {
 					dataType: 'json',
 					data: {'id': id,'item_id':item_id},
 					beforeSend:function(){
-						$('.chooseModal').after('<img src="../../images/loading.gif" class="loading">');
+						//casa
+						//$('.chooseModal').after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
+						//trabajo
+						$('.chooseModal').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						$('.loading').css({
 							'display': 'block',
 							'margin': '2em auto'
@@ -720,7 +722,11 @@ jQuery(document).ready(function($) {
 					beforeSend:function()
 					{
 						$('.btnAddCart').addClass('disabled');
-						$('.btnAddCart').before('<img src="../../images/loading.gif" class="loading">');
+						//casa
+						//$('.btnAddCart').before('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
+						//trabajo
+						$('.btnAddCart').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+
 						$('.loading').css({
 								'display': 'inline-block'
 							}).animate({
@@ -729,16 +735,14 @@ jQuery(document).ready(function($) {
 					},
 					success:function(response)
 					{
+						$('.btnAddCart').removeClass('disabled');
 						$('.loading').animate({
 							'opacity': 0},
-						250,function(){
-							$(this).remove();
-							boton.css({
-								'display': 'inline-block'
-							}).animate({
-								'opacity': 1},
-								250);
-						});
+						250);
+						if ($('#'.response.rowid).length<1) {
+							$('.tableItems').append('<tr id="'+response.rowid+'" class="removable"><td class="textoNegro">'+response.price+'</td><td class="textoNegro">'+response.name+'</td><td class="textoNegro">'+response.qty+'</td><td><button class="btn btn-danger btn-xs btnQuitar btn-carrito" data-url-value="quitar-item" value="'+response.rowid+'"><i class="fa fa-close"></i></button></td></tr>')
+							$('.total').html(response.total)
+						}
 					}
 				})
 			}
@@ -767,7 +771,10 @@ jQuery(document).ready(function($) {
 					data: {'id':boton.val() },
 					beforeSend:function()
 					{
-						boton.after('<img src="../images/loading.gif" class="loading">');
+						//casa
+						//boton.after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
+						//trabajo
+						boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						boton.animate({
 								'opacity': 0},
 								250,function(){
@@ -824,7 +831,10 @@ jQuery(document).ready(function($) {
 						'qty':inp.val() },
 					beforeSend:function()
 					{
-						boton.after('<img src="../images/loading.gif" class="loading">');
+						//casa
+						//boton.after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
+						//trabajo
+						boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						boton.animate({
 								'opacity': 0},
 								250,function(){
@@ -898,7 +908,7 @@ jQuery(document).ready(function($) {
 			dataType: 'json',
 			data: {'id': id,'status':status},
 			beforeSend:function () {
-				boton.after('<img src="../images/loading.gif" class="loading">');
+				boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 				boton.animate({
 						'opacity': 0},
 						250,function(){

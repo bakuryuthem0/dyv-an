@@ -91,13 +91,30 @@
       <div id="cd-shadow-layer"></div>
       <div id="cd-cart">
         <h2 class="textoNegro">Cart</h2>
-        <ul class="cd-cart-items textoNegro">
+        <ul class="cd-cart-items ">
           <li>
-            <table>
+            <table class="table table-hover tableItems">
+              <tr>
+                <th class="textoNegro">Precio</th>
+                <th class="textoNegro">Nombre</th>
+                <th class="textoNegro">Cantidad</th>
+                <th>
+                   <button class="btn btn-danger btn-xs btnVaciar">
+                      Vaciar
+                    </button>
+                </th>
+              </tr>
               <?php $total = 0;?>
             @foreach(Cart::content() as $c)
-              <tr>
-                <td>{{ $c->price }}</td><td>{{ $c->name }}</td><td>{{ $c->qty }}</td>
+              <tr id="{{ $c->rowid  }}" class="removable">
+                <td class="textoNegro">{{ $c->price }}</td>
+                <td class="textoNegro">{{ $c->name }}</td>
+                <td class="textoNegro">{{ $c->qty }}</td>
+                <td>
+                  <button class="btn btn-danger btn-xs btnQuitar btn-carrito" data-url-value="quitar-item" value="{{ $c->rowid }}">
+                    <i class="fa fa-close"></i>
+                  </button>
+                </td>
               </tr>
               <?php  $total = $total+($c->price*$c->qty);?>
             @endforeach
