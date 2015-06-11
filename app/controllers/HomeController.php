@@ -30,22 +30,29 @@ class HomeController extends BaseController {
 	public function getFront()
 	{
 		$title = "Portada";
-		return View::make('indexs.portada')->with('title',$title); 
+		$slides = Slides::where('deleted','=',0)
+		->where('pos','=',2)
+		->get();
+		return View::make('indexs.portada')
+		->with('title',$title)
+		->with('slides',$slides); 
 	}
 	public function getIndex()
 	{
 		$title  = Lang::get('lang.title_index');
-		$cats   = Cat::where('deleted','=',0)->get();
+		$cats   = Cat::where('deleted','=',0)->paginate(5);
 		$i = 0;
 		$cat = array();
 		foreach ($cats as $c) {
 			$aux = SubCat::where('cat_id','=',$c->id)->where('deleted','=',0)->get();
 			$c->subcat = $aux;
 			$cat[$i] = $c;
+			$i++;
 		}
 		return View::make('indexs.index')
 		->with('title',$title)
-		->with('cats',$cat);
+		->with('cats',$cat)
+		->with('pag',$cats);
 	}
 
 	public function postItemLoad()
@@ -144,6 +151,57 @@ class HomeController extends BaseController {
 		->with('busq',$auxcat->sub_desc);
 
 	}
+	public function getShowItem($id)
+	{
+		$art = Items::where('item.id','=',$id)
+		->first(array('item.*'));
+		$a = new stdClass;
+		$a->id = $art->id;
+		$a->item_nomb 		= $art->item_nomb;
+		$a->item_desc 		= $art->item_desc;
+		$a->item_cod 	 	= $art->item_cod;
+		$a->item_precio 	= $art->item_precio;
+		if (!is_null($art->percent)) {
+			$a->percent = $art->percent;
+		}
+		$a->misc 			= array();
+		$a->tallas    		= array();
+		$a->colores   		= array();
+		//$misc    			= Misc::where('item_id','=',$art->id)->first();
+		$misc    			= Misc::where('item_id','=',$art->id)->get();
+		$aux = array();
+		$i = 0;
+		foreach ($misc as $m ) {
+			$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get();
+			$i++;
+		}
+		$a->images   	 	= $aux;
+		
+		$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('item_talla'));
+		$c = Misc::where('item_id','=',$art->id)->get(array('item_color','item_talla'));
+		$a->tallas = $t;
+		$a->colores= $c;
+		$tallas  = Tallas::get();
+		$colores = Colores::get();
+
+		$title = $art->item_nomb;
+		if (Auth::check() && Auth::user()->role == 1) {
+			$layout = 'admin';
+		}else
+		{
+			$layout = 'default';
+		}
+		$option = array();
+		$tallas = Tallas::get();
+		$colores = Colores::get();		
+		return View::make('indexs.artSelf')
+		->with('title',$title)
+		->with('art',$a)
+		->with('layout',$layout)
+		->with('tallas',$tallas)
+		->with('colores',$colores);
+	
+	}
 	public function search()
 	{
 		$busq = Input::get('busq');
@@ -231,5 +289,18 @@ class HomeController extends BaseController {
 			});
 			Session::flash('success', 'Mensaje enviado correctamente. pronto nuestros agentes se pondrán en contacto con usted.');
 			return Redirect::to('contactenos');
+	}
+	public function getMySize()
+	{
+		$title = "¿Como saber mi talla?";
+		return View::make('indexs.tallas')
+		->with('title',$title);
+	}
+	public function getMyWishList()
+	{
+		$title = "Mi lista de deseos";
+
+		return View::make('user.wishList')
+		->with('title',$title);
 	}
 }

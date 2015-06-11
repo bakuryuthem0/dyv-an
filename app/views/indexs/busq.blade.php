@@ -35,6 +35,15 @@
               <label class="description textoNegro">Descripción</label>
               <div class="contDescription textoNegro"></div>
             </div>
+          @if(Auth::check() && Auth::user()->role != 1)
+          <div class="col-xs-12 formulario">
+              <button class="btn btn-danger btnAddWishList" data-toggle="modal" data-target="#addWishList" data-cod-value="" data-price-value="" data-name-value="" value="">Agregar a mi lista de deseos.</button>
+          </div>
+          @else
+          <div class="col-xs-12 formulario">
+              <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#loginModal">Agregar a mi lista de deseos.</a>
+          </div>
+          @endif
           </div>
           <div class="col-xs-4 contImageItem">
             <div class="cien">
@@ -62,7 +71,7 @@
               </ul>
               <input type="hidden" class="values" value="" data-misc-id="">
             </div>
-            {{ Auth::check() }}
+            
             @if(Auth::check() && Auth::user()->role != 1)
             <div class="col-xs-12 formulario">
                 <button class="btn btn-danger btnAgg" data-toggle="modal" data-target="#addCart" data-cod-value="" data-price-value="" data-name-value="" value="">Agregar al carrito.</button>
@@ -110,6 +119,23 @@
         <button class="btn btn-danger btnAddCart disabled">Agregar</button>
       </div>
     </div>
+  </div>
+</div>
+<div class="modal fade" id="addWishList" tabindex="-1" role="dialog" aria-labelledby="modalForggo" aria-hidden="true">
+  <div class="forgotPass modal-dialog imgLiderUp">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      </div>
+      <div class="textoNegro">
+        <h3>Agregar a mi lista de deseos </h3>
+      </div>
+        <p class="textoNegro textoPromedio">¿Seguro desea agregar este item a su lista de deseos?</p>
+        <div class="clearfix"></div>
+        <div class="modal-footer">
+          <button class="btn btn-danger btnAddMyWishList">Agregar</button>
+        </div>
+      </div>
   </div>
 </div>
 <div class="contLoading">

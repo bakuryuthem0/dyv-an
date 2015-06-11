@@ -36,13 +36,11 @@
 			<h3>Pagos realizados</h3>
 			<div class="clearfix"></div>
 			<form action="#" method="get">
-				<div class="input-group">
 					<!-- USE TWITTER TYPEAHEAD JSON WITH API TO SEARCH -->
 					<input class="form-control" id="buscar-usuario" name="q" placeholder="Busqueda general" required>
 					<span class="input-group-addon">
 						<i class="glyphicon glyphicon-search"></i>
 					</span>
-				</div>
 			</form>
 			<table id="tablesorter" class="tablesorter table table-striped table-condensed table-vertical-middle table-super-condensed table-bordered table-list-search table-hover">
 				<thead>

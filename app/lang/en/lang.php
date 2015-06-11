@@ -7,8 +7,10 @@ return array(
 	    "menu_login"    			=> "Login",
 	    "menu_logout"    			=> "Log out",
 	    "menu_profile"    			=> "My Profile",
+	    "menu_changepass"    		=> "Change Password",
 	    "menu_register"   			=> "Register",
 	    "menu_contact"   			=> "Contact us",
+	    "menu_wish_list"			=> "My Wish List",
 	    "lang_es"					=> "Spanish",
 	    "lang_en"					=> "English",
 	    "lang_po"					=> "Portuguese",
@@ -17,6 +19,7 @@ return array(
 	    "titulo_2"					=> "Login",
 	    "titulo_3"					=> "User registration",
 	    "titulo_4"					=> "Contact us",
+	    "titulo_5"					=> "My Cart",
 	    /*Formularios*/
 	    "login_username"			=> "Username",
 	    "login_pass"				=> "Password",

@@ -69,13 +69,17 @@ class AuthController extends BaseController {
 	{
 		$title = Lang::get('lang.titulo_3');
 		$departamentos = Department::all();
-		return View::make('indexs.register')->with('title',$title)->with('departamentos',$departamentos);
+		$pais = Pais::orderBy('name','asc')
+		->get();
+		return View::make('indexs.register')
+		->with('title',$title)
+		->with('pais',$pais)
+		->with('departamentos',$departamentos);
 	}
 	public function postRegister()
 	{
 		$input = Input::all();
 		$rules = array(
-			'username'   			 => 'required|min:4|unique:usuario',
 			'pass'      		 	 => 'required|min:6|confirmed',
 			'cedula'			 	 => 'required',
 			'pass_confirmation'      => 'required',
@@ -84,7 +88,6 @@ class AuthController extends BaseController {
 			'email'      			 => 'required|email|unique:usuario',
 			'city'     			 	 => 'required',
 			'dir' 			 		 => 'required',
-			'dir2' 			 		 => 'required',
 			'department'			 => 'required',
 			'g-recaptcha-response'   => 'required',
 
@@ -103,12 +106,14 @@ class AuthController extends BaseController {
 		}
 		$codigo = md5(rand());
 		$user = new User;
-		$user->username 	 = $input['username'];
+		$user->username 	 = $input['email'];
 		$user->password    	 = Hash::make($input['pass']);
 		$user->email    	 = $input['email'];
 		$user->nombre    	 = $input['name'];
 		$user->dir 			 = $input['dir'];
-		$user->dir2 			 = $input['dir2'];
+		if (!empty($input['dir2'])) {
+			$user->dir2 	 = $input['dir2'];
+		}
 		$user->apellido 	 = $input['lastname'];
 		$user->cedula  		 = $input['cedula'];
 		$user->city  	   	 = $input['city'];
@@ -119,6 +124,13 @@ class AuthController extends BaseController {
 		$user->role          = 3;
 		
 		if ($user->save()) {
+			$data = array(
+				'hola' => 'hola'
+			);
+			Mail::send('emails.newPass', $data, function ($message){
+			    $message->subject('Correo creación de usuario dyv-an.com');
+			    $message->to('someemail@dyv-an.com');
+			});
 			Session::flash('success', 'Su cuenta fue creada satisfractoriamente, inicie sesión para disfrutar de nuestros servicios.');
 			return Redirect::to('iniciar-sesion');
 			
@@ -223,4 +235,5 @@ class AuthController extends BaseController {
 			return $parroquia;
 		}
 	}
+	
 }

@@ -23,50 +23,60 @@
     <body >
         <div class="row">
           <div class="container">
-            <div class="col-xs-12">
-              <h1>Factura digital dyv-an.com</h1>
-              <h3>Datos del Cliente</h3>
-              <ul class="textoPromedio">
-                <li>Cliente:{{ $user->nombre.' '.$user->apellido }}</li>
-                <li>Direccion: {{ $user->dir }}</li>
-                <li>CI/RIF: {{ $user->cedula }}</li>
-              </ul>
-              <h3 style="text-align:center;">FACTURA</h3>
-              <br>
-              <table class="table table-hover textoPromedio">
-                <tr><td>FACTURA</td><td>{{ $factura->id }}</td></tr>
-                <tr><td>FECHA</td><td>{{ $factura->updated_at }}</td></tr>
-              </table>
-              <table class="table table-hover">
-                <thead>
-                  <tr class="textoPromedio">
-                    <th>Codigo del articulo</th>
-                    <th>Cantidad de articulos</th>
-                    <th>Precio unitario</th>
-                    <th>Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <? $total = 0; ?>
-                  @foreach($fact as $f)
-                  <tr class="textoPromedio">
-                    <td>{{ $f->item_cod }}</td>
-                    <td>{{ $f->qty }}</td>
-                    <td>{{ $f->item_precio }}</td>
-                    <td>{{ $f->qty*$f->item_precio }}</td>
-                    <? $total += $f->qty*$f->item_precio; ?>
-                  </tr>
-                  @endforeach
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td><h3>Total:</h3></td>
-                    <td><h3 class="precio">{{ $total }}</h3></td>
-                  </tr>
-                </tbody>
-              </table>
-
-            </div>
+            <div class="contenedorFactura">
+                      <div class="col-xs-12 textoNegro">
+                        <h1>Factura digital dyv-an.com</h1>
+                        <div class="contImgFac">
+                          <img src="{{ asset('images/logo-01.png') }}">
+                        </div>
+                        <div class="derecha contdeNegro" style="margin-top:2em;">
+                          <h3>Datos del Cliente</h3>
+                          <ul class="textoPromedio">
+                            <li>Cliente:{{ $user->nombre.' '.$user->apellido }}</li>
+                            <li>Direccion: {{ $user->dir }}</li>
+                            <li>CI/RIF: {{ $user->cedula }}</li>
+                          </ul>
+                        </div>
+                        <div class="contdeNegro">
+                          <h3 style="text-align:center;">FACTURA</h3>
+                          <table class="table table-hover textoPromedio">
+                            <tr><td>FACTURA</td><td>{{ $factura->id }}</td></tr>
+                            <tr><td>FECHA</td><td>{{ $factura->updated_at }}</td></tr>
+                          </table>
+                        </div>
+                        <div class="contdeNegro">
+                          <table class="table table-hover">
+                            <thead>
+                              <tr class="textoPromedio">
+                                <th>Codigo del articulo</th>
+                                <th>Cantidad de articulos</th>
+                                <th>Precio unitario</th>
+                                <th>Subtotal</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <?php $total = 0; ?>
+                              @foreach($fact as $f)
+                              <tr class="textoPromedio">
+                                <td>{{ $f->item_cod }}</td>
+                                <td>{{ $f->qty }}</td>
+                                <td>{{ $f->item_precio }}</td>
+                                <td>{{ $f->qty*$f->item_precio }}</td>
+                                <?php $total += $f->qty*$f->item_precio; ?>
+                              </tr>
+                              @endforeach
+                              <tr>
+                                <td></td>
+                                <td></td>
+                                <td><h3>Total:</h3></td>
+                                <td><h3 class="precio">{{ $total }}</h3></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+          
+                      </div>
+                  </div>
           </div>
         </div>          
           

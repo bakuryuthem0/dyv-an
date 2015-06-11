@@ -11,7 +11,9 @@ Class ShowSlides{
 	}
 	static function showTallas()
 	{
-		$tallas = Tallas::where('deleted','=',0)->get();
+		$tallas = Tallas::where('deleted','=',0)
+		->where('pos','=',1)
+		->get();
 		return $tallas;
 	}
 }
