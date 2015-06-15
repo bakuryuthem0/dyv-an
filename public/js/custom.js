@@ -214,13 +214,14 @@ function validarEmail(email,e) {
 }
 jQuery(document).ready(function($) {
 	$('.pais').change(function(event) {
+		console.log($(this).val())
 		if ($(this).val() == 31) {
-			$('.delSel').css('display', 'inline-block').attr('name', 'department');
-			$('.delInp').css('display', 'none').attr('name', '');
+			$('.depSel').css({'display': 'inline-block'}).attr('name', 'department').addClass('inputFondoNegro');
+			$('.depInp').css({'display': 'none'}).attr('name', '').removeClass('inputFondoNegro');
 		}else
 		{
-			$('.delSel').css('display', 'none').attr('name', '');
-			$('.delInp').css('display', 'inline-block').attr('name', 'department');
+			$('.depSel').css({'display': 'none'}).attr('name', '').removeClass('inputFondoNegro');
+			$('.depInp').css({'display': 'inline-block'}).attr('name', 'department').addClass('inputFondoNegro');
 
 		}
 	});
@@ -466,7 +467,7 @@ jQuery(document).ready(function($) {
 					$('.contDescription').html(response['item'].item_desc)
 					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','http://localhost/dyv-an/public/images/items/'+response.princ)
 					$('.contImageItem > .imagenPrincipal').attr('src','http://localhost/dyv-an/public/images/items/'+response.princ)
-					$('.precio').html(response['item'].item_precio);
+					$('.precio').html('Bs. '+response['item'].item_precio);
 					$('.btnAgg').val(response['item'].id)
 					$('.btnAgg').attr('data-name-value', response['item'].item_nomb);
 					$('.btnAgg').attr('data-price-value', response['item'].item_precio);
@@ -494,7 +495,7 @@ jQuery(document).ready(function($) {
 						})
 						$(this).stop().animate({'opacity':1}, 250)
 					});
-					$('.imgMini').mouseover(function(event) {
+					$('.imgMini').click(function(event) {
 						var src = $(this).attr('src');
 						if (src != $('.imagenPrincipal').attr('src')) {
 							$('.imagenPrincipal').stop().animate({'opacity':0}, 250,function()
@@ -847,9 +848,8 @@ jQuery(document).ready(function($) {
 			})		
 		}
 	});
-	$('.btnAgg').click(function(event) {
-		event.stopImmediatePropagation();
-		$(this).unbind('click');
+	
+	$('.btnAgg').on('click',function(event) {
 		var name  = $(this).attr('data-name-value');
 		var price = $(this).attr('data-price-value');
 		$('.btnAddCart').val($(this).val())
@@ -874,17 +874,17 @@ jQuery(document).ready(function($) {
 					data: {'id': id,'item_id':item_id},
 					beforeSend:function(){
 						//casa
-						$('.btnAddCart').after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
+						$('.btnAddCart').before('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
 						//trabajo
 						//$('.btnAddCart').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						$('.loading').css({
-							'display': 'block',
+							'display': 'inline-block',
 							'margin': '2em auto'
 						}).animate({
 							'opacity': 1},
 							500);
 					},
-					success:function(response){
+					success:function(response){	
 						$('.loading').animate({
 							'opacity': 0},
 							500,function(){
@@ -915,8 +915,10 @@ jQuery(document).ready(function($) {
 				$('.disabled').removeClass('disabled');
 			}
 		});
-		$('.btnAddCart').click(function(event) {
+
+		$('.btnAddCart').on('click',function(event) {
 			event.stopImmediatePropagation();
+			console.log(event)
 			var id = $(this).val();
 			if ($('.colorModal').val() == "" || $('.chooseModal').val() == "") {
 				alert('Debes elegir la talla y el color.')
@@ -957,7 +959,7 @@ jQuery(document).ready(function($) {
 					},
 					success:function(response)
 					{
-
+						$('.btnAddCart').unbind('click');
 						$('#addCart').modal('hide');
 						$('#showItem').modal('hide');
 						$('#cd-cart-trigger').popover('show');
@@ -970,15 +972,17 @@ jQuery(document).ready(function($) {
 							'opacity': 0},
 						250);
 						if ($('#'+response.rowid).length < 1) {
-							$('.tableItems').append('<tr id="'+response.rowid+'" class="removable"><td class="textoNegro">'+response.price+'</td><td class="textoNegro">'+response.name+'</td><td class="textoNegro">'+response.qty+'</td><td><button class="btn btn-danger btn-xs btnQuitar btn-carrito" data-url-value="quitar-item" value="'+response.rowid+'"><i class="fa fa-close"></i></button></td></tr>')
+							$('.tableItems').append('<tr id="'+response.rowid+'" class="removable textoPromedio"><td class="textoNegro">'+response.price+'</td><td class="textoNegro">'+response.name+'</td><td class="textoNegro">'+response.qty+'</td><td><button class="btn btn-danger btn-xs btnQuitar btn-carrito" data-url-value="quitar-item" value="'+response.rowid+'"><i class="fa fa-close"></i></button></td></tr>')
 							$('.total').html(response.total)
 						}else
 						{
 							$('#'+response.id+'> .qty').html(response.qty);
 							$('.total').html(response.total)
 						}
-						$('.btnQuitar').bind('click');
-
+						
+						setTimeout(function(){
+							window.location.reload();
+						},2000)
 					}
 				})
 			}
@@ -1294,6 +1298,50 @@ jQuery(document).ready(function($) {
 	});
 });
 jQuery(document).ready(function($) {
+	$('.btn-reactivar').on('click', function(event) {
+		var boton = $(this)	
+		$('.envReactivar').val($(this).val())
+		$('.envReactivar').click(function(event) {
+			$.ajax({
+				url: 'ver-articulo/reactivar',
+				type: 'POST',
+				dataType: 'json',
+				data: {'id': $(this).val()},
+				beforeSend:function()
+				{
+					$('.envReactivar').before('<img src="../images/loading.gif" class="loading">');
+					$('.loading').css({
+						'display': 'block',
+						'margin': '2em auto'
+					}).animate({
+						'opacity': 1},
+						500);
+					$('.envReactivar').addClass('disabled');
+				},
+				success:function(response)
+				{
+					$('.envReactivar').removeClass('disabled');
+					$('.loading').animate({
+						'opacity': 0},
+						500,function(){
+							$(this).remove();
+						});
+					if (response.type == 'success') {
+						boton.after('<button class="btn btn-xs btn-danger btnElimItem" data-toggle="modal" data-target="#elimModal" value="'+$(this).val()+'">Eliminar</button>')
+						boton.remove();
+						$('.btnElimItem').bind('click');
+					};
+					$('.responseDanger').addClass('alert-'+response.type).html(response.msg).css({
+						'display': 'block'
+					}).animate({
+						'opacity': 1},
+						500);
+				}
+			})
+			
+			
+		});
+	});
 	$('.btnElimItem').click(function(event) {
 		var boton = $(this);
 		$('.responseDanger').removeClass('alert-danger');
@@ -1330,8 +1378,9 @@ jQuery(document).ready(function($) {
 							$(this).remove();
 						});
 					if (response.type == 'success') {
-
-						boton.parent().parent().remove();
+						boton.after('<button class="btn btn-xs btn-danger btn-reactivar" data-toggle="modal" data-target="#reactivarModal" value="'+$(this).val()+'">Reactivar</button>')
+						boton.remove();
+						$('.btn-reactivar').bind('click');
 					};
 					$('.responseDanger').addClass('alert-'+response.type).html(response.msg).css({
 						'display': 'block'
@@ -1350,7 +1399,21 @@ jQuery(document).ready(function($) {
 	$('.slick-prev').html('<i class="fa fa-caret-left"></i>');
 	$('.slick-next').html('<i class="fa fa-caret-left"></i>');
 });
-
+jQuery(document).ready(function($) {
+	var id = $('.art_id').val(),misc = $('.misc_id').val();
+	$('.contNew').click(function(event) {
+		$('.formCart').prop({
+			'action': '../enviar/'+id+'/'+misc,
+		})
+		$('.formCart').submit();
+	});
+	$('.contSave').click(function(event) {
+		$('.formCart').prop({
+			'action': '../guardar-cerrar/'+id+'/'+misc,
+		})
+		$('.formCart').submit();
+	});
+});
 jQuery(document).ready(function($) {
 	/*-------------------------------------------registro de usuario-------------------------------------------*/
 	var estado = $('#estado2');
@@ -1594,6 +1657,19 @@ jQuery(document).ready(function($) {
 		$('.pagWebModal').html(pagWeb);
 		$('.carnetModal').html(carnet);
 		$('.nitModal').html(nit);
+	});
+	$('.verTransData').click(function(event) {
+		var id = $(this).val();
+		var bank  = $('.bank-'+id).val();
+		var bank2 = $('.bank2-'+id).val();
+		var fech  = $('.fech-'+id).val();
+		var num   = $('.num-'+id).val();
+		
+		$('.bankeModal').html(bank);
+		$('.bankemisorModal').html(bank2);
+		$('.fechTransModal').html(fech);
+		$('.numTransModal').html(num);
+		
 	});
 });
 

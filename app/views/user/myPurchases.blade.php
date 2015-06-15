@@ -11,7 +11,7 @@
 	</div>
 	@endif
 	<div class="col-xs-12">
-		<div class="col-xs-12">
+		<div class="col-xs-12 formulario">
 			<legend>Leyenda</legend>
 			<p class="textoPromedio">
 				Aprovado: <i class="fa fa-check-circle btn-xs icon-status-success icon"></i>
@@ -21,10 +21,11 @@
 				Pendiente: <i class="fa fa-exclamation-circle icon-status-pending icon"></i>
 			</p>
 		</div>
-		<p class="textoPromedio">A continuación se mostrara su lista de compras</p>
+
+		<div class="col-xs-12 formulario"><p class="textoPromedio">A continuación se mostrara su lista de compras</p></div>
 			<table class="table table-hover" style="margin:5em 0">
 				<thead>
-					<tr>
+					<tr class="textoPromedio">
 						<th>Codigo de factura</th>
 						<th>Status</th>
 						<th>Dirección</th>
@@ -48,15 +49,12 @@
 							<td>
 								<a href="{{ URL::to('compra/procesar/'.$f->id) }}" class="btn btn-success btn-xs">Pagar</a>
 							</td>
-							<td>
-								<a target="_blank" href="{{ URL::to('usuario/ver-factura/'.$f->id) }}" class="btn btn-xs btn-info">Ver factura</a>
-							</td>
 						@else
-							<td>@if($f->pagada == 1) 
-								<a target="_blank" href="{{ URL::to('usuario/ver-factura/'.$f->id) }}" class="btn btn-xs btn-info">Ver factura</a>
-								@endif
-							</td>
+							<td></td>
 						@endif
+						<td>
+							<a target="_blank" href="{{ URL::to('usuario/ver-factura/'.$f->id) }}" class="btn btn-xs btn-info">Ver factura</a>
+						</td>
 					</tr>
 					@endforeach
 				</tbody>

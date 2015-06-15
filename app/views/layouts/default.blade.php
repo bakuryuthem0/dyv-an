@@ -38,7 +38,7 @@
             <div class="clearfix"></div>
             <div class="col-xs-12 contMenu no-in si-in">
               <ul class="menu textoGrande">
-                <li><a href="{{ URL::to('catalogo') }}">{{ Lang::get('lang.menu_index') }}</a></li>
+                <li><a href="{{ URL::to('inicio') }}">{{ Lang::get('lang.menu_index') }}</a></li>
                 @if(!Auth::check())
                 <li><a href="#" data-toggle="modal" data-target="#loginModal">{{ Lang::get('lang.menu_login') }}</a></li>
                 <li><a href="{{ URL::to('registro') }}">{{ Lang::get('lang.menu_register') }}</a></li>
@@ -74,7 +74,7 @@
           </div>
         </nav>
       </header>
-      <div id="cd-cart-trigger" data-toggle="popover" data-placement="left" data-content="Se ha agregado un item"title="" data-original-title="Aviso"><a class="cd-img-replace" href="#0"><i class="fa fa-shopping-cart fa-5x"></i></a></div>
+      <div id="cd-cart-trigger" data-toggle="popover" data-placement="left" data-content="Se ha agregado un item"title="" data-original-title="Aviso"><a class="cd-img-replace" href="#0"><i class="fa fa-shopping-cart fa-4x"></i></a></div>
       <div id="cd-shadow-layer"></div>
       <div id="cd-cart">
         <h2 class="textoNegro">Carrito</h2>
@@ -82,9 +82,9 @@
           <li>
             <table class="table table-hover tableItems">
               <tr>
-                <th class="textoNegro">Precio</th>
-                <th class="textoNegro">Nombre</th>
-                <th class="textoNegro">Cantidad</th>
+                <th class="textoNegro textoPromedio">Precio</th>
+                <th class="textoNegro textoPromedio">Nombre</th>
+                <th class="textoNegro textoPromedio">Cantidad</th>
                 <th>
                    <button class="btn btn-danger btn-xs btnVaciar">
                       Vaciar
@@ -94,9 +94,9 @@
               <?php $total = 0;?>
             @foreach(Cart::content() as $c)
               <tr id="{{ $c->rowid  }}" class="removable">
-                <td class="textoNegro">{{ $c->price }}</td>
-                <td class="textoNegro">{{ $c->name }}</td>
-                <td class="textoNegro qty">{{ $c->qty }}</td>
+                <td class="textoNegro textoPromedio">{{ $c->price }}</td>
+                <td class="textoNegro textoPromedio">{{ $c->name }}</td>
+                <td class="textoNegro textoPromedio qty">{{ $c->qty }}</td>
                 <td>
                   <button class="btn btn-danger btn-xs btnQuitar btn-carrito" data-url-value="quitar-item" value="{{ $c->rowid }}">
                     <i class="fa fa-close"></i>
@@ -110,11 +110,11 @@
 
         </ul> <!-- cd-cart-items -->
        
-        <div class="cd-cart-total textoNegro">
+        <div class="cd-cart-total textoNegro textoPromedio">
           <p>Total <span class="total">{{ $total }}</span></p>
         </div> <!-- cd-cart-total -->
        
-        <a href="{{ URL::to('comprar/ver-carrito') }}" class="checkout-btn @if(Cart::count()>0) btn-comprar @else btn-no @endif">Checkout</a>
+        <a href="{{ URL::to('comprar/ver-carrito') }}" class="checkout-btn textoPromedio @if(Cart::count()>0) btn-comprar @else btn-no @endif">Comprar</a>
         
       </div> <!-- cd-cart -->
       @yield('content')

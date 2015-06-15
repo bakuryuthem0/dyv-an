@@ -11,7 +11,7 @@
 |
 */
 Route::get('/', 'HomeController@getFront');
-Route::get('catalogo', 'HomeController@getIndex');
+Route::get('inicio', 'HomeController@getIndex');
 Route::get('contacto','HomeController@getContact');
 Route::post('contactenos','HomeController@postContact');
 Route::get('como-saber-mi-talla','HomeController@getMySize');
@@ -103,6 +103,7 @@ Route::group(array('before' =>'auth'),function()
 		Route::get('administrador/ver-articulo', 'AdminController@getShowArt');
 		Route::get('administrador/ver-articulo/{id}','HomeController@getShowItem');
 		Route::post('administrador/ver-articulo/eliminar','AdminController@postElimItem');
+		Route::post('administrador/ver-articulo/reactivar','AdminController@postReactItem');
 		Route::get('administrador/editar-articulo/{id}','AdminController@getMdfItem');
 		/*Categorias*/
 		/*nueva*/

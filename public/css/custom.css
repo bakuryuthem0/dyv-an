@@ -1,3 +1,4 @@
+
 @-webkit-keyframes moves-background {
    0% { 
    -webkit-transform: scale(1);
@@ -171,6 +172,10 @@ body.admin legend
           transition: all .25s linear;
   
 }
+.carImg
+{
+  max-width: 250px;
+}
 .fa
 {
   color: #e62169;
@@ -179,7 +184,7 @@ body.admin legend
 {
   background-color: #e62169;
 }
-.btn-success:hover
+.btn-success:hover,.btn-success:focus
 {
   background-color: #EA6C9A;
 }
@@ -524,6 +529,16 @@ h4 > .rotated
   padding: 1em;
   margin-bottom: 2em;
 }
+#cd-cart .checkout-btn
+{
+  background-color: #e62169 !important;
+
+}
+.precio
+{
+  font-weight: 600;
+  color: #e62169 !important;
+}
 .redes
 {
     text-align: center;
@@ -564,13 +579,35 @@ h4 > .rotated
 .table-hover>tbody>tr>td {
   vertical-align: middle;
 }
-
-
+.portadaMySlide .slick-prev
+{
+  left: 0;
+}
+.portadaMySlide .slick-next
+{
+    right: 3%;
+}
+.portadaMySlide .slick-prev:before,.portadaMySlide .slick-next:before
+{
+  font-size: 50px !important;
+  opacity: 0.9 !important;
+}
+.portadaMySlide .slick-prev:hover:before,.portadaMySlide .slick-prev:focus:before,.portadaMySlide .slick-next:hover:before,.portadaMySlide .slick-next:focus:before
+{
+  opacity: 0.9 !important;
+  ;
+}
+.slickPortada > img {
+  width: 100% !important;
+}
 .btn-success,.btn-warning,.btn-danger,.btn-primary,.btn-info
 {
   background-image: none !important;
 }
-
+.checkout-btn
+{
+  background-color: #e62169;
+}
 .btn-comprar
 {
   display: inline-block;
@@ -787,7 +824,7 @@ li.disabled
 }
 #cd-cart h2 {
   font-size: 14px;
-  font-size: 0.875rem;
+  font-size: 1.3rem;
   font-weight: bold;
   text-transform: uppercase;
   margin: 1em 0;

@@ -3,9 +3,9 @@
 @section('content')
 <div class="hidden-container container-in">
   <div class="contenido">
-      <div class="mySlide">
+      <div class="portadaMySlide">
       @foreach($slides as $s)
-        <div>
+        <div class="slickPortada">
             <img src="{{ asset('images/slides-top/'.$s->image) }}">
         </div>
       @endforeach
@@ -17,30 +17,19 @@
 @section('postscript')
    <script type="text/javascript">
           $(document).ready(function(){
-            $('.mySlide').slick({
+            $('.portadaMySlide').slick({
               adaptiveHeight: true,
-              accessibility:true,
-              autoplay    : true,
+              accessibility :true,
+              autoplay      : true,
               autoplaySpeed : 5000,
-              dots: false,
-              infinite: true,
-              speed: 300,
-              slidesToShow: 1,
+              dots          : false,
+              infinite      : true,
+              speed         : 300,
+              slidesToShow  : 1,
               slidesToScroll: 1,
-              fade: true,
+              fade          : true,
             });
-            
-            /*$('.fade').slick({
-              dots: true,
-              infinite: true,
-              speed: 500,
-              fade: true,
-              cssEase: 'linear',
-              adaptiveHeight: true,
-              autoplay    : true,
-              autoplaySpeed : 5000
-            });
-            */
+           
           });
     </script>
 @stop

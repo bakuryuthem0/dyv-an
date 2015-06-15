@@ -37,11 +37,11 @@
             </div>
           @if(Auth::check() && Auth::user()->role != 1)
           <div class="col-xs-12 formulario">
-              <button class="btn btn-danger btnAddWishList" data-toggle="modal" data-target="#addWishList" data-cod-value="" data-price-value="" data-name-value="" value="">Agregar a mi lista de deseos.</button>
+              <button class="btn btn-danger btnAddWishList" data-toggle="modal" data-target="#addWishList" data-cod-value="" data-price-value="" data-name-value="" value=""><i class="fa fa-heart"></i></button>
           </div>
           @else
           <div class="col-xs-12 formulario">
-              <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#loginModal">Agregar a mi lista de deseos.</a>
+              <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#loginModal"><i class="fa fa-heart" style="colo:white;"></i></a>
           </div>
           @endif
           </div>
@@ -53,7 +53,7 @@
           </div>
           <div class="col-xs-4 textoPromedio ">
             <div class="col-xs-12">
-              <label class="textoNegro">PRECIO EN DYV-AN:<span class="precio"></span></label>
+              <label class="textoNegro">PRECIO EN DYV-AN:<h3 class="precio"></h3></label>
             </div>
             <div class="col-xs-12 formulario">
               <label class="textoNegro">Talla</label>

@@ -44,7 +44,7 @@
 	    "form_dir1"	 				=> "Dirección #1",
 	    "form_dir2"	 				=> "Dirección #2",
 	    "form_phone"				=> "Telefono",
-	    "form_dep"					=> "Departamento",
+	    "form_dep"					=> "Departamento/Estado",
 	    "form_selectDep"			=> "Selecione un departamento",
 	    "form_subject"				=> "Asunto",
 	    "form_msg"					=> "Mensaje",

@@ -292,10 +292,11 @@ class AdminController extends BaseController {
 	public function getShowArt()
 	{
 		$title = "Articulos";
-		$art = Items::where('deleted','=',0)->get(array(
+		$art = Items::get(array(
 			'item.item_cod',
 			'item.item_nomb',
-			'item.id'
+			'item.id',
+			'item.deleted'
 		));
 		return View::make('admin.showArt')
 		->with('title',$title)
@@ -1265,6 +1266,27 @@ class AdminController extends BaseController {
 			return Response::json(array('type' =>'danger','msg' =>'Error al eliminar el articulo'));
 		}
 	}
+	public function postReactItem()
+	{
+		$id = Input::get('id');
+		$item = Items::find($id);
+		$misc = Misc::where('item_id','=',$id)->first();
+		$img  = Images::where('misc_id','=',$misc->id)->get();
+		$item->deleted = 0;
+		$misc->deleted = 0;
+		foreach ($img as $i) {
+			$i->deleted = 0;
+			$i->save();
+		}
+		
+		if($item->save() && $misc->save())
+		{
+			return Response::json(array('type' => 'success','msg' => 'Articulo eliminado satisfactoriamente'));
+		}else
+		{
+			return Response::json(array('type' =>'danger','msg' =>'Error al eliminar el articulo'));
+		}
+	}
 	public function getMdfItem($id)
 	{
 		$item = Items::find($id);
@@ -1437,7 +1459,7 @@ class AdminController extends BaseController {
 		$title = "Pagos | dyv-an.com";
 		$fac = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
 		->join('usuario','usuario.id','=','facturas.user_id')
-		
+		->leftJoin('departamento','departamento.id','=','usuario.department')
 		->leftJoin('bancos','bancos.id','=','facturas.banco')
 		->where('pagada','=',-1)->orderBy('facturas.id','DESC')
 		->get(
@@ -1449,7 +1471,7 @@ class AdminController extends BaseController {
 				'usuario.apellido',
 				'usuario.telefono',
 				'usuario.email',
-				
+				'departamento.nombre as dep_name',
 				'facturas.*',
 				'direcciones.email',
 				'direcciones.dir as dir_name',

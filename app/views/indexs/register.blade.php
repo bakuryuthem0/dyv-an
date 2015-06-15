@@ -177,7 +177,11 @@
 							<select name="pais" class="form-control inputFondoNegro pais" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Alerta">
 								<option value="">{{ Lang::get('lang.form_selectDep') }}</option>
 								@foreach ($pais as $p)
-									<option value="{{ $p->id }}">{{ $p->name }}</option>
+									@if(Input::old('pais') == $p->id)
+										<option value="{{ $p->id }}" selected>{{ $p->name }}</option>
+									@else
+										<option value="{{ $p->id }}">{{ $p->name }}</option>
+									@endif
 								@endforeach
 							</select>
 
@@ -197,7 +201,17 @@
 							<p class="textoPromedio">(*) {{ Lang::get('lang.form_dep') }}:</p>
 						</div>
 						<div class="col-xs-6 inputRegister">
-							<select name="" class="form-control inputFondoNegro depSel" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Alerta">
+							<select 
+							@if ($errors->has('department') && Input::old('pais')==31) 
+								name="department" 
+								class="form-control inputFondoNegro
+							@else 
+								name=""
+								style="display:none;"
+								class="form-control 
+							@endif 
+
+							 depSel" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Alerta">
 								<option value="">{{ Lang::get('lang.form_selectDep') }}</option>
 								@foreach ($departamentos as $dep)
 									@if(Input::old('department') == $dep->id)
@@ -207,14 +221,29 @@
 									@endif
 								@endforeach
 							</select>
-							{{ Form::text('', Input::old('department'),array(
-								'class' => 'form-control inputFondoNegro depInp',
-								'required' 	  			=> 'required',
-								'data-trigger' 					=> 'manual',
-								"data-toggle" 			=> "popover",
-								"data-placement" 		=> "left",
-								"data-content" 			=> "Campo requerido",
-								"data-original-title" 	=> "Alerta")) }}
+
+							@if ($errors->has('department') && Input::old('pais') != 31)
+								{{ Form::text('department', Input::old('department'),array(
+									'class' => 'form-control inputFondoNegro depInp',
+									'required' 	  			=> 'required',
+									'placeholder'  			=> 'Estado',
+									'data-trigger' 			=> 'manual',
+									"data-toggle" 			=> "popover",
+									"data-placement" 		=> "left",
+									"data-content" 			=> "Campo requerido",
+									"data-original-title" 	=> "Alerta")) }}
+							@else
+								{{ Form::text('', Input::old('department'),array(
+									'class' => 'form-control depInp',
+									'required' 	  			=> 'required',
+									'style' 	  			=> 'display:inline-block;',
+									'placeholder'  			=> 'Estado',
+									'data-trigger' 			=> 'manual',
+									"data-toggle" 			=> "popover",
+									"data-placement" 		=> "left",
+									"data-content" 			=> "Campo requerido",
+									"data-original-title" 	=> "Alerta")) }}
+							@endif
 							@if ($errors->has('department'))
 								
 								 @foreach($errors->get('department') as $err)
@@ -315,24 +344,23 @@
 							<div class="g-recaptcha" data-sitekey="6LdEiwUTAAAAAINrrnq7GRyTrMXOrqU8kpm4hUhL"></div>
 							<div class="clearfix"></div>
 							@if ($errors->has('g-recaptcha-response'))
-									
 									 @foreach($errors->get('g-recaptcha-response') as $err)
 									 	<div class="alert alert-danger">
 									 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 									 		<p class="textoPromedio">{{ $err }}</p>
 									 	</div>
 									 @endforeach
-						</div>
 							@endif
+						</div>
 					</div>
 				</form>
-			</div>
 				<div class="col-xs-12 formulario">
 					<div class="col-xs-6 imgLiderUp">
 						<button id="enviar" class="btn btn-success btnAlCien">{{ Lang::get('lang.btn_send') }}</button>
 						
 					</div>
 				</div>
+			</div>
   </div>
 </div>
 

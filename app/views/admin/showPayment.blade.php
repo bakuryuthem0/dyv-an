@@ -46,37 +46,51 @@
 				<thead>
 					<tr>
 						<th>Codigo de factura</th>
-						<th>Numero de transacción</th>
+						<th>Datos del usuario</th>
+						<th>Datos de la transacción</th>
 						<th>email</th>
 						<th>Dirección</th>
-						@if(isset($type))<th>Datos del usuario</th>@endif
+						<th>Factura</th>
 					</tr>
 				</thead>
 				<tbody>
 					@foreach($fac as $f)
 					<tr class="textoPromedio">
 						<td>{{ $f->id }}</td>
-						<td>
-							{{ $f->num_trans }}
+						<td class="textoMedio noMovil">
+							<button class="btn btn-primary btn-xs ver" data-toggle="modal" data-target="#showUserData" value="{{ $f->id }}">
+								Ver
+							</button>
 						</td>
-						<td>{{ $f->email }}</td>
-						<td>{{ $f->dir }}</td>
-						@if(!isset($type))
-
-						<td><a href="{{ URL::to('administrador/ver-factura/'.$f->id) }}" class="btn btn-info btn-xs">Ver</a></td>
-						<td><button class="btn btn-success btn-xs aprov-fac" value="{{ $f->id }}">Aprobar</button></td>
-						<td><button class="btn btn-danger btn-xs reject-fac" value="{{ $f->id }}" data-toggle="modal" data-target="#elimFac">Rechazar</button></td>
-						@else
-						<td class="textoMedio noMovil"><button class="btn btn-primary btn-xs ver" data-toggle="modal" data-target="#showUserData" value="{{ $f->id }}">Ver</button></td>
+						
 						<input type="hidden" class="username-{{ $f->id }}" value="{{ $f->username }}">
 						<input type="hidden" class="name-{{ $f->id }}" value="{{ $f->nombre.' '.$f->apellido }}">
 						<input type="hidden" class="email-{{ $f->id }}" value="{{ $f->email }}">
 						<input type="hidden" class="dir-{{ $f->id }}" value="{{ $f->user_dir }}">
 						<input type="hidden" class="phone-{{ $f->id }}" value="{{ $f->telefono }}">
-						<input type="hidden" class="est-{{ $f->id }}" value="{{ $f->est }}">
-						<input type="hidden" class="mun-{{ $f->id }}" value="{{ $f->mun }}">
-						<input type="hidden" class="par-{{ $f->id }}" value="{{ $f->par }}">
+						<input type="hidden" class="est-{{ $f->id }}" value="{{ $f->dep_name }}">
+						<td class="textoMedio noMovil">
+							<button class="btn btn-primary btn-xs verTransData" data-toggle="modal" data-target="#showTransData" value="{{ $f->id }}">
+								Ver
+							</button>
+						</td>
+						
+						<input type="hidden" class="bank-{{ $f->id }}" value="{{ $f->banco_name }}">
+						<input type="hidden" class="bank2-{{ $f->id }}" value="{{ $f->banco_ext }}">
+						<input type="hidden" class="fech-{{ $f->id }}" value="{{ $f->fech_trans }}">
+						<input type="hidden" class="num-{{ $f->id }}" value="{{ $f->num_trans }}">
+						
+						<td>{{ $f->email }}</td>
+						<td>{{ $f->dir_name }}</td>
+						<td><a href="{{ URL::to('administrador/ver-factura/'.$f->id) }}" target="_blank" class="btn btn-info btn-xs">Ver</a></td>
+						@if(!isset($type))
+
+						<td><button class="btn btn-success btn-xs aprov-fac" value="{{ $f->id }}">Aprobar</button></td>
+						<td><button class="btn btn-danger btn-xs reject-fac" value="{{ $f->id }}" data-toggle="modal" data-target="#elimFac">Rechazar</button></td>
+						
 						@endif
+
+						
 					</tr>
 					@endforeach
 
@@ -124,23 +138,53 @@
 					</p>
 				</div>
 				<div class="col-xs-12">
-					<p class="textoPromedio"><label>Estado</label></p>
+					<p class="textoPromedio"><label>Departamento</label></p>
 					<p class="textoPromedio pagWebModal">
 
 					</p>
 				</div>
-				<div class="col-xs-12">
-					<p class="textoPromedio"><label>Municipio</label></p>
-					<p class="textoPromedio carnetModal">
+				
+			</div>
+			<div class="modal-footer " style="text-align:center;">
+				
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="showTransData" tabindex="-1" role="dialog" aria-labelledby="modalForggo" aria-hidden="true">
+	<div class="forgotPass modal-dialog imgLiderUp">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">Datos de la transacción.</h4>
+			</div>
+			<div class="modal-body">
+				<div class="col-xs-12" style="margin-top:3em;">
+					<p class="textoPromedio"><label>Banco de destino</label></p>
+					<p class="textoPromedio bankeModal">
 
 					</p>
 				</div>
 				<div class="col-xs-12">
-					<p class="textoPromedio"><label>Parroquia</label></p>
-					<p class="textoPromedio nitModal">
+					<p class="textoPromedio"><label>Banco emisor</label></p>
+					<p class="textoPromedio bankemisorModal">
 
 					</p>
 				</div>
+				<div class="col-xs-12">
+					<p class="textoPromedio"><label>Fecha de transacción</label></p>
+					<p class="textoPromedio fechTransModal">
+
+					</p>
+				</div>
+				<div class="col-xs-12">
+					<p class="textoPromedio"><label>Numero de transacción</label></p>
+					<p class="textoPromedio numTransModal">
+
+					</p>
+				</div>
+				
+				
 			</div>
 			<div class="modal-footer " style="text-align:center;">
 				
