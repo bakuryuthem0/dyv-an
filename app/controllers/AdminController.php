@@ -292,10 +292,11 @@ class AdminController extends BaseController {
 	public function getShowArt()
 	{
 		$title = "Articulos";
-		$art = Items::where('deleted','=',0)->get(array(
+		$art = Items::get(array(
 			'item.item_cod',
 			'item.item_nomb',
-			'item.id'
+			'item.id',
+			'item.deleted'
 		));
 		return View::make('admin.showArt')
 		->with('title',$title)
@@ -804,8 +805,23 @@ class AdminController extends BaseController {
 	}
 	public function getNewSlide()
 	{
+		$title = "Nueva imagen de fondo";
+		$url = 'administrador/nueva-imagen/procesar';
+		$url2 = 'administrador/nuevas-imagenes/procesar';
+		return View::make('admin.newSlide')
+		->with('title',$title)
+		->with('url',$url)
+		->with('url2',$url2);
+	}
+	public function getNewSlide2()
+	{
 		$title = "Nuevo slide";
-		return View::make('admin.newSlide')->with('title',$title);
+		$url  = 'administrador/nuevo-slide/procesar';
+		$url2 = 'administrador/nuevos-slides/procesar';
+		return View::make('admin.newSlide')
+		->with('title',$title)
+		->with('url',$url)
+		->with('url2',$url2);
 	}
 	public function postNewSlide()
 	{
@@ -844,6 +860,7 @@ class AdminController extends BaseController {
 	           ->save('images/slides-top/'.$miImg);
             if($miImg != $file->getClientOriginalName()){
             	$images->image = $miImg;
+            	$images->pos   = 1;
             }
 		}else
 		{
@@ -852,6 +869,7 @@ class AdminController extends BaseController {
             $img->interlace()
             ->save('images/slides-top/'.$file->getClientOriginalName());
             $images->image = $file->getClientOriginalName();
+            $images->pos   = 1;
 		}
 		if($images->save())
 		{
@@ -901,6 +919,7 @@ class AdminController extends BaseController {
 	           ->save('images/slides-top/'.$miImg);
             if($miImg != $file->getClientOriginalName()){
             	$images->image = $miImg;
+            	$images->pos   = 1;
             }
 		}else
 		{
@@ -908,6 +927,122 @@ class AdminController extends BaseController {
 			$img = Image::make('images/slides-top/'.$file->getClientOriginalName())->interlace()
            ->save('images/slides-top/'.$file->getClientOriginalName());
            $images->image = $file->getClientOriginalName();
+           $images->pos   = 1;
+		}
+		$images->save();
+        return Response::json(array('image' => $images->id));
+
+        if( $upload_success ) {
+        	return Response::json('success', 200);
+        } else {
+        	return Response::json('error', 400);
+        }
+	}
+	public function postNewSlide2()
+	{
+		$input = Input::all();
+		$rules = array(
+		    'img' => 'image|max:2000',
+		);
+		$messages = array(
+			'image' => 'Todos los archivos deben ser imagenes',
+			'max'	=> 'Las imagenes deben ser de menos de 3Mb'
+		);
+		$validation = Validator::make($input, $rules, $messages);
+
+		if ($validation->fails())
+		{
+			return Redirect::to('administrador/nuevo-slide')->withErrors($validation);
+		}
+		$file = Input::file('img');
+		$images = new Slides;
+		if (file_exists('images/slides-top/'.$file->getClientOriginalName())) {
+			//guardamos la imagen en public/imgs con el nombre original
+            $i = 0;//indice para el while
+            //separamos el nombre de la img y la extensión
+            $info = explode(".",$file->getClientOriginalName());
+            //asignamos de nuevo el nombre de la imagen completo
+            $miImg = $file->getClientOriginalName();
+            //mientras el archivo exista iteramos y aumentamos i
+            while(file_exists('images/slides-top/'.$miImg)){
+                $i++;
+                $miImg = $info[0]."(".$i.")".".".$info[1];              
+            }
+            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
+            $file->move("images/slides-top/",$miImg);
+            $img = Image::make('images/slides-top/'.$miImg);
+            $img->interlace()
+	           ->save('images/slides-top/'.$miImg);
+            if($miImg != $file->getClientOriginalName()){
+            	$images->image = $miImg;
+            	$images->pos   = 2;
+            }
+		}else
+		{
+			$file->move("images/slides-top/",$file->getClientOriginalName());
+			$img = Image::make('images/slides-top/'.$file->getClientOriginalName());
+            $img->interlace()
+            ->save('images/slides-top/'.$file->getClientOriginalName());
+            $images->image = $file->getClientOriginalName();
+            $images->pos   = 2;
+		}
+		if($images->save())
+		{
+			Session::flash('success','Imagen guardada correctamente');
+			return Redirect::to('administrador/editar-slides');
+		}else
+		{
+			Session::flash('danger','Error al guardar la imagen');
+			return Redirect::to('administrador/nuevo-slide');
+		}
+
+	}
+	public function post_upload_slides2()
+	{
+		$input = Input::all();
+		$rules = array(
+		    'file' => 'image|max:3000',
+		);
+		$messages = array(
+			'image' => 'Todos los archivos deben ser imagenes',
+			'max'	=> 'Las imagenes deben ser de menos de 3Mb'
+		);
+		$validation = Validator::make($input, $rules, $messages);
+
+		if ($validation->fails())
+		{
+			return Response::make($validation)->withErrors($validation);
+		}
+		$file = Input::file('file');
+		$images = new Slides;
+		if (file_exists('images/slides-top/'.$file->getClientOriginalName())) {
+			//guardamos la imagen en public/imgs con el nombre original
+            $i = 0;//indice para el while
+            //separamos el nombre de la img y la extensión
+            $info = explode(".",$file->getClientOriginalName());
+            //asignamos de nuevo el nombre de la imagen completo
+            $miImg = $file->getClientOriginalName();
+            //mientras el archivo exista iteramos y aumentamos i
+            while(file_exists('images/slides-top/'.$miImg)){
+                $i++;
+                $miImg = $info[0]."(".$i.")".".".$info[1];              
+            }
+            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
+            $file->move("images/slides-top/",$miImg);
+            $img = Image::make('images/slides-top/'.$miImg)
+	           ->interlace()
+	           ->save('images/slides-top/'.$miImg);
+            if($miImg != $file->getClientOriginalName()){
+            	$images->image = $miImg;
+            	$images->pos   = 2;
+            }
+		}else
+		{
+			$file->move("images/slides-top/",$file->getClientOriginalName());
+			$img = Image::make('images/slides-top/'.$file->getClientOriginalName())->interlace()
+           ->save('images/slides-top/'.$file->getClientOriginalName());
+           $images->image = $file->getClientOriginalName();
+           $images->pos   = 2;
 		}
 		$images->save();
         return Response::json(array('image' => $images->id));
@@ -1109,49 +1244,7 @@ class AdminController extends BaseController {
 			return Response::json(array('type' => 'danger','msg' => 'Error al agregar el articulo.'));
 		}
 	}
-	public function postNewPub()
-	{
-		$input = Input::all();
-		$rules = array(
-			'img'  		=> 'required|image|max:2000',
-			'position'  => 'required'
-		);
-		$msg = array(
-			'required' => ':attribute es obligatorio',
-			'image'	   => ':attribute debe ser una imagen',
-			'max'	   => 'La imagen no debe ser mayor a 2Mb',
-		);
-		$attr = array(
-			'img' 	=> 'El campo imagen',
-			'position' => 'Error al enviar algunos datos'
-		);
-		$validator = Validator::make($input, $rules, $msg, $attr);
-		if ($validator->fails()) {
-			return Redirect::back()->withErrors($validator);
-		}
-		if ($input['position'] == 'top') {
-			$pub = Publicidad::find(1);
-		}elseif($input['position'] == 'left')
-		{
-			$pub = Publicidad::find(2);
-		}elseif($input['position'] == 'right')
-		{
-			$pub = Publicidad::find(3);
-		}
-
-		
-		if($pub->save())
-		{
-		
-			$url = "administrador/nueva-publicidad";
-			Session::flash('success','Publicidad guardada correctamente');
-			return Redirect::to($url);
-		}else
-		{
-			Session::flash('danger','Error al guardar la publicidad');
-			return Redirect::back();
-		}
-	}
+	
 	public function postElimItem()
 	{
 		$id = Input::get('id');
@@ -1162,6 +1255,27 @@ class AdminController extends BaseController {
 		$misc->deleted = 1;
 		foreach ($img as $i) {
 			$i->deleted = 1;
+			$i->save();
+		}
+		
+		if($item->save() && $misc->save())
+		{
+			return Response::json(array('type' => 'success','msg' => 'Articulo eliminado satisfactoriamente'));
+		}else
+		{
+			return Response::json(array('type' =>'danger','msg' =>'Error al eliminar el articulo'));
+		}
+	}
+	public function postReactItem()
+	{
+		$id = Input::get('id');
+		$item = Items::find($id);
+		$misc = Misc::where('item_id','=',$id)->first();
+		$img  = Images::where('misc_id','=',$misc->id)->get();
+		$item->deleted = 0;
+		$misc->deleted = 0;
+		foreach ($img as $i) {
+			$i->deleted = 0;
 			$i->save();
 		}
 		
@@ -1206,14 +1320,13 @@ class AdminController extends BaseController {
 			'item_nomb' 	=> 'required',
 			'item_desc' 	=> 'required',
 			'item_precio' 	=> 'required',
-			'item_stock' 	=> 'required',
 		);
 		$msg = array(
 			'required' => 'El campo no debe estar vacio'
 		);
 		$validator = Validator::make($inp, $rules, $msg);
 		if ($validator->fails()) {
-			return Redirect::back()->withErrors($validation);
+			return Redirect::back()->withErrors($validator);
 		}
 		$item = Items::find($inp['item']);
 
@@ -1227,9 +1340,8 @@ class AdminController extends BaseController {
 		$item->item_nomb 	= $inp['item_nomb'];
 		$item->item_desc 	= $inp['item_desc'];
 		$item->item_precio	= $inp['item_precio'];
-		$item->item_stock   = $inp['item_stock'];
 
-		if ($misc->save() && $item->save()) {
+		if ($item->save()) {
 			Session::flash('success', 'Articulo modificado satisfactoriamente.');
 			return Redirect::to('administrador/ver-articulo');
 		}else
@@ -1246,6 +1358,12 @@ class AdminController extends BaseController {
 			$misc->item_talla = $inp['talla'];
 		}elseif (!empty($inp['color']) && $inp['color'] != $misc->item_color) {
 			$misc->item_color = $inp['color'];
+		}elseif(!empty($inp['item_stock']) && $inp['item_stock'] != $misc->item_stock)
+		{
+			$misc->item_stock = $inp['item_stock'];
+		}
+		elseif (!empty($inp['item_stock']) && $inp['item_stock'] != $misc->item_stock) {
+			$misc->item_stock = $inp['item_stock'];
 		}
 		if($misc->save())
 		{
@@ -1339,11 +1457,9 @@ class AdminController extends BaseController {
 	public function getPayment()
 	{
 		$title = "Pagos | dyv-an.com";
-		$fac = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
-		->join('usuario','usuario.id','=','facturas.user_id')
-		->leftJoin('estado','usuario.estado','=','estado.id')
-		->leftJoin('municipio','usuario.municipio','=','municipio.id')
-		->leftJoin('parroquia','usuario.parroquia','=','parroquia.id')
+		$fac = Facturas::leftJoin('direcciones','direcciones.id','=','facturas.dir')
+		->leftJoin('usuario','usuario.id','=','facturas.user_id')
+		->leftJoin('departamento','departamento.id','=','usuario.department')
 		->leftJoin('bancos','bancos.id','=','facturas.banco')
 		->where('pagada','=',-1)->orderBy('facturas.id','DESC')
 		->get(
@@ -1355,20 +1471,16 @@ class AdminController extends BaseController {
 				'usuario.apellido',
 				'usuario.telefono',
 				'usuario.email',
-				'estado.nombre as est',
-				'municipio.nombre as mun',
-				'parroquia.nombre as par',
+				'departamento.nombre as dep_name',
 				'facturas.*',
 				'direcciones.email',
 				'direcciones.dir as dir_name',
-				'bancos.banco'
+				'bancos.banco as banco_name'
 			)
 		);
-		$facNot  = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
+		$facNot  = Facturas::leftJoin('direcciones','direcciones.id','=','facturas.dir')
 		->join('usuario','usuario.id','=','facturas.user_id')
-		->leftJoin('estado','usuario.estado','=','estado.id')
-		->leftJoin('municipio','usuario.municipio','=','municipio.id')
-		->leftJoin('parroquia','usuario.parroquia','=','parroquia.id')
+		
 		->where('facturas.deleted','=',0)
 		->where('facturas.created_at','<=',date('Y-m-d',(time()-(86400*5))))
 		->where('pagada','=',0)->orderBy('facturas.id','DESC')
@@ -1381,9 +1493,7 @@ class AdminController extends BaseController {
 				'usuario.apellido',
 				'usuario.telefono',
 				'usuario.email',
-				'estado.nombre as est',
-				'municipio.nombre as mun',
-				'parroquia.nombre as par',
+				
 				'facturas.*',
 				'direcciones.email',
 				'direcciones.dir as dir_name',
@@ -1506,9 +1616,7 @@ class AdminController extends BaseController {
 		$title = "Pagos | dyv-an.com";
 		$fac = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
 		->join('usuario','usuario.id','=','facturas.user_id')
-		->leftJoin('estado','usuario.estado','=','estado.id')
-		->leftJoin('municipio','usuario.municipio','=','municipio.id')
-		->leftJoin('parroquia','usuario.parroquia','=','parroquia.id')
+		
 		->leftJoin('bancos','bancos.id','=','facturas.banco')
 		->where('pagada','=',1)->orderBy('facturas.id','DESC')
 		->get(
@@ -1520,9 +1628,7 @@ class AdminController extends BaseController {
 				'usuario.apellido',
 				'usuario.telefono',
 				'usuario.email',
-				'estado.nombre as est',
-				'municipio.nombre as mun',
-				'parroquia.nombre as par',
+				
 				'facturas.*',
 				'direcciones.email',
 				'direcciones.dir as dir_name',
@@ -1731,5 +1837,38 @@ class AdminController extends BaseController {
 				return Response::json(array('type' => 'danger','msg' => 'Error al eliminar el banco'));
 			}
 		}
+	}
+	public function newCategoriaMdf()
+	{
+		$input = Input::all();
+		$rules = array(
+			'item_stock' 	=> 'required|min:1',
+			'talla' 		=> 'required',
+			'color' 		=> 'required'
+		);
+		$msg = array('required' => 'El campo :attribute es obligatorio');
+		$validator = Validator::make($input, $rules,$msg);
+		if ($validator->fails()) {
+			return Redirect::back()->withInput()->withErrors($validator);
+		}
+		$misc = new Misc;
+		$misc->item_id 	  = $input['art'];
+		$misc->item_talla = $input['talla'];
+		$misc->item_color = $input['color'];
+		$misc->item_stock = $input['item_stock'];
+		if ($misc->save()) {
+			Session::flash('success', 'Categorai añadida satisfactoriamente');
+			return Redirect::back();
+		}else
+		{
+			Session::flash('danger', 'error al articulo satisfactoriamente');
+			return Redirect::back();
+		}
+	}
+	public function getNewPass()
+	{
+		$title = "Cambiar contraseña";
+		return View::make('admin.newPass')
+		->with('title',$title);
 	}
 }

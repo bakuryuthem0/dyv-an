@@ -1,3 +1,4 @@
+
 jQuery(document).ready(function($) {
 	function cambiarFondo()
 	{
@@ -51,22 +52,59 @@ jQuery(document).ready(function($) {
 		}
 	});	
 });
+
 jQuery(document).ready(function($) {
-	$('.inputFondoNegro').keydown(function(event) {
-		$('.alert-danger').animate({'opacity':0}, 500,function(){
-		$(this).remove();
-	})
-	});
-});
-jQuery(document).ready(function($) {
-	$('.btnMdfShow').click(function(event) {
-		$(this).css({
-			'display':'none'
-		});
-		$('.mdfForm').addClass('mdfFormShow').removeClass('mdfForm');
-		$('.mdfText').addClass('mdfFormText').removeClass('mdfText');
-	});
 	
+	$('.btnMdfShow').click(function(event) {
+		$(this).addClass('deactiveForm')
+		$('.mdfForm').addClass('activeForm');
+		$('.mdfText').addClass('deactiveForm');
+		$('.botones').addClass('activeForm');
+	});
+	$('.btnSend').click(function(event) {
+		$('.formMdf').submit();
+	});
+	$('.btnCancelMdf').click(function(event) {
+		$('.activeForm').removeClass('activeForm');
+		$('.deactiveForm').removeClass('deactiveForm');	
+	});
+	$('.btnElimDir').click(function(event) {
+		$('.btnModalElimDir').val($(this).val())
+		console.log($('.btnModalElimDir').val())
+		$('.btnModalElimDir').click(function(event) {
+			var id = $(this).val();
+			$.ajax({
+				url: 'usuario/perfil/eliminar-direccion',
+				type: 'POST',
+				dataType: 'json',
+				data: {'id': id},
+				beforeSend:function()
+				{
+					$('.btnModalElimDir').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.loading').css({
+						'display': 'block',
+						'margin': '2em auto'
+					}).animate({
+						'opacity': 1},
+						500);
+				},
+				success:function(response){
+					$('.loading').animate({
+						'opacity': 0},
+						500,function(){
+							$(this).remove();
+						});
+					$('.responseDanger').removeClass('alert-danger');
+					$('.responseDanger').removeClass('alert-success');
+					$('.responseDanger').stop().css({'display':'block'}).addClass('alert-'+response.type).html('<p class="textoPromedio">'+response.msg+'</p>').animate({
+						'opacity': 1},
+						500);
+					$('#modalElimDir').modal('hide')
+				}
+			})
+			
+		});
+	});
 });
 /*olvide la contraseña esto me ayuda*/
 jQuery(document).ready(function($) {
@@ -158,21 +196,94 @@ jQuery(document).ready(function($) {
 	});
 
 });
-
-
+function alerta(elem)
+{
+	elem.popover('show')
+}
+function validarEmail(email,e) {
+    expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if ( !expr.test(email) )
+    {
+    	e.popover('show');
+    }else if (e.val() == '') {
+    	e.popover('show');
+    }else
+    {
+    	e.popover('hide');
+    }
+}
 jQuery(document).ready(function($) {
-	var id = $('.art_id').val(),misc = $('.misc_id').val();
-	$('.contNew').click(function(event) {
-		$('.formCart').prop({
-			'action': '../enviar/'+id+'/'+misc,
-		})
-		$('.formCart').submit();
+	$('.pais').change(function(event) {
+		console.log($(this).val())
+		if ($(this).val() == 31) {
+			$('.depSel').css({'display': 'inline-block'}).attr('name', 'department').addClass('inputFondoNegro');
+			$('.depInp').css({'display': 'none'}).attr('name', '').removeClass('inputFondoNegro');
+		}else
+		{
+			$('.depSel').css({'display': 'none'}).attr('name', '').removeClass('inputFondoNegro');
+			$('.depInp').css({'display': 'inline-block'}).attr('name', 'department').addClass('inputFondoNegro');
+
+		}
 	});
-	$('.contSave').click(function(event) {
-		$('.formCart').prop({
-			'action': '../guardar-cerrar/'+id+'/'+misc,
-		})
-		$('.formCart').submit();
+	$('.inputFondoNegro').blur(function(event) {
+		if ($(this).attr('name') != 'pass' && $(this).attr('name') != 'pass_confirmation' && $(this).attr('name') != 'email') {
+			if ($(this).val().length < 1) {
+				$(this).popover('show')
+			}else
+			{
+				$(this).popover('hide')
+			}
+		}else
+		{
+			if ($(this).attr('name') == 'pass') {
+				if ($(this).val().length < 6) {
+					$(this).popover('show')
+				}else
+				{
+					$(this).popover('hide')
+				}
+			}else if ($(this).attr('name') == 'pass_confirmation')
+			{
+				if ($('.password').val() != $(this).val()) {
+					$(this).popover('show')
+				}else
+				{
+					$(this).popover('hide')
+				}
+			}else if($(this).attr('name') == 'email')
+			{
+				validarEmail($(this).val(),$(this));
+			}
+		}
+		
+	});
+	$('#enviar').click(function(event) {
+
+		$(this).addClass('disabled');
+		$(this).after('<img src="images/loading.gif" class="loading">')
+		$('.loading').css(
+			{
+				'margin-left':'1em',
+				'display': 'inline-block'
+			}
+		).animate(
+		{
+			'opacity':1
+		}, 250);
+		var b = 0;
+		$('.inputFondoNegro').each(function(i, e) {
+			if ($(e).val() == '' && $(e).attr('name') != 'dir2') {
+				alerta($(e));
+				b = 1;
+				$('.disabled').removeClass('disabled');
+				$('.loading').animate({'opacity':0}, 250,function(){
+					$(this).remove();
+				})
+			}
+		});
+		if (b == 0) {
+			$('#formRegister').submit();
+		};
 	});
 });
 
@@ -200,7 +311,6 @@ jQuery(document).ready(function($) {
 });
 jQuery(document).ready(function($) {
 	$('#enviar').click(function(event) {
-		event.preventDefault();
 		$('.errorText').remove();
 		function alerta(esto){
 			esto.css({
@@ -220,9 +330,7 @@ jQuery(document).ready(function($) {
 			}
 
 		})
-		if ($('.cat_nomb').val() != "" && $('.cat_desc').val() != "") {
-			$('#formRegister').submit();
-		}
+		
 	});
 });
 //ajax para eliminar cosas
@@ -255,7 +363,7 @@ jQuery(document).ready(function($) {
 				data: {id: $(this).val()},
 				beforeSend:function()
 				{
-					$('.envElim').before('<img src="../images/loading.gif" class="loading">');
+					$('.envElim').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -350,19 +458,20 @@ jQuery(document).ready(function($) {
 					});
 					$('.values').val(response['item'].id)
 					for (var i = 0; i < response.images.length; i++) {
-						$('.contImagesMini').append('<img src="../../images/items/'+response.images[i]+'" class="imgMini">');
+						$('.contImagesMini').append('<img src="http://localhost/prueba/dyv-an/public/images/items/'+response.images[i].image+'" class="imgMini" data-misc="'+response.images[i].misc_id+'">');
 					};
 					for (var i = 0; i < response.tallas.length; i++) {
 						$('.selectChoose option[value = '+response.tallas[i]+']').prop('disabled',false);
 					};
 					$('.ItemTitle').html(response['item'].item_nomb+' - '+response['item'].item_cod)
 					$('.contDescription').html(response['item'].item_desc)
-					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','../../images/items/'+response.princ)
-					$('.contImageItem > .imagenPrincipal').attr('src','../../images/items/'+response.princ)
-					$('.precio').html(response['item'].item_precio);
+					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','http://localhost/prueba/dyv-an/public/images/items/'+response.princ)
+					$('.contImageItem > .imagenPrincipal').attr('src','http://localhost/prueba/dyv-an/public/images/items/'+response.princ)
+					$('.precio').html('Bs. '+response['item'].item_precio);
 					$('.btnAgg').val(response['item'].id)
 					$('.btnAgg').attr('data-name-value', response['item'].item_nomb);
 					$('.btnAgg').attr('data-price-value', response['item'].item_precio);
+					$('.btnAddWishList').val(response['item'].id)
 					$('.imagenPrincipal').hover(function(event) {
 						$('.zoomed').attr('src', $(this).attr('src'));
 						$('.zoomed').css({
@@ -386,7 +495,7 @@ jQuery(document).ready(function($) {
 						})
 						$(this).stop().animate({'opacity':1}, 250)
 					});
-					$('.imgMini').mouseover(function(event) {
+					$('.imgMini').click(function(event) {
 						var src = $(this).attr('src');
 						if (src != $('.imagenPrincipal').attr('src')) {
 							$('.imagenPrincipal').stop().animate({'opacity':0}, 250,function()
@@ -408,7 +517,121 @@ jQuery(document).ready(function($) {
 		$('.seleccioname').prop('selected', true)
 	});
 });
+jQuery(document).ready(function($) {
+	$('.btnElimBank').click(function(event) {
+		var id = $(this).val();
+		var boton = $(this);
+		var x = confirm('¿Seguro desea eliminar el banco? Esta acción es irreversible');
+		if (x) {
+			$.ajax({
+				url: 'editar-bancos/eliminar',
+				type: 'POST',
+				dataType: 'json',
+				data: {'id': id},
+				beforeSend:function()
+				{
+					boton.before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.loading').css({
+						'display': 'block',
+						'margin': '2em auto'
+					}).animate({
+						'opacity': 1},
+						500,function(){
+							boton.css({
+								'display':'none'
+							});
+						});
+				},
+				success:function(response)
+				{
+					$('.loading').animate({
+						'opacity': 0},
+						500,function(){
+							boton.css({
+								'display':'block'
+							});
+							$(this).remove();
+						});
+					if (response.type == 'success') {
 
+						boton.parent().parent().remove();
+					};
+					$('.responseDanger').addClass('alert-'+response.type).html(response.msg).css({
+						'display': 'block'
+					}).animate({
+						'opacity': 1},
+						500);
+					setTimeout(function(){
+
+						$('.responseDanger').removeClass('success')
+						$('.responseDanger').removeClass('danger')
+						$('.responseDanger').stop().animate({
+							'opacity':0},
+							500, function() {
+							$(this).css({
+								'display':'none'
+							});
+						});
+					},6000);
+				}
+			})		
+		};
+	});
+});
+jQuery(document).ready(function($) {
+	$('.btnAddWishList').click(function(event) {
+		$('.btnAddMyWishList').val($(this).val());
+		$('.btnAddMyWishList').click(function(event) {
+			event.stopImmediatePropagation()
+			$.ajax({
+				url: '../agregar-lista-de-deseos',
+				type: 'POST',
+				dataType: 'json',
+				data: {'id':$(this).val()},
+				beforeSend:function()
+				{
+					$('.btnAddMyWishList').addClass('disabled');
+					$('.btnAddMyWishList').before('<img src="../http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.loading').css({
+						'display': 'block',
+						'margin': '2em auto'
+					}).animate({
+						'opacity': 1},
+						500);
+				},
+				success:function(response)
+				{
+					$('.disabled').removeClass('disabled');
+					$('.loading').animate({
+						'opacity': 0},
+						500,function(){
+							$(this).remove();
+						});
+					$('#addWishList').modal('hide');
+					if (response.type == 'success') {
+						alert('Articulo agregado satisfactoriamente.')
+					}else if(response.type == 'warning')
+					{
+						alert('El item ya esta en su lista de deseo.');						
+					}else
+					{
+						alert('Error al agregar el articulo.')
+					}
+
+				}
+			})
+			
+		});
+	});
+});
+jQuery(document).ready(function($) {
+	$('.tallasCollapse').on('show.bs.collapse',  function(event) {
+		$('.dedo').addClass('rotated')
+	});
+	$('.tallasCollapse').on('hide.bs.collapse',  function(event) {
+		$('.dedo').removeClass('rotated')
+	});
+});
 jQuery(document).ready(function($) {
 	function doAjax(esto)
 	{
@@ -438,7 +661,7 @@ jQuery(document).ready(function($) {
 								250);
 						}
 				);
-				boton.after('<img src="../images/loading.gif" class="loading">');
+				boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 				
 			},
 			success:function(response)
@@ -477,7 +700,7 @@ jQuery(document).ready(function($) {
 				data: {'id':boton.val() },
 				beforeSend:function()
 				{
-					boton.after('<img src="../images/loading.gif" class="loading">');
+					boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					boton.animate({
 							'opacity': 0},
 							250,function(){
@@ -516,26 +739,11 @@ jQuery(document).ready(function($) {
 						250, function() {
 						$(this).remove();
 						});
-					$('.catnArt').html(response.count)
 					$('.total').html(response.total)				
 				}
 			})
 	}
-	$('.btnAdd').click(function(event) {
-		$(this).unbind('click');
-		var esto = $(this);
-		doAjax(esto);
-
-	});
-	$('.btnRestar').click(function(event) {
-		$(this).unbind('click');
-		var esto = $(this);
-		doAjax(esto);
-
-	});
-	$('.btnQuitar').click(function(event) {
-		$(this).unbind('click');
-		$('.btnQuitar').unbind('click');
+	$('.btnQuitar').on('click',function(event) {
 		var x = confirm('¿Seguro desea quitar el item?');
 		if (x) {
 			var esto = $(this);
@@ -544,14 +752,14 @@ jQuery(document).ready(function($) {
 		}
 	});
 	$('.btnVaciar').click(function(event) {
-		$(this).unbind('click')
+		event.stopImmediatePropagation();
 		var x = confirm('¿Seguro desea vaciar el carrito?');
 		if (x) {
 			$.ajax({
 				//casa
-				//url: '/dyv-an/public/vaciar-carrito',
+				url: '/dyv-an/public/vaciar-carrito',
 				//trabajo
-				url: '/prueba/dyv-an/public/vaciar-carrito',
+				//url: '/prueba/dyv-an/public/vaciar-carrito',
 				type: 'POST',
 				dataType: 'json',
 				beforeSend:function()
@@ -608,7 +816,7 @@ jQuery(document).ready(function($) {
 				dataType: 'json',
 				data: {'id': id,'item_id':item_id},
 				beforeSend:function(){
-					$('.choose').after('<img src="../../images/loading.gif" class="loading">');
+					$('.choose').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -626,15 +834,22 @@ jQuery(document).ready(function($) {
 						$('.removable').remove();
 						for(var i = 0;i<response.length;i++)
 						{
-							$('.colores').append('<li class="removable" style="color:black;">'+response[i].color_desc+' - '+response[i].item_stock+'</li>')
+							if (response[i].item_stock > 5) {
+								$('.colores').append('<li class="removable" style="color:black;">'+response[i].color_desc+' - Disponible en stock.</li>')
+								
+							}else
+							{
+								$('.colores').append('<li class="removable" style="color:black;">'+response[i].color_desc+' - Quedan '+response[i].item_stock+'</li>')
+
+							}
 						}	
 					};
 				}
 			})		
 		}
 	});
-	$('.btnAgg').click(function(event) {
-		$(this).unbind('click');
+	
+	$('.btnAgg').on('click',function(event) {
 		var name  = $(this).attr('data-name-value');
 		var price = $(this).attr('data-price-value');
 		$('.btnAddCart').val($(this).val())
@@ -659,17 +874,17 @@ jQuery(document).ready(function($) {
 					data: {'id': id,'item_id':item_id},
 					beforeSend:function(){
 						//casa
-						//$('.chooseModal').after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
+						$('.btnAddCart').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						//trabajo
-						$('.chooseModal').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+						//$('.btnAddCart').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						$('.loading').css({
-							'display': 'block',
+							'display': 'inline-block',
 							'margin': '2em auto'
 						}).animate({
 							'opacity': 1},
 							500);
 					},
-					success:function(response){
+					success:function(response){	
 						$('.loading').animate({
 							'opacity': 0},
 							500,function(){
@@ -679,7 +894,13 @@ jQuery(document).ready(function($) {
 							$('.removable').remove();
 							for(var i = 0;i<response.length;i++)
 							{
-								$('.colorModal').append('<option class="removable" value="'+response[i].id+'">'+response[i].color_desc+' - '+response[i].item_stock+'</option>')
+								if (response[i].item_stock > 5 ) {
+									$('.colorModal').append('<option class="removable" value="'+response[i].id+'">'+response[i].color_desc+' - Disponible en stock</option>')
+								}else
+								{
+									$('.colorModal').append('<option class="removable" value="'+response[i].id+'">'+response[i].color_desc+' - Quedan '+response[i].item_stock+'</option>')
+									
+								}
 							}	
 						};
 					}
@@ -694,7 +915,10 @@ jQuery(document).ready(function($) {
 				$('.disabled').removeClass('disabled');
 			}
 		});
-		$('.btnAddCart').click(function(event) {
+
+		$('.btnAddCart').on('click',function(event) {
+			event.stopImmediatePropagation();
+			console.log(event)
 			var id = $(this).val();
 			if ($('.colorModal').val() == "" || $('.chooseModal').val() == "") {
 				alert('Debes elegir la talla y el color.')
@@ -712,9 +936,9 @@ jQuery(document).ready(function($) {
 				}
 				$.ajax({
 					//casa
-					//url: 'dyv-an/public/agregar-al-carrito',
-					//trabajo
 					url: '/prueba/dyv-an/public/agregar-al-carrito',
+					//trabajo
+					//url: '/prueba/dyv-an/public/agregar-al-carrito',
 
 					type: 'POST',
 					dataType: 'json',
@@ -723,9 +947,9 @@ jQuery(document).ready(function($) {
 					{
 						$('.btnAddCart').addClass('disabled');
 						//casa
-						//$('.btnAddCart').before('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
-						//trabajo
 						$('.btnAddCart').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+						//trabajo
+						//$('.btnAddCart').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 
 						$('.loading').css({
 								'display': 'inline-block'
@@ -735,14 +959,30 @@ jQuery(document).ready(function($) {
 					},
 					success:function(response)
 					{
+						$('.btnAddCart').unbind('click');
+						$('#addCart').modal('hide');
+						$('#showItem').modal('hide');
+						$('#cd-cart-trigger').popover('show');
+						$('#cd-cart-trigger').click(function(){
+							$('.popover').remove();
+						})
+						$('#cd-cart-trigger').addClass('activated');
 						$('.btnAddCart').removeClass('disabled');
 						$('.loading').animate({
 							'opacity': 0},
 						250);
-						if ($('#'.response.rowid).length<1) {
-							$('.tableItems').append('<tr id="'+response.rowid+'" class="removable"><td class="textoNegro">'+response.price+'</td><td class="textoNegro">'+response.name+'</td><td class="textoNegro">'+response.qty+'</td><td><button class="btn btn-danger btn-xs btnQuitar btn-carrito" data-url-value="quitar-item" value="'+response.rowid+'"><i class="fa fa-close"></i></button></td></tr>')
+						if ($('#'+response.rowid).length < 1) {
+							$('.tableItems').append('<tr id="'+response.rowid+'" class="removable textoPromedio"><td class="textoNegro">'+response.price+'</td><td class="textoNegro">'+response.name+'</td><td class="textoNegro">'+response.qty+'</td><td><button class="btn btn-danger btn-xs btnQuitar btn-carrito" data-url-value="quitar-item" value="'+response.rowid+'"><i class="fa fa-close"></i></button></td></tr>')
+							$('.total').html(response.total)
+						}else
+						{
+							$('#'+response.id+'> .qty').html(response.qty);
 							$('.total').html(response.total)
 						}
+						
+						setTimeout(function(){
+							window.location.reload();
+						},2000)
 					}
 				})
 			}
@@ -752,7 +992,13 @@ jQuery(document).ready(function($) {
 });
 /**/
 
-
+jQuery(document).ready(function($) {
+	$('#cd-cart-trigger').click(function(event) {
+		if ($(this).hasClass('activated')) {
+			$(this).removeClass('activated');
+		};
+	});
+});
 
 jQuery(document).ready(function($) {
 	$('.btnActualizar').click(function(event) {
@@ -763,17 +1009,16 @@ jQuery(document).ready(function($) {
 			if (x) {
 				$.ajax({
 					//casa
-					url: '/dyv-an/public/quitar-item',
+					//url: '/guacamaya/public/quitar-item',
 					//trabajo
-					//url: '/prueba/dyv-an/public/quitar-item',
+					//url: '/prueba/guacamaya/public/quitar-item',
+					//serv
+					url:'/public/quitar-item',
 					type: 'POST',
 					dataType: 'json',
 					data: {'id':boton.val() },
 					beforeSend:function()
 					{
-						//casa
-						//boton.after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
-						//trabajo
 						boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						boton.animate({
 								'opacity': 0},
@@ -824,16 +1069,18 @@ jQuery(document).ready(function($) {
 					url: '/dyv-an/public/actualizar-al-carrito',
 					//trabajo
 					//url: '/prueba/dyv-an/public/actualizar-al-carrito',
+					//serv
+					//url:'/public/actualizar-al-carrito',
 					type: 'POST',
 					dataType: 'json',
 					data: {
 						'id' :boton.val(),
-						'qty':inp.val() },
+						'qty':inp.val(),
+						'talla':boton.attr('data-talla'),
+						'color':boton.attr('data-color'),
+						'item_id':boton.attr('data-id') },
 					beforeSend:function()
 					{
-						//casa
-						//boton.after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
-						//trabajo
 						boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						boton.animate({
 								'opacity': 0},
@@ -863,11 +1110,17 @@ jQuery(document).ready(function($) {
 										'opacity': 1},
 										250);
 								});
-						$('#'+response.id+'> .carItem:nth-child(3)').html(response.qty);
-						$('#'+response.id+'> .carItem:nth-child(5)').html(response.subtotal);
-						$(boton.attr('data-field-value')+'_subtotal').html(response.subtotal);
-						$('.catnArt').html(response.count)
-						$('.total').html(response.total)				
+						if (response.type == "success") {
+							alert('carrito actualizado');
+							$('#'+response.id+'> .carItem:nth-child(5)').html(response.qty);
+							$('#'+response.id+'> .carItem:nth-child(7)').html(response.subtotal);
+							$(boton.attr('data-field-value')+'_subtotal').html(response.subtotal);
+							$('.catnArt').html(response.count)
+							$('.total').html(response.total)				
+
+						}else{
+							alert('No hay inventario suficiente para abarcar esta solicitud');
+						}
 					}
 				})
 		}
@@ -897,7 +1150,23 @@ jQuery(document).ready(function($) {
 		})
 	});
 });
-
+jQuery(document).ready(function($) {
+	$('#continuar').on('shown.bs.collapse',function(){
+		var pos = $('.continuar').position();
+		$(window).scrollTop(pos.top)
+	})
+});
+jQuery(document).ready(function($) {
+	$('.btnShowInfoItem').click(function(event) {
+		var x = $(this);
+		$('.itemNameModal').html('<label>Articulo: </label><p>'+x.attr('data-name'))
+		$('.itemTallaModal').html('<label>Talla: </label><p>'+x.attr('data-talla')+'</p>')
+		$('.itemColorModal').html('<label>Color: </label><p>'+x.attr('data-color')+'</p>')
+		$('.itemPrecioModal').html('<label>Precio: </label><p>'+x.attr('data-precio')+'</p>')
+		$('.itemSubtotalModal').html('<label>Sub-Total: </label><p>'+x.attr('data-subtotal')+'</p>')
+		$('.itemQtylModal').html('<label>Cantidad: </label><p>'+x.attr('data-qty')+'</p>')
+	});
+});
 jQuery(document).ready(function($) {
 	$('.refresh').click(function(event) {
 		var id = $(this).val(),status = $(this).data('status');
@@ -962,12 +1231,13 @@ jQuery(document).ready(function($) {
 		
 	});
 	$('.deleteSlide').click(function(event) {
-		$(this).unbind('click')
 		$('.envElim').removeClass('disabled');
 		var id = $(this).val();
 		var fila = $(this);
 		$('.envElim').val(id);
 		$('.envElim').click(function(event) {
+		event.stopImmediatePropagation();
+			
 			var boton = $(this);
 			$.ajax({
 				url: 'editar-slides/eliminar',
@@ -975,7 +1245,7 @@ jQuery(document).ready(function($) {
 				dataType: 'json',
 				data: {'id': id},
 				beforeSend:function() {
-					boton.after('<img src="../images/loading.gif" class="loading">');
+					boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					boton.animate({
 						'opacity': 0},
 						250,function(){
@@ -1008,6 +1278,7 @@ jQuery(document).ready(function($) {
 							500);
 					$('#elimModal').modal('hide')
 					$('.envElim').addClass('disabled')
+					window.location.reload();
 					setTimeout(function(){ 
 						$('.responseDanger').animate({
 							'opacity':0},
@@ -1028,6 +1299,50 @@ jQuery(document).ready(function($) {
 	});
 });
 jQuery(document).ready(function($) {
+	$('.btn-reactivar').on('click', function(event) {
+		var boton = $(this)	
+		$('.envReactivar').val($(this).val())
+		$('.envReactivar').click(function(event) {
+			$.ajax({
+				url: 'ver-articulo/reactivar',
+				type: 'POST',
+				dataType: 'json',
+				data: {'id': $(this).val()},
+				beforeSend:function()
+				{
+					$('.envReactivar').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.loading').css({
+						'display': 'block',
+						'margin': '2em auto'
+					}).animate({
+						'opacity': 1},
+						500);
+					$('.envReactivar').addClass('disabled');
+				},
+				success:function(response)
+				{
+					$('.envReactivar').removeClass('disabled');
+					$('.loading').animate({
+						'opacity': 0},
+						500,function(){
+							$(this).remove();
+						});
+					if (response.type == 'success') {
+						boton.after('<button class="btn btn-xs btn-danger btnElimItem" data-toggle="modal" data-target="#elimModal" value="'+$(this).val()+'">Eliminar</button>')
+						boton.remove();
+						$('.btnElimItem').bind('click');
+					};
+					$('.responseDanger').addClass('alert-'+response.type).html(response.msg).css({
+						'display': 'block'
+					}).animate({
+						'opacity': 1},
+						500);
+				}
+			})
+			
+			
+		});
+	});
 	$('.btnElimItem').click(function(event) {
 		var boton = $(this);
 		$('.responseDanger').removeClass('alert-danger');
@@ -1046,7 +1361,7 @@ jQuery(document).ready(function($) {
 				data: {'id': $(this).val()},
 				beforeSend:function()
 				{
-					$('.envElim').before('<img src="../images/loading.gif" class="loading">');
+					$('.envElim').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -1064,8 +1379,9 @@ jQuery(document).ready(function($) {
 							$(this).remove();
 						});
 					if (response.type == 'success') {
-
-						boton.parent().parent().remove();
+						boton.after('<button class="btn btn-xs btn-danger btn-reactivar" data-toggle="modal" data-target="#reactivarModal" value="'+$(this).val()+'">Reactivar</button>')
+						boton.remove();
+						$('.btn-reactivar').bind('click');
 					};
 					$('.responseDanger').addClass('alert-'+response.type).html(response.msg).css({
 						'display': 'block'
@@ -1084,7 +1400,21 @@ jQuery(document).ready(function($) {
 	$('.slick-prev').html('<i class="fa fa-caret-left"></i>');
 	$('.slick-next').html('<i class="fa fa-caret-left"></i>');
 });
-
+jQuery(document).ready(function($) {
+	var id = $('.art_id').val(),misc = $('.misc_id').val();
+	$('.contNew').click(function(event) {
+		$('.formCart').prop({
+			'action': '../enviar/'+id+'/'+misc,
+		})
+		$('.formCart').submit();
+	});
+	$('.contSave').click(function(event) {
+		$('.formCart').prop({
+			'action': '../guardar-cerrar/'+id+'/'+misc,
+		})
+		$('.formCart').submit();
+	});
+});
 jQuery(document).ready(function($) {
 	/*-------------------------------------------registro de usuario-------------------------------------------*/
 	var estado = $('#estado2');
@@ -1182,7 +1512,7 @@ jQuery(document).ready(function($) {
 								250);
 						}
 				);
-				boton.after('<img src="../images/loading.gif" class="loading">');
+				boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 				
 			},
 			success:function(response)
@@ -1228,7 +1558,7 @@ jQuery(document).ready(function($) {
 				data: {'id': $(this).val(),'motivo': motivo},
 				beforeSend:function()
 				{
-					boton2.before('<img src="../images/loading.gif" class="loading">');
+					boton2.before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -1328,6 +1658,19 @@ jQuery(document).ready(function($) {
 		$('.pagWebModal').html(pagWeb);
 		$('.carnetModal').html(carnet);
 		$('.nitModal').html(nit);
+	});
+	$('.verTransData').click(function(event) {
+		var id = $(this).val();
+		var bank  = $('.bank-'+id).val();
+		var bank2 = $('.bank2-'+id).val();
+		var fech  = $('.fech-'+id).val();
+		var num   = $('.num-'+id).val();
+		
+		$('.bankeModal').html(bank);
+		$('.bankemisorModal').html(bank2);
+		$('.fechTransModal').html(fech);
+		$('.numTransModal').html(num);
+		
 	});
 });
 

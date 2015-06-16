@@ -2,148 +2,140 @@
 @section('content')
 
 <div class="row">
-	<div class="container">
 		<div class="col-xs-12">
 			<div class="col-xs-12 contCentrado contdeColor">
+				<h2>Vista previa del articulo</h2>
+				<br>
+				<br>
 				<legend>{{ $art->item_nomb.' - '.$art->item_cod }}</legend>
-				<div class="col-xs-4 textoPromedio">
-					<div class="col-xs-12" style="word-break: break-all;">
+				<div class="col-xs-4 textoPromedio contDescItem">
+					<div class="col-xs-12" style="word-break: break-word;">
 						<label class="description">Descripción</label>
 						{{ $art->item_desc }}
 						<div id="fb-root"></div>
-						<div style="margin-top:2em;margin-bottom:2em;"
-						  class="fb-like"
-						  data-share="true"
-						  data-width="450"
-						  data-show-faces="true">
-						</div>
-						<a href="{{ URL::previous() }}" class="btn btn-volver">Volver</a>
+						<div class="fb-like" data-href="{{ Request::url() }}" data-layout="box_count" data-action="like" data-show-faces="true" data-share="true"></div>
+						<br>
+						<br>
+						<a href="{{ URL::previous() }}" class="btn btn-success btn-volver">Volver</a>
 					</div>
 				</div>
-				<div class="col-xs-4">
-					<ul id="cd-gallery-items" class="cd-container">
-						<li>
-							<ul class="cd-item-wrapper">
-								<?php 
-									$k = 0; 
-									$c = count($art->images);
-									$total = 0;
-									if ($c>1)
-									{
-										foreach ($art->images as $a)
-										{
-											$total += count($a);
-										}
-									}else
-									{
-										$total = count($art->images[0]);
-									}
-									for($i = 0;$i<count($art->images);$i++)
-									{
-										for ($j=0; $j <count($art->images[$i]) ; $j++) { 
-											$l = $art->images[$i][$j];
-								?>
-										<li class="
-										@if($k == 0) 
-											cd-item-front 
-										@elseif($k == 1)
-											cd-item-middle 
-										@elseif($k+1 == $total)
-											cd-item-back 
-										@else cd-item-out cd-item-{{ $k }} @endif">
-											<a href="#0">
-												<img src="{{ asset('images/items/'.$l->image) }}" alt="{{ $art->item_nomb }}">
-											</a>
-										</li>
-								<?php
-											$k++;
-										}
-									}
-								?>
-								
-							</ul> <!-- cd-item-wrapper -->
-
-							<nav>
-								<ul class="cd-item-navigation">
-									<li><a class="cd-img-replace" href="#0"><i class="fa fa-caret-right navItemIcon"></i><span class="navButtom">Prev</span></a></li>
-									<li><a class="cd-img-replace" href="#0"><i class="fa fa-caret-right navItemIcon"></i><span class="navButtom">Next</span></a></li>
-								</ul>
-							</nav>
-
-							<a class="cd-3d-trigger cd-img-replace" href="#0">Open</a>
-						</li>
-					</ul>				
+				<div class="col-xs-4 contImageItem">
+					<div class="cien">
+		              <img src="" class="zoomed">
+		            </div>
+					<img src="{{ asset('images/items/'.$art->images[0][0]->image) }}" class="imgPrincSelf" data-zoom-image="{{ asset('images/items/'.$art->images[0][0]->image) }}">				
 				</div>
 
-				<div class="col-xs-4 textoPromedio">
+				<div class="col-xs-4 textoPromedio contPrecItem">
 					<div class="col-xs-12">
 						<label>PRECIO EN DYV-AN:</label>
 
-						<h3 class="precio">Bs. {{ $art->item_precio }}</h3>
+							@if(isset($art->percent))
+								<h3 class="precio">Precio Actual: Bs. {{ $art->item_precio-($art->item_precio*$art->percent/100) }}</h3>
+								<li class="disabled">Precio Anterior: Bs. {{ $art->item_precio }}</li>
+							@else
+								<h3 class="precio">Bs. {{ $art->item_precio }}</h3>
+							@endif
+
 					</div>
-					<div class="col-xs-12">
+					<div class="col-xs-12 formulario">
 						<label>Talla</label>
-						<ul>
+						<select class="choose form-control">
+							<option value="">Seleccione una talla</option>
 							@foreach($tallas as $t)
 								<?php $n = 0;?>
 								@foreach($art->tallas as $at)
 									@if($at->item_talla == $t->id || $at->item_talla == "all")
 										<?php $n = 0;?>
-										<li value="{{ $t->id }}">{{ strtoupper($t->talla_nomb).' - '.ucfirst($t->talla_desc) }}</li>
+										<option value="{{ $t->id }}">{{ strtoupper($t->talla_nomb).' - '.ucfirst($t->talla_desc) }}</option>
 										<?php break;?>
 									@else
 										<?php $n = 1;?>
 									@endif
 								@endforeach
 								@if($n == 1)
-								<li class="disabled" disabled value="{{ $t->id }}">{{ strtoupper($t->talla_nomb).' - '.ucfirst($t->talla_desc) }}</li>
+									<option class="disabled" disabled value="{{ $t->id }}">{{ strtoupper($t->talla_nomb).' - '.ucfirst($t->talla_desc) }}</option>
 								@endif
 							@endforeach
-						</ul>
+						</select>
 					</div>
-					<div class="col-xs-12">
+					<div class="col-xs-12 formulario">
 						<label>Color</label>
-						<ul>
-							@foreach($colores as $c)
-								<?php $nop = 1;?>
-
-								@foreach($art->colores as $ac)
-									@if($ac->item_color == $c->id || $ac->item_color == "all")
-										<?php $nop = 0;?>
-									@endif
-								@endforeach
-
-								@if($nop == 0)
-									<li value="{{ $c->id }}">{{ ucfirst($c->color_desc) }}</li>
-								@else
-									<li class="disabled" disabled>{{ ucfirst($c->color_desc) }}</li>
-								@endif
-
-							@endforeach
+						<ul class="colores">
+							<li class="removable">Elija una talla</li>
 						</ul>
+						<input type="hidden" class="values" value="{{ $art->id }}" data-misc-id="">
 					</div>
 					
-					@if(Auth::check() && Auth::user()->role != 1)
-					<div class="col-xs-12">
-							<button class="btn btn-success btnAgg" data-cod-value="{{ $art->item_cod }}" data-price-value="{{ $art->item_precio}}" data-name-value="{{ $art->item_nomb }}" value="{{ $art->id }}">Agregar al carrito.</button>
-					</div>
-					@endif
-					<div class="col-xs-12">
-						<label>Disponibles es stock: </label>
-						<h3 class="stock">{{ $art->item_stock }}</h3>
-						<input type="hidden" class="values" data-art-id="{{ $art->id }}" data-misc-id="">
-					</div>
+
+					
+				</div>
+				<div class="col-xs-12 contImagesMini">
+					@foreach($art->images as $images)
+						@foreach($images as $i)
+							<img src="{{ asset('images/items/'.$i->image) }}" class="imgMini">
+						@endforeach
+					@endforeach
 				</div>
 				<div class="clearfix"></div>
 			</div>
 		</div>
-	</div>
 </div>
-
+<div class="modal fade" id="addCart" tabindex="-1" role="dialog" aria-labelledby="modalForggo" aria-hidden="true">
+          <div class="forgotPass modal-dialog imgLiderUp">
+            <div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				</div>
+        		<div class="">
+                    <h3>Agregar al carrito </h3>
+              	</div>
+               	<div class="col-xs-12 formulario textoPromedio">
+						<label>Talla</label>
+						<select class="chooseModal form-control">
+							<option value="">Seleccione una talla</option>
+							@foreach($tallas as $t)
+								<?php $n = 0;?>
+								@foreach($art->tallas as $at)
+									@if($at->item_talla == $t->id || $at->item_talla == "all")
+										<?php $n = 0;?>
+										<option value="{{ $t->id }}">{{ strtoupper($t->talla_nomb).' - '.ucfirst($t->talla_desc) }}</option>
+										<?php break;?>
+									@else
+										<?php $n = 1;?>
+									@endif
+								@endforeach
+								@if($n == 1)
+									<option class="disabled" disabled value="{{ $t->id }}">{{ strtoupper($t->talla_nomb).' - '.ucfirst($t->talla_desc) }}</option>
+								@endif
+							@endforeach
+						</select>
+					</div>
+					<div class="col-xs-12 formulario textoPromedio">
+						<label>Color</label>
+						<select class="colorModal form-control">
+							<option value="">Seleccione un color</option>
+						</select>
+						<input type="hidden" class="values" value="{{ $art->id }}" data-misc-id="">
+					</div>
+					<div class="clearfix"></div>
+					<div class="modal-footer">
+						<button class="btn btn-danger btnAddCart disabled">Agregar</button>
+					</div>
+            </div>
+          </div>
+      </div>
 @stop
 
 @section('postscript')
 <script type="text/javascript">
-	//	$(".zoom_item").elevateZoom({scrollZoom : true});
+	jQuery(document).ready(function($) {
+		if ($(window).width()<991) {
+			$('.cd-3d-trigger').popover('show');
+			$('.popover').click(function(event) {
+				$('.popover').remove();
+			});
+		}
+	});
 </script>
 @stop

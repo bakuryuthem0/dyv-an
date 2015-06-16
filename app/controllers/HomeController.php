@@ -30,22 +30,29 @@ class HomeController extends BaseController {
 	public function getFront()
 	{
 		$title = "Portada";
-		return View::make('indexs.portada')->with('title',$title); 
+		$slides = Slides::where('deleted','=',0)
+		->where('pos','=',2)
+		->get();
+		return View::make('indexs.portada')
+		->with('title',$title)
+		->with('slides',$slides); 
 	}
 	public function getIndex()
 	{
 		$title  = Lang::get('lang.title_index');
-		$cats   = Cat::where('deleted','=',0)->get();
+		$cats   = Cat::where('deleted','=',0)->paginate(5);
 		$i = 0;
 		$cat = array();
 		foreach ($cats as $c) {
 			$aux = SubCat::where('cat_id','=',$c->id)->where('deleted','=',0)->get();
 			$c->subcat = $aux;
 			$cat[$i] = $c;
+			$i++;
 		}
 		return View::make('indexs.index')
 		->with('title',$title)
-		->with('cats',$cat);
+		->with('cats',$cat)
+		->with('pag',$cats);
 	}
 
 	public function postItemLoad()
@@ -60,32 +67,44 @@ class HomeController extends BaseController {
 			$a->item_cod 	 	= $art->item_cod;
 			$a->item_precio 	= $art->item_precio;
 			$a->tallas    		= array();
+
 			$misc    			= Misc::where('item_id','=',$art->id)->get();
-			$aux = array();
+			$aux  = array();
+			$aux2 = array();
+			$aux3 = array();
 			$i = 0;
 			$j = 0;
+			$auxImg = new stdClass;
+			$auxMisc  = new stdClass;
+
 			foreach ($misc as $m ) {
-				$x = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('image'));
+
 				$aux2[$j] = $m->item_talla;
+
+				$auxMisc->id = $m->id;
+				$auxMisc->ta = $m->item_talla;
+
+				$aux3[$j] = $auxMisc;
 				$j++;
-				if (count($x)>1) {
+
+				$x = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('image','misc_id'));
+				if (count($x)>0) {
 					foreach ($x as $y) {
-						$aux[$i] = $y->image;
+						$auxImg->misc_id 	= $y->misc_id;
+ 						$auxImg->image 		= $y->image;
+
+						$aux[$i] = $y;
 						$i++;
 					}
-				}else
-				{
-					$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->pluck('image');
-					$i++;
 				}
-				
-				
 			}
-			$a->images   	 	= $aux;
+				
+			
 			$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('id'));
 			$a->tallas = $t;
+			$a->misc = $aux3;
 		
-			return Response::json(array('item' => $a,'princ' => $a->images[0],'images' => $aux,'tallas' => $aux2));
+			return Response::json(array('item' => $a,'princ' => $aux[0]->image,'images' => $aux,'tallas' => $aux2));
 		}
 	}
 	public function getCaTbuscar($id)
@@ -143,6 +162,57 @@ class HomeController extends BaseController {
 		->with('art',$art)
 		->with('busq',$auxcat->sub_desc);
 
+	}
+	public function getShowItem($id)
+	{
+		$art = Items::where('item.id','=',$id)
+		->first(array('item.*'));
+		$a = new stdClass;
+		$a->id = $art->id;
+		$a->item_nomb 		= $art->item_nomb;
+		$a->item_desc 		= $art->item_desc;
+		$a->item_cod 	 	= $art->item_cod;
+		$a->item_precio 	= $art->item_precio;
+		if (!is_null($art->percent)) {
+			$a->percent = $art->percent;
+		}
+		$a->misc 			= array();
+		$a->tallas    		= array();
+		$a->colores   		= array();
+		//$misc    			= Misc::where('item_id','=',$art->id)->first();
+		$misc    			= Misc::where('item_id','=',$art->id)->get();
+		$aux = array();
+		$i = 0;
+		foreach ($misc as $m ) {
+			$aux[$i] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get();
+			$i++;
+		}
+		$a->images   	 	= $aux;
+		
+		$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('item_talla'));
+		$c = Misc::where('item_id','=',$art->id)->get(array('item_color','item_talla'));
+		$a->tallas = $t;
+		$a->colores= $c;
+		$tallas  = Tallas::get();
+		$colores = Colores::get();
+
+		$title = $art->item_nomb;
+		if (Auth::check() && Auth::user()->role == 1) {
+			$layout = 'admin';
+		}else
+		{
+			$layout = 'default';
+		}
+		$option = array();
+		$tallas = Tallas::get();
+		$colores = Colores::get();		
+		return View::make('indexs.artSelf')
+		->with('title',$title)
+		->with('art',$a)
+		->with('layout',$layout)
+		->with('tallas',$tallas)
+		->with('colores',$colores);
+	
 	}
 	public function search()
 	{
@@ -231,5 +301,18 @@ class HomeController extends BaseController {
 			});
 			Session::flash('success', 'Mensaje enviado correctamente. pronto nuestros agentes se pondrán en contacto con usted.');
 			return Redirect::to('contactenos');
+	}
+	public function getMySize()
+	{
+		$title = "¿Como saber mi talla?";
+		return View::make('indexs.tallas')
+		->with('title',$title);
+	}
+	public function getMyWishList()
+	{
+		$title = "Mi lista de deseos";
+
+		return View::make('user.wishList')
+		->with('title',$title);
 	}
 }

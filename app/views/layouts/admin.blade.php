@@ -27,7 +27,7 @@
               <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="col-xs-1">
-                  <a href="{{ URL::to('administrador/inicio') }}"><img src="{{ asset('images/logo2.jpg') }}" class="logo2"></a>
+                  <a href="{{ URL::to('administrador/inicio') }}"><img src="{{ asset('images/logo-01.png') }}" class="logo2"></a>
                 </div>
 
                 <div class="navbar-header">
@@ -41,7 +41,7 @@
                
                <div class="collapse navbar-collapse adminlayout" id="bs-example-navbar-collapse-1 col-xs-3">
                 @if(!Auth::check())
-                <h3 style="text-align:left;vertical-align:middle;">Bienvenido (a)<br>Al Centro De Administración De Dyv-an Venezuela</h3>
+                <h3 style="text-align:left;vertical-align:middle;">Bienvenido (a)<br>Al Centro De Administración De Dyv-an</h3>
                 @else
                   <ul class="nav navbar-nav">
                     <li class="dropdown myMenu">
@@ -149,6 +149,24 @@
                               
                             </ul>
                           </li>
+                          <li class="dropdown-submenu">
+                            <a href="#" >
+                              Bancos
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                              <li>
+                                <a href="{{ URL::to('administrador/agregar-bancos') }}">
+                                  Agregar
+                                </a>
+                              </li>
+                              <li>
+                                <a href="{{ URL::to('administrador/editar-banco') }}">
+                                  Editar
+                                </a>
+                              </li>
+                              
+                            </ul>
+                          </li>
                         </ul>
                       </li>
                       <li class="dropdown myMenu">
@@ -158,6 +176,7 @@
                           <span class="caret"></span></a>
                           <ul class="dropdown-menu multi-level" role="menu">
                             <li><a href="{{ URL::to('administrador/crear-nuevo') }}">Nuevo administrador</a></li>
+                            <li><a href="{{ URL::to('administrador/cambiar-contraseña') }}">Cambiar mi contraseña</a></li>
                           </ul>
                       </li>
                       <li class="dropdown myMenu">
@@ -168,7 +187,25 @@
                         <ul class="dropdown-menu multi-level" role="menu">
                           <li class="dropdown-submenu">
                             <a href="#" >
-                              Slider
+                              Imagenes de fondo
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                              <li>
+                                <a href="{{ URL::to('administrador/nueva-imagen') }}">
+                                  Nueva Imagen
+                                </a>
+                              </li>
+                              <li>
+                                <a href="{{ URL::to('administrador/editar-slides') }}">
+                                  Editar Imagenes
+                                </a>
+                              </li>
+                              
+                            </ul>
+                          </li>
+                          <li class="dropdown-submenu">
+                            <a href="#" >
+                              Slides
                             </a>
                             <ul class="dropdown-menu" role="menu">
                               <li>

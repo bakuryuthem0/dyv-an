@@ -9,10 +9,18 @@
 			<div class="alert responseDanger" style="text-align:center;">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 			</div>
-			<table class="table table-striped table-hover">
+			<form action="#" method="get">
+					<!-- USE TWITTER TYPEAHEAD JSON WITH API TO SEARCH -->
+					<input class="form-control" id="buscar-usuario" name="q" placeholder="Busqueda general">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-search"></i>
+					</span>
+			</form>
+			<table class="table table-striped table-hover table-list-search">
 				<thead>
 					<tr>
 						<th>Id</th>
+						<th>Tipo</th>
 						<th>Vista previa</th>
 						<th>Activar</th>
 						<th>Eliminar</th>
@@ -22,6 +30,13 @@
 					@foreach($slides as $s)
 					<tr class="tr-slide-desc">
 						<td>{{ $s->id }}</td>
+						<td>
+							@if($s->pos == 1)
+								<p class="textoPromedio">Imagen de fondo</p>
+							@else
+								<p class="textoPromedio">Slide</p>
+							@endif
+						</td>
 						<td><img src="{{ asset('images/slides-top/'.$s->image) }}" style="max-width:300px;"></td>
 						<td>
 							@if($s->active == 1)

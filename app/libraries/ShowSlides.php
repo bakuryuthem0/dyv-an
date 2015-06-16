@@ -3,7 +3,9 @@
 Class ShowSlides{
 	static function show()
 	{
-		$slides = Slides::where('deleted','=',0)->where('active','=',1)->get();
+		$slides = Slides::where('deleted','=',0)
+		->where('pos','=',1)
+		->where('active','=',1)->get();
 		foreach ($slides as $s) {
 			echo ' <div class="front"><img src="'.asset('images/slides-top/'.$s->image).'"/></div>';
 		}
@@ -11,7 +13,8 @@ Class ShowSlides{
 	}
 	static function showTallas()
 	{
-		$tallas = Tallas::where('deleted','=',0)->get();
+		$tallas = Tallas::where('deleted','=',0)
+		->get();
 		return $tallas;
 	}
 }

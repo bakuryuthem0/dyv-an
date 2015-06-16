@@ -18,7 +18,7 @@
 					<div class="clearfix"></div>
 				</div>
 				<div class="single imagesSlidesOption textoPromedio">
-					<form method="POST" action="{{ URL::to('administrador/nuevo-slide/procesar') }}" enctype="multipart/form-data">
+					<form method="POST" action="{{ URL::to($url) }}" enctype="multipart/form-data">
 
 						<label>Slide:</label>
 						<input type="file" name="img">
@@ -27,7 +27,7 @@
 				</div>
 				<div class="multiple imagesSlidesOption">
 					<div id="dropzone">
-	                    <form action="{{ URL::to('administrador/nuevos-slides/procesar') }}" method="POST" class="dropzone textoPromedio" id="my-awesome-dropzone">
+	                    <form action="{{ URL::to($url2) }}" method="POST" class="dropzone textoPromedio" id="my-awesome-dropzone">
 	                        <div class="dz-message">
 	                            Arrastre o presione aquí para subir su imagen.
 	                        </div>

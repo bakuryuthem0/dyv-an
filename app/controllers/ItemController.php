@@ -110,18 +110,32 @@ class ItemController extends BaseController {
 	public function getRefresh()
 	{
 		if (Request::ajax()) {
-			$id = Input::get('id');
-			$qty = Input::get('qty');
-			$cart = Cart::get($id);
+			$item_id= Input::get('item_id');
+			$id 	= Input::get('id');
+			$qty 	= Input::get('qty');
+			$talla 	= Input::get('talla');
+			$color 	= Input::get('color'); 
+			$misc = Misc::where('item_talla','=',$talla)
+			->where('item_id','=',$item_id)
+			->where('item_color','=',$color)
+			->pluck('item_stock');
+			if ($misc < $qty) {
+				return Response::json(array('type' => 'danger'));
+			}
+			$cart 	= Cart::get($id);
 			Cart::update($id,$qty);
-			$count = Cart::count();
-			$total = Cart::total();
+			$count 	= Cart::count();
+			$total 	= Cart::total();
 			return Response::json(array('type' => 'success','count' => $count,'total' => $total,'qty' => $cart->qty,'id' => $cart->id,'subtotal'=>$cart->subtotal));
 		}
 	}
 	public function postDir()
 	{
 		$id = Input::get('dir');
+		if (empty($id) || is_null($id)) {
+			Session::flash('error', 'Debe seleccionar una dirección.');
+			return Redirect::back();
+		}
 		if ($id == 'user_id') {
 			$dir = Dir::where('user_id','=',Auth::user()->id)->where('user_dir','=',1)->first();
 			if (count($dir)>0) {
@@ -187,7 +201,6 @@ class ItemController extends BaseController {
 			{
 
 				foreach (Cart::content() as $c) {
-					return $c;	
 					$misc = Misc::find($c->options['misc']);
 					$misc->item_stock = $misc->item_stock-$c->qty;
 					$misc->save();
@@ -232,27 +245,13 @@ class ItemController extends BaseController {
 
 		}
 		$total = 0;
-		$method= "hola";
-		/*$mp = new MP('8718886882978199','K1SlqcrxB2kKnnrhxt6PCyLtC6RuSuux');
-		$preference_data = array(
-    			"items" => array(
-       			array(
-           			"title" => $p,
-           			"quantity" => 1,
-           			"currency_id" => "VEF",
-           			"unit_price" => $auxT
-       			)
-    			)
-		);
-		$preference = $mp->create_preference ($preference_data);*/
-		$preference = '';
+		$method = 'hola';
 		$bancos = Bancos::where('deleted','=',0)->get();
 		return View::make('indexs.showCart')
 		->with('title',$title)
 		->with('method',$method)
 		->with('total',$total)
 		->with('items',$item)
-		->with('preference',$preference)
 		->with('id',$id)
 		->with('bancos',$bancos);
 	}
@@ -261,7 +260,7 @@ class ItemController extends BaseController {
 		$input = Input::all();
 		$id = $input['factId'];
 		$rules = array(
-			'transNumber' => 'required|numeric',
+			'transNumber' => 'required',
 			'banco'		  => 'required',
 			'fecha'		  => 'required'
 		);
@@ -271,12 +270,15 @@ class ItemController extends BaseController {
 			);
 		$validator = Validator::make($input, $rules, $messages);
 		if ($validator->fails()) {
-			return Redirect::back()->withErrors($validator);
+			return Redirect::back()->withErrors($validator)->withInput();
 		}
 		$fac 			= Facturas::find($id);
 
 		$fac->num_trans = $input['transNumber'];
 		$fac->banco 	= $input['banco'];
+		if (!empty($input['bank_ext'])) {
+			$fac->banco_ext = $input['bank_ext'];
+		}
 		$fac->fech_trans= $input['fecha'];
 		$fac->pagada 	= -1;
 		if ($fac->save()) {
@@ -298,6 +300,25 @@ class ItemController extends BaseController {
 		{
 			Session::flash('danger', 'Error al guardar el pago');
 			return Redirect::back();
+		}
+	}
+	public function postMyWishList()
+	{
+		if (Request::ajax()) {
+			$id = Input::get('id');
+			$wish = Wish::where('item_id','=',$id)->where('deleted','=',0)->count();
+			if ($wish > 0) {
+				return Response::json(array('type' => 'warning'));
+			}
+			$wish = new Wish;
+			$wish->item_id = $id;
+			$wish->user_id = Auth::user()->id;
+			if ($wish->save()) {
+				return Response::json(array('type' => 'success'));
+			}else
+			{
+				return Response::json(array('type' => 'danger'));
+			}
 		}
 	}
 }
