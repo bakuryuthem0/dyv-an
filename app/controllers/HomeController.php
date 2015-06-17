@@ -69,12 +69,11 @@ class HomeController extends BaseController {
 			$a->tallas    		= array();
 
 			$misc    			= Misc::where('item_id','=',$art->id)->get();
-			$aux  = array();
 			$aux2 = array();
 			$aux3 = array();
 			$i = 0;
 			$j = 0;
-			$auxImg = new stdClass;
+			$auxImg = array();
 			$auxMisc  = new stdClass;
 
 			foreach ($misc as $m ) {
@@ -90,21 +89,19 @@ class HomeController extends BaseController {
 				$x = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('image','misc_id'));
 				if (count($x)>0) {
 					foreach ($x as $y) {
-						$auxImg->misc_id 	= $y->misc_id;
- 						$auxImg->image 		= $y->image;
-
-						$aux[$i] = $y;
+						$auxImg[$i] = new stdClass;
+						$auxImg[$i]->misc_id 	= $y->misc_id;
+ 						$auxImg[$i]->image 		= $y->image;
 						$i++;
 					}
 				}
 			}
-				
-			
+
 			$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('id'));
 			$a->tallas = $t;
 			$a->misc = $aux3;
 		
-			return Response::json(array('item' => $a,'princ' => $aux[0]->image,'images' => $aux,'tallas' => $aux2));
+			return Response::json(array('item' => $a,'princ' => $auxImg[0]->image,'images' => $auxImg,'tallas' => $aux2));
 		}
 	}
 	public function getCaTbuscar($id)

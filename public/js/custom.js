@@ -457,9 +457,11 @@ jQuery(document).ready(function($) {
 						$(this).css({'display':'none'});
 					});
 					$('.values').val(response['item'].id)
+					console.log(response.images[0]);
 					for (var i = 0; i < response.images.length; i++) {
-						$('.contImagesMini').append('<img src="http://localhost/prueba/dyv-an/public/images/items/'+response.images[i].image+'" class="imgMini" data-misc="'+response.images[i].misc_id+'">');
+						$('.contImagesMini').append('<img src="http://localhost/prueba/dyv-an/public/images/items/'+response.images[i].image+'" data-misc="'+response.images[i].misc_id+'" class="imgMini" data-misc="'+response.images[i].misc_id+'">');
 					};
+					
 					for (var i = 0; i < response.tallas.length; i++) {
 						$('.selectChoose option[value = '+response.tallas[i]+']').prop('disabled',false);
 					};
