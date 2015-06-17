@@ -82,7 +82,6 @@
           <li>
             <table class="table table-hover tableItems">
               <tr>
-                <th></th>
                 <th class="textoNegro textoPromedio">Precio</th>
                 <th class="textoNegro textoPromedio">Nombre</th>
                 <th class="textoNegro textoPromedio">Cantidad</th>
@@ -95,7 +94,6 @@
               <?php $total = 0;?>
             @foreach(Cart::content() as $c)
               <tr id="{{ $c->rowid  }}" class="removable">
-                <td class="textoNegro textoPromedio"><img src="{{ asset('images/items/'.$c->options['img']) }}"></td>
                 <td class="textoNegro textoPromedio">{{ $c->price }}</td>
                 <td class="textoNegro textoPromedio">{{ $c->name }}</td>
                 <td class="textoNegro textoPromedio qty">{{ $c->qty }}</td>

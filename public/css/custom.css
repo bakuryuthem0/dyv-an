@@ -288,6 +288,7 @@ body.admin legend
   display: block;
   margin: 0 auto;
 }
+.
 .contRed
 {
   display: inline-block;
@@ -427,7 +428,6 @@ body.admin legend
          -o-transition: all .25s ease-in-out;
             transition: all .25s ease-in-out;
 }
-
 .modal-content
 {
   padding: 2em;
@@ -656,21 +656,6 @@ h4 > .rotated
   
   color:green;
 }
-.onlyMovil
-{
-  display: none;
-}
-@media(max-width: 991px){
-  .noMovil
-  {
-    display: none;
-  }
-  .onlyMovil
-  {
-    display: table-cell;
-  }
-}
-
 /**/
 li.disabled
 {

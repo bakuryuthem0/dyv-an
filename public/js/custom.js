@@ -80,7 +80,7 @@ jQuery(document).ready(function($) {
 				data: {'id': id},
 				beforeSend:function()
 				{
-					$('.btnModalElimDir').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.btnModalElimDir').before('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -363,7 +363,7 @@ jQuery(document).ready(function($) {
 				data: {id: $(this).val()},
 				beforeSend:function()
 				{
-					$('.envElim').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.envElim').before('<img src="../images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -457,18 +457,16 @@ jQuery(document).ready(function($) {
 						$(this).css({'display':'none'});
 					});
 					$('.values').val(response['item'].id)
-					console.log(response.images[0]);
 					for (var i = 0; i < response.images.length; i++) {
-						$('.contImagesMini').append('<img src="http://localhost/prueba/dyv-an/public/images/items/'+response.images[i].image+'" data-misc="'+response.images[i].misc_id+'" class="imgMini" data-misc="'+response.images[i].misc_id+'">');
+						$('.contImagesMini').append('<img src="http://localhost/dyv-an/public/images/items/'+response.images[i]+'" class="imgMini">');
 					};
-					
 					for (var i = 0; i < response.tallas.length; i++) {
 						$('.selectChoose option[value = '+response.tallas[i]+']').prop('disabled',false);
 					};
 					$('.ItemTitle').html(response['item'].item_nomb+' - '+response['item'].item_cod)
 					$('.contDescription').html(response['item'].item_desc)
-					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','http://localhost/prueba/dyv-an/public/images/items/'+response.princ)
-					$('.contImageItem > .imagenPrincipal').attr('src','http://localhost/prueba/dyv-an/public/images/items/'+response.princ)
+					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','http://localhost/dyv-an/public/images/items/'+response.princ)
+					$('.contImageItem > .imagenPrincipal').attr('src','http://localhost/dyv-an/public/images/items/'+response.princ)
 					$('.precio').html('Bs. '+response['item'].item_precio);
 					$('.btnAgg').val(response['item'].id)
 					$('.btnAgg').attr('data-name-value', response['item'].item_nomb);
@@ -532,7 +530,7 @@ jQuery(document).ready(function($) {
 				data: {'id': id},
 				beforeSend:function()
 				{
-					boton.before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					boton.before('<img src="../images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -593,7 +591,7 @@ jQuery(document).ready(function($) {
 				beforeSend:function()
 				{
 					$('.btnAddMyWishList').addClass('disabled');
-					$('.btnAddMyWishList').before('<img src="../http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.btnAddMyWishList').before('<img src="../../images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -663,7 +661,7 @@ jQuery(document).ready(function($) {
 								250);
 						}
 				);
-				boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+				boton.after('<img src="../images/loading.gif" class="loading">');
 				
 			},
 			success:function(response)
@@ -702,7 +700,7 @@ jQuery(document).ready(function($) {
 				data: {'id':boton.val() },
 				beforeSend:function()
 				{
-					boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					boton.after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
 					boton.animate({
 							'opacity': 0},
 							250,function(){
@@ -780,7 +778,7 @@ jQuery(document).ready(function($) {
 							}
 					);
 					$('.btn-carrito').addClass('disabled')
-					$('.btnVaciar').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.btnVaciar').after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
 					
 				},
 				success:function(response)
@@ -818,7 +816,7 @@ jQuery(document).ready(function($) {
 				dataType: 'json',
 				data: {'id': id,'item_id':item_id},
 				beforeSend:function(){
-					$('.choose').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.choose').after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -876,7 +874,7 @@ jQuery(document).ready(function($) {
 					data: {'id': id,'item_id':item_id},
 					beforeSend:function(){
 						//casa
-						$('.btnAddCart').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+						$('.btnAddCart').before('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
 						//trabajo
 						//$('.btnAddCart').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 						$('.loading').css({
@@ -938,7 +936,7 @@ jQuery(document).ready(function($) {
 				}
 				$.ajax({
 					//casa
-					url: '/prueba/dyv-an/public/agregar-al-carrito',
+					url: '/dyv-an/public/agregar-al-carrito',
 					//trabajo
 					//url: '/prueba/dyv-an/public/agregar-al-carrito',
 
@@ -949,7 +947,7 @@ jQuery(document).ready(function($) {
 					{
 						$('.btnAddCart').addClass('disabled');
 						//casa
-						$('.btnAddCart').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+						$('.btnAddCart').before('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
 						//trabajo
 						//$('.btnAddCart').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 
@@ -1021,7 +1019,7 @@ jQuery(document).ready(function($) {
 					data: {'id':boton.val() },
 					beforeSend:function()
 					{
-						boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+						boton.after('<img src="../images/loading.gif" class="loading">');
 						boton.animate({
 								'opacity': 0},
 								250,function(){
@@ -1083,7 +1081,7 @@ jQuery(document).ready(function($) {
 						'item_id':boton.attr('data-id') },
 					beforeSend:function()
 					{
-						boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+						boton.after('<img src="../images/loading.gif" class="loading">');
 						boton.animate({
 								'opacity': 0},
 								250,function(){
@@ -1247,7 +1245,7 @@ jQuery(document).ready(function($) {
 				dataType: 'json',
 				data: {'id': id},
 				beforeSend:function() {
-					boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					boton.after('<img src="../images/loading.gif" class="loading">');
 					boton.animate({
 						'opacity': 0},
 						250,function(){
@@ -1280,7 +1278,6 @@ jQuery(document).ready(function($) {
 							500);
 					$('#elimModal').modal('hide')
 					$('.envElim').addClass('disabled')
-					window.location.reload();
 					setTimeout(function(){ 
 						$('.responseDanger').animate({
 							'opacity':0},
@@ -1312,7 +1309,7 @@ jQuery(document).ready(function($) {
 				data: {'id': $(this).val()},
 				beforeSend:function()
 				{
-					$('.envReactivar').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.envReactivar').before('<img src="../images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -1363,7 +1360,7 @@ jQuery(document).ready(function($) {
 				data: {'id': $(this).val()},
 				beforeSend:function()
 				{
-					$('.envElim').before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					$('.envElim').before('<img src="../images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -1514,7 +1511,7 @@ jQuery(document).ready(function($) {
 								250);
 						}
 				);
-				boton.after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+				boton.after('<img src="../images/loading.gif" class="loading">');
 				
 			},
 			success:function(response)
@@ -1560,7 +1557,7 @@ jQuery(document).ready(function($) {
 				data: {'id': $(this).val(),'motivo': motivo},
 				beforeSend:function()
 				{
-					boton2.before('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
+					boton2.before('<img src="../images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'

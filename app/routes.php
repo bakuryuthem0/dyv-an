@@ -24,7 +24,6 @@ Route::post('cargar-item','HomeController@postItemLoad');
 Route::post('articulos/categoria/cargar-item','HomeController@postItemLoad');
 Route::post('articulos/sub-categoria/cargar-item','HomeController@postItemLoad');
 Route::post('buscar/colores','HomeController@getColors');
-Route::post('articulos/categoria/buscar/colores','HomeController@getColors');
 Route::post('articulos/sub-categoria/buscar/colores','HomeController@getColors');
 
 Route::group(array('before' =>'no_auth'),function()

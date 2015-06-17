@@ -34,7 +34,7 @@
                           <ul class="textoPromedio">
                             <li>Cliente:{{ $user->nombre.' '.$user->apellido }}</li>
                             <li>Direccion: {{ $user->dir }}</li>
-                            <li>Carnet de identidad/NIT: {{ $user->cedula }}</li>
+                            <li>CI/RIF: {{ $user->cedula }}</li>
                           </ul>
                         </div>
                         <div class="contdeNegro">

@@ -1457,8 +1457,8 @@ class AdminController extends BaseController {
 	public function getPayment()
 	{
 		$title = "Pagos | dyv-an.com";
-		$fac = Facturas::leftJoin('direcciones','direcciones.id','=','facturas.dir')
-		->leftJoin('usuario','usuario.id','=','facturas.user_id')
+		$fac = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
+		->join('usuario','usuario.id','=','facturas.user_id')
 		->leftJoin('departamento','departamento.id','=','usuario.department')
 		->leftJoin('bancos','bancos.id','=','facturas.banco')
 		->where('pagada','=',-1)->orderBy('facturas.id','DESC')
@@ -1475,10 +1475,10 @@ class AdminController extends BaseController {
 				'facturas.*',
 				'direcciones.email',
 				'direcciones.dir as dir_name',
-				'bancos.banco as banco_name'
+				'bancos.banco'
 			)
 		);
-		$facNot  = Facturas::leftJoin('direcciones','direcciones.id','=','facturas.dir')
+		$facNot  = Facturas::join('direcciones','direcciones.id','=','facturas.dir')
 		->join('usuario','usuario.id','=','facturas.user_id')
 		
 		->where('facturas.deleted','=',0)
