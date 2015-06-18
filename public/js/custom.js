@@ -435,6 +435,7 @@ jQuery(document).ready(function($) {
 		$('.contArtPrinc').animate({
 			'opacity':0},
 			250);
+		$('.misc_item').remove();
 		var id = $(this).data('id');
 		if (id != $('.showItemContent').attr('data-modal-id')) {
 			$('.imgMini').remove();
@@ -458,15 +459,18 @@ jQuery(document).ready(function($) {
 					});
 					$('.values').val(response['item'].id)
 					for (var i = 0; i < response.images.length; i++) {
-						$('.contImagesMini').append('<img src="http://localhost/dyv-an/public/images/items/'+response.images[i]+'" class="imgMini">');
+						$('.contImagesMini').append('<img src="http://localhost/prueba/dyv-an/public/images/items/'+response.images[i].image+'" class="imgMini image_misc_'+response.images[i].misc_id+'">');
 					};
 					for (var i = 0; i < response.tallas.length; i++) {
 						$('.selectChoose option[value = '+response.tallas[i]+']').prop('disabled',false);
 					};
+					for (var i = 0; i < response['item'].misc.length;i++) {
+						$('.contMiscHid').append('<input type="hidden" class="misc_item_'+response['item'].misc[i].ta+'" value="'+response['item'].misc[i].id+'">')
+					};
 					$('.ItemTitle').html(response['item'].item_nomb+' - '+response['item'].item_cod)
 					$('.contDescription').html(response['item'].item_desc)
-					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','http://localhost/dyv-an/public/images/items/'+response.princ)
-					$('.contImageItem > .imagenPrincipal').attr('src','http://localhost/dyv-an/public/images/items/'+response.princ)
+					$('.contImageItem > .imagenPrincipal').attr('data-zoom-image','http://localhost/prueba/dyv-an/public/images/items/'+response.princ)
+					$('.contImageItem > .imagenPrincipal').attr('src','http://localhost/prueba/dyv-an/public/images/items/'+response.princ)
 					$('.precio').html('Bs. '+response['item'].item_precio);
 					$('.btnAgg').val(response['item'].id)
 					$('.btnAgg').attr('data-name-value', response['item'].item_nomb);
@@ -803,6 +807,21 @@ jQuery(document).ready(function($) {
 		}
 	});
 	$('.choose').change(function(event) {
+		if ($(this).val() != "") {
+			var misc  = $('.misc_item_'+$(this).val());
+			$('.imgMini:not(.image_misc_'+misc.val()+')').animate({'opacity':'0'}, 500,function() {
+				$(this).hide();
+			});
+			$('.image_misc_'+misc.val()).animate({'opacity':1}, 500,function () {
+				$(this).show();
+			});
+
+		}else
+		{
+			$('.imgMini').animate({'opacity':1}, 500,function () {
+				$(this).show();
+			});
+		}
 		var id = $(this).val();
 		var item_id = $('.values').val();
 		if (id == "") {
@@ -816,7 +835,7 @@ jQuery(document).ready(function($) {
 				dataType: 'json',
 				data: {'id': id,'item_id':item_id},
 				beforeSend:function(){
-					$('.choose').after('<img src="http://localhost/dyv-an/public/images/loading.gif" class="loading">');
+					$('.choose').after('<img src="http://localhost/prueba/dyv-an/public/images/loading.gif" class="loading">');
 					$('.loading').css({
 						'display': 'block',
 						'margin': '2em auto'
@@ -1673,6 +1692,82 @@ jQuery(document).ready(function($) {
 	});
 });
 
+jQuery(document).ready(function($) {
+	$('.btnChange').click(function(event) {
+		$('.minis').addClass('miniSortable');
+
+		$('.btn-no').addClass('btn-show');
+		$(this).addClass('btn-no');
+		
+		$( ".minis" ).sortable({
+	      revert: true
+	    });
+
+	    $(".minis").disableSelection();
+	});
+	$('.btnChangeEnviar').click(function(event) {
+		var lista = $('.imgMini')
+		var ids   = [];
+		lista.each(function(i, el) {
+			ids[i] = $(el).attr('data-id-value');
+		});
+		var id = $(this).val();
+		$.ajax({
+			url: 'cambiar/posiciones',
+			type: 'POST',
+			dataType: 'json',
+			data: {'ids': ids},
+			beforeSend:function () {
+				$('.btnChangeEnviar').before('<img src="http://localhost/prueba/car2/public/images/loading.gif" class="loading">');
+				$('.loading').css({
+					'display': 'block',
+					'margin': '2em auto'
+				}).animate({
+					'opacity': 1},
+					500);
+				$('.btn').addClass('disabled');	
+			},
+			success:function (response) {
+				$('.disabled').removeClass('disabled');
+				$('.loading').animate({
+					'opacity': 0},
+				500,function(){
+					
+					$(this).remove();
+				});
+				$('.responseDanger').addClass('alert-'+response.type).html('<p class="textoPromedio">'+response.msg+'</p>').css({
+					'display': 'block'
+				}).animate({
+					'opacity': 1},
+					500);
+				$('.minis').sortable("destroy");
+				$('.miniSortable').removeClass('miniSortable');
+				$('.btn-show').removeClass('btn-show');
+				$('.btnChange').removeClass('btn-no');
+				setTimeout(function(){
+
+					$('.responseDanger').removeClass('success')
+					$('.responseDanger').removeClass('danger')
+					$('.responseDanger').stop().animate({
+						'opacity':0},
+						500, function() {
+						$(this).css({
+							'display':'none'
+						});
+					});
+				},6000);
+				
+			}
+		})
+		
+	});
+	$('.btnChangeCancel').click(function(event) {
+		$('.minis').sortable("destroy");
+		$('.miniSortable').removeClass('miniSortable');
+		$('.btn-show').removeClass('btn-show');
+		$('.btnChange').removeClass('btn-no');
+	});
+});
 
 //cart plugin
 jQuery(document).ready(function($){

@@ -288,7 +288,7 @@ body.admin legend
   display: block;
   margin: 0 auto;
 }
-.
+
 .contRed
 {
   display: inline-block;
@@ -331,6 +331,31 @@ body.admin legend
 {
   text-align: center;
   margin-top: 5em;
+}
+.showImages
+{
+  display: inline-block;
+}
+.hiddeImage
+{
+  display: none;
+}
+.imageMdfAdmin
+{
+  max-width: 300px;
+}
+.btn-no
+{
+  display: none;
+}
+.btn-show
+{
+  display: inline-block !important;
+}
+.miniSortable
+{
+  background-color: rgba(45, 169, 88, 0.4);
+  padding: 2em;
 }
 .depInp
 {

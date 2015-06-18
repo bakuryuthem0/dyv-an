@@ -74,12 +74,12 @@ class HomeController extends BaseController {
 			$i = 0;
 			$j = 0;
 			$auxImg = array();
-			$auxMisc  = new stdClass;
 
 			foreach ($misc as $m ) {
 
 				$aux2[$j] = $m->item_talla;
 
+				$auxMisc  = new stdClass;
 				$auxMisc->id = $m->id;
 				$auxMisc->ta = $m->item_talla;
 

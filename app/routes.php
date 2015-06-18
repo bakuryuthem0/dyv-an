@@ -24,6 +24,7 @@ Route::post('cargar-item','HomeController@postItemLoad');
 Route::post('articulos/categoria/cargar-item','HomeController@postItemLoad');
 Route::post('articulos/sub-categoria/cargar-item','HomeController@postItemLoad');
 Route::post('buscar/colores','HomeController@getColors');
+Route::post('articulos/categoria/buscar/colores','HomeController@getColors');
 Route::post('articulos/sub-categoria/buscar/colores','HomeController@getColors');
 
 Route::group(array('before' =>'no_auth'),function()
@@ -99,6 +100,10 @@ Route::group(array('before' =>'auth'),function()
 		Route::post('administrador/cambiar-imagen','AdminController@changeItemImagen');
 		Route::post('administrador/agregar-nueva-categoria','AdminController@newCategoriaMdf');
 		/**/
+		Route::get('administrador/nueva-caracteristica/{id}','AdminController@getNewMisc');
+		Route::get('administrador/cambiar-posicion/{id}','AdminController@getNewImgPos');
+
+		Route::post('administrador/cambiar-posicion/cambiar/posiciones','AdminController@postChangePost');
 		/*Ver articulos*/
 		Route::get('administrador/ver-articulo', 'AdminController@getShowArt');
 		Route::get('administrador/ver-articulo/{id}','HomeController@getShowItem');
@@ -109,6 +114,7 @@ Route::group(array('before' =>'auth'),function()
 		/*nueva*/
 		Route::get('categoria/nueva','AdminController@getNewCat');
 		Route::post('categoria/nueva/enviar', 'AdminController@postNewCat');
+
 		/*Modificar*/
 		Route::get('categoria/ver-categorias','AdminController@getModifyCat');
 		Route::get('administrador/ver-categoria/{id}','AdminController@getModifyCatById');

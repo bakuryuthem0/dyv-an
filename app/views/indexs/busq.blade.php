@@ -51,6 +51,8 @@
             </div>
             <img src="" class="imagenPrincipal" data-src="{{ asset('images/items/') }}" data-zoom-image="">
           </div>
+          <div class="contMiscHid">
+          </div>
           <div class="col-xs-4 textoPromedio ">
             <div class="col-xs-12">
               <label class="textoNegro">PRECIO EN DYV-AN:<h3 class="precio"></h3></label>
@@ -114,6 +116,7 @@
           <option value="">Seleccione un color</option>
         </select>
       </div>
+
       <div class="clearfix"></div>
       <div class="modal-footer">
         <button class="btn btn-danger btnAddCart disabled">Agregar</button>

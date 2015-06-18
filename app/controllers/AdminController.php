@@ -1858,7 +1858,7 @@ class AdminController extends BaseController {
 		$misc->item_stock = $input['item_stock'];
 		if ($misc->save()) {
 			Session::flash('success', 'Categorai añadida satisfactoriamente');
-			return Redirect::back();
+			return Redirect::to('administrador/editar-articulo/'.$misc->item_id);
 		}else
 		{
 			Session::flash('danger', 'error al articulo satisfactoriamente');
@@ -1870,5 +1870,67 @@ class AdminController extends BaseController {
 		$title = "Cambiar contraseña";
 		return View::make('admin.newPass')
 		->with('title',$title);
+	}
+	public function getNewMisc($id)
+	{
+		$title = "Nueva Caracteristica";
+		$item = Items::find($id);
+		$misc = Misc::where('item_id','=',$item->id)->get();
+		
+		$item->misc = $misc;
+
+		$cat = Cat::where('deleted','=',0)->get();
+		$tallas = Tallas::where('deleted','=',0)->get();
+		$colors = Colores::where('deleted','=',0)->get();
+		return View::make('admin.newMisc')
+		->with('title',$title)
+		->with('item',$item)
+		->with('cat',$cat)
+		->with('tallas',$tallas)
+		->with('colores',$colors);
+	}
+	public function getNewImgPos($id)
+	{
+		$title ="Cambiar posición de las imagenes";
+
+		$item = Items::find($id);
+		$misc = Misc::where('item_id','=',$item->id)->get(array('id'));
+		$aux = array();
+		$j = 0;
+		foreach ($misc as $m) {
+			$aux[$j] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('id','misc_id','image','order'));
+			$j++;
+		}
+		for ($i=0; $i < count($aux); $i++) { 
+			for ($j=$i; $j < count($aux)-1 ; $j++) { 
+				echo $aux[$j];
+				echo '<br>';
+			}
+		}
+		die();
+		if ($aux[$j]->order<$aux[$j+1]->order) {
+			$x = $aux[$j];
+			$aux[$j] = $aux[$j+1];
+			$aux[$j+1] = $x;
+		}
+
+		return View::make('admin.changeImagePos')
+		->with('title',$title)
+		->with('item',$aux);
+
+	}
+	public function postChangePost()
+	{
+		$id = Input::get('ids');
+		$i = 0;
+		foreach ($id as $k) {
+			$img = Images::find($id[$i]);
+			$img->order = $i+1;
+			$img->save();
+			$i++;
+		}
+		$x = 0;
+		
+		return Response::json(array('type' => 'success','msg' => 'Imagenes cambiadas de posición satisfactoriamente.'));
 	}
 }
