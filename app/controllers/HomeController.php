@@ -73,7 +73,8 @@ class HomeController extends BaseController {
 			$aux3 = array();
 			$i = 0;
 			$j = 0;
-			$auxImg = array();
+			$k = 0;
+			$images = array();
 
 			foreach ($misc as $m ) {
 
@@ -86,22 +87,33 @@ class HomeController extends BaseController {
 				$aux3[$j] = $auxMisc;
 				$j++;
 
-				$x = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('image','misc_id'));
-				if (count($x)>0) {
-					foreach ($x as $y) {
-						$auxImg[$i] = new stdClass;
-						$auxImg[$i]->misc_id 	= $y->misc_id;
- 						$auxImg[$i]->image 		= $y->image;
-						$i++;
+				$x = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('id','misc_id','image','order'));
+				foreach ($x as $y) {
+					$aux = new stdClass;
+					$aux->id      = $y->id;
+					$aux->misc_id = $y->misc_id;
+					$aux->image   = $y->image;
+					$aux->order   = $y->order;
+					$images[$k]  = $aux;
+					$k++;
+				}
+			}
+			for($i = 0;$i < count($images);$i++)
+			{
+				for ($j=0; $j < count($images)-1 ; $j++) { 
+					if ($images[$j]->order > $images[$j+1]->order) {
+						$bub = new stdClass;
+						$bub 				= $images[$j+1];
+						$images[$j+1] 		= $images[$j];
+						$images[$j] 		= $bub;	
 					}
 				}
 			}
-
 			$t = Misc::where('item_id','=',$art->id)->groupBy('item_talla')->get(array('id'));
 			$a->tallas = $t;
 			$a->misc = $aux3;
 		
-			return Response::json(array('item' => $a,'princ' => $auxImg[0]->image,'images' => $auxImg,'tallas' => $aux2));
+			return Response::json(array('item' => $a,'princ' => $images[0]->image,'images' => $images,'tallas' => $aux2));
 		}
 	}
 	public function getCaTbuscar($id)

@@ -54,11 +54,9 @@
 				<div class="alert responseDanger">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 				</div>
-				<form methos="POST" action="{{ URL::to('recuperar/password') }}">
 					<p class="textoPromedio">{{ Lang::get('lang.login_text1') }}</p>
 					<input class="form-control emailForgot" name="email" placeholder="{{ Lang::get('lang.placeholder_email') }}">
 					<button class="btn btn-success envForgot" style="margin-top:2em;">{{ Lang::get('lang.btn_send') }}</button>	
-				</form>
 			</div>
 		</div>
 	</div>

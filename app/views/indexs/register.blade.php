@@ -318,13 +318,8 @@
 						<div class="col-xs-6 inputRegister">
 							{{ Form::text('telefono', Input::old('telefono'),array(
 								'class' => 'form-control inputFondoNegro',
-								'placeholder' => Lang::get('lang.form_phone'),
-								'required' 	  			=> 'required',
-								'data-trigger' 					=> 'manual',
-								"data-toggle" 			=> "popover",
-								"data-placement" 		=> "left",
-								"data-content" 			=> "Campo requerido",
-								"data-original-title" 	=> "Alerta")) }}
+								'placeholder' => Lang::get('lang.form_phone')
+								)) }}
 							@if ($errors->has('telefono'))
 								 @foreach($errors->get('telefono') as $err)
 								 	<div class="alert alert-danger">

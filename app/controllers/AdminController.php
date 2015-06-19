@@ -1895,28 +1895,37 @@ class AdminController extends BaseController {
 
 		$item = Items::find($id);
 		$misc = Misc::where('item_id','=',$item->id)->get(array('id'));
-		$aux = array();
+		$images = array();
 		$j = 0;
+
 		foreach ($misc as $m) {
-			$aux[$j] = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('id','misc_id','image','order'));
-			$j++;
-		}
-		for ($i=0; $i < count($aux); $i++) { 
-			for ($j=$i; $j < count($aux)-1 ; $j++) { 
-				echo $aux[$j];
-				echo '<br>';
+			$x = Images::where('misc_id','=',$m->id)->where('deleted','=',0)->get(array('id','misc_id','image','order'));
+			foreach ($x as $y) {
+				$aux = new stdClass;
+				$aux->id      = $y->id;
+				$aux->misc_id = $y->misc_id;
+				$aux->image   = $y->image;
+				$aux->order   = $y->order;
+				$images[$j]  = $aux;
+				
+				$j++;
 			}
 		}
-		die();
-		if ($aux[$j]->order<$aux[$j+1]->order) {
-			$x = $aux[$j];
-			$aux[$j] = $aux[$j+1];
-			$aux[$j+1] = $x;
+		for($i = 0;$i < count($images);$i++)
+		{
+			for ($j=0; $j < count($images)-1 ; $j++) { 
+				if ($images[$j]->order > $images[$j+1]->order) {
+					$bub = new stdClass;
+					$bub 				= $images[$j+1];
+					$images[$j+1] 		= $images[$j];
+					$images[$j] 		= $bub;	
+				}
+			}
 		}
-
+		
 		return View::make('admin.changeImagePos')
 		->with('title',$title)
-		->with('item',$aux);
+		->with('item',$images);
 
 	}
 	public function postChangePost()

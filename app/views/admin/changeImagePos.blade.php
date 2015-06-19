@@ -9,10 +9,8 @@
 			<div class="contenedor minis formulario">
 				<?php $j = 0;?>
 				@foreach($item as $it)
-					@foreach($it as $i)
-						<img src="{{ asset('images/items/'.$i->image) }}" class="imgMini" data-id-value="{{ $i->id }}">
+						<img src="{{ asset('images/items/'.$it->image) }}" class="imgMini" data-id-value="{{ $it->id }}">
 						<?php $j++;?>
-					@endforeach
 				@endforeach
 			</div>
 			<div class="col-xs-12" style="padding:0;">

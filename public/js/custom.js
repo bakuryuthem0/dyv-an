@@ -154,7 +154,7 @@ jQuery(document).ready(function($) {
 				'disabled': true
 			})
 			$.ajax({
-				url: 'chequear/email',
+				url: 'http://localhost/prueba/dyv-an/public/chequear/email',
 				type: 'POST',
 				dataType: 'json',
 				data: {'email': email},
