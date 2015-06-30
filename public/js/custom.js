@@ -280,7 +280,7 @@ jQuery(document).ready(function($) {
 		}, 250);
 		var b = 0;
 		$('.inputFondoNegro').each(function(i, e) {
-			if ($(e).val() == '' && $(e).attr('name') != 'dir2') {
+			if ($(e).val() == '' && $(e).attr('name') != 'dir2' && $(e).attr('name') != 'telefono') {
 				alerta($(e));
 				b = 1;
 				$('.disabled').removeClass('disabled');

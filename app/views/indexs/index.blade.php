@@ -57,36 +57,36 @@
               //Si es la primera página mostramos el enlace desactivado
               if ($currentPage <= 1)
               {
-                echo '<li class="disabled noMovil"><span>&lt;&lt;Primera</span></li>';
+                echo '<li class="disabled noMovil"><span>&lt;&lt;'.Lang::get('lang.paginator_btn1').'</span></li>';
               }
               //en otro caso obtenemos la url y mostramos en forma de link
               else
               {
                 $url = $pag->getUrl(1);
            
-                echo '<li class="noMovil"><a href="'.$url.'">&lt;&lt; Primera</a></li>';
+                echo '<li class="noMovil"><a href="'.$url.'">&lt;&lt; '.Lang::get('lang.paginator_btn1').'</a></li>';
               }
            
               //Para ir a la anterior
-              echo '<li class="noMovil">'.$presenter->getPrevious('&lt; Anterior').'</li>';
+              echo '<li class="noMovil">'.$presenter->getPrevious('&lt; '.Lang::get('lang.paginator_btn2').'</li>';
            
               //Rango de enlaces desde el principio al final, 3 delante y 3 detrás
               echo $presenter->getPageRange($start, $end);
            
               //Para ir a la siguiente
-              echo '<li class="noMovil">'.$presenter->getNext('Siguiente &gt;').'</li>';
+              echo '<li class="noMovil">'.$presenter->getNext(Lang::get('lang.paginator_btn3').' &gt;').'</li>';
            
               ////Si es la última página mostramos desactivado
               if ($currentPage >= $lastPage)
               {
-                echo '<li class="disabled noMovil"><span>Última</span></li>';
+                echo '<li class="disabled noMovil"><span>'.Lang::get('lang.paginator_btn4').'</span></li>';
               }
               //en otro caso obtenemos la url y mostramos en forma de link
               else
               {
                 $url = $pag->getUrl($lastPage);
            
-                echo '<li class="noMovil"><a href="'.$url.'">Última &gt;&gt;</a></li>';
+                echo '<li class="noMovil"><a href="'.$url.'">'.Lang::get('lang.paginator_btn4').' &gt;&gt;</a></li>';
               }
               ?>
             @endif

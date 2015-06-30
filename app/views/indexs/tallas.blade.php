@@ -2,25 +2,26 @@
 
 @section('content')
 <div class="hidden-container container-in">
-  <div class="titulo"><h1>¿COMO SABER LA TALLA DE SU TRAJE DE BAÑO?</h1></div>
+  <div class="titulo"><h1></h1></div>
   <div class="contenido">
-  	<h4 style="text-align:center;">Si no conoces tu talla, y no sabes como elegirla, a continuacion te ofrecemos una pequeña guia de como encontrarla.</h4>
+  	<h4 style="text-align:center;">{{ Lang::get('lang.text_mysize0') }}.</h4>
   	<br>
-    <p class="textoPromedio"><strong>PECHO</strong>: Comenzar midiendo desde un lado manteniendo la cinta horizontal. Pase la cinta alrededor del cuerpo sujétela por la parte más ancha del pecho. </p>
+    <p class="textoPromedio"><strong>{{ Lang::get('lang.title_mysize1') }}</strong>:{{ Lang::get('lang.text_mysize1') }}. </p>
  
-	<p class="textoPromedio"><strong>TORAX</strong>: Comience a medir desde un lado manteniendo la cinta horizontal. Pase la cinta alrededor del cuerpo, por debajo de los brazos y justo por debajo del pecho.</p>
+	<p class="textoPromedio"><strong>{{ Lang::get('lang.title_mysize2') }}</strong>:{{ Lang::get('lang.text_mysize2') }}.</p>
  
-	<p class="textoPromedio"><strong>CINTURA</strong>: Mídala por la parte más estrecha, manteniendo la cinta horizontal.</p>
+	<p class="textoPromedio"><strong>{{ Lang::get('lang.title_mysize3') }}</strong>:{{ Lang::get('lang.text_mysize3') }}</p>
  
-	<p class="textoPromedio"><strong>TORSO</strong>: De una vuelta completa a la cinta desde un punto del hombro situado entre la base del cuello y la articulación del hombro, pasando por la parte más ancha del pecho; descienda hasta el punto central de la entrepierna y suba por la espalda hasta el punto inicial.</p>
-	<p class="textoPromedio">Le recomendamos comenzar midiendo primero por la espalda y pasar la cinta por la entrepierna para obtener un resultado más fácil.</p>
+	<p class="textoPromedio"><strong>{{ Lang::get('lang.title_mysize4') }}</strong>:{{ Lang::get('lang.text_mysize4') }}.</p>
+
+	<p class="textoPromedio">{{ Lang::get('lang.text_mysize5') }}.</p>
 	<br>
-	<h4 style="text-align:center;">ELEGIR LA TALLA ADECUADA</h4>
+	<h4 style="text-align:center;">{{ Lang::get('lang.title_mysize5') }}</h4>
 	<br>
-	<p class="textoPromedio">Si las medidas se encuentran a medio camino entre dos tallas, escoja la talla más pequeña si prefiere y un ajuste más ceñido; en caso de preferir un ajuste holgado, escoja la talla más grande.</p>
-	<p class="textoPromedio">Si las medidas de cadera y cintura sugirieran dos tallas diferentes, elija la recomendada en función a la cadera. </p>
+	<p class="textoPromedio">{{ Lang::get("lang.text_mysize6") }}.</p>
+	<p class="textoPromedio">{{ Lang::get("lang.text_mysize7") }}. </p>
  	
-	<h4 style="text-align:center;" data-toggle="collapse" data-target=".tallasCollapse" class="toCollapse"><i class="fa fa-hand-o-right dedo"></i> Click aqui para ver las <strong>Medidas</strong></h4>
+	<h4 style="text-align:center;" data-toggle="collapse" data-target=".tallasCollapse" class="toCollapse"><i class="fa fa-hand-o-right dedo"></i> {{ Lang::get('lang.btn_mysize') }}</h4>
   	<div class="collapse tallasCollapse">
 		<p class="textoPromedio">TALLA “S” = MEDIDA 36</p>
 		<ul class="textoPromedio">
