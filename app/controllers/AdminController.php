@@ -1686,7 +1686,7 @@ class AdminController extends BaseController {
             }
             //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
             $file->move("images/bancos/",$miImg);
-            $blank = Image::make('images/blank400x200.jpg');
+            $blank = Image::make('images/blank.jpg');
 
             $img = Image::make('images/bancos/'.$miImg);
             if ($img->width() > $img->height()) {
@@ -1781,14 +1781,14 @@ class AdminController extends BaseController {
 	            }
 	            //guardamos la imagen con otro nombre ej foto(1).jpg || foto(2).jpg etc
 	            $file->move("images/bancos/",$miImg);
-	            $blank = Image::make('images/blank400x200.jpg');
+	            $blank = Image::make('images/blank.jpg');
 
 	            $img = Image::make('images/bancos/'.$miImg);
 	            if ($img->width() > $img->height()) {
-	            	$img->widen(600);
+	            	$img->widen(400);
 	            }else
 	            {
-	            	$img->heighten(300);
+	            	$img->heighten(200);
 	            }
 	            
 		        $blank->insert($img,'center')
@@ -1803,10 +1803,10 @@ class AdminController extends BaseController {
 				$blank = Image::make('images/blank.jpg');
 				$img = Image::make('images/bancos/'.$file->getClientOriginalName());
 	            if ($img->width() > $img->height()) {
-	            	$img->widen(600);
+	            	$img->widen(400);
 	            }else
 	            {
-	            	$img->heighten(300);
+	            	$img->heighten(200);
 	            }
 
 	            $blank->insert($img,'center')

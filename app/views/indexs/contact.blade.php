@@ -10,6 +10,17 @@
 				<legend>Contáctenos</legend>
 				<p class="textoPromedio">Si desea contactar con nuestro equipo, puede hacerlo mediante algunos de los métodos que le ofrecemos a continuación</p>
 			</div>
+	@if(Session::has('success'))
+	<div class="alert alert-success">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<p class="textoPromedio">{{Session::get('success')}}</p>
+	</div>
+	@elseif(Session::has('error'))
+	<div class="alert alert-danger">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<p class="textoPromedio">{{ Session::get('error') }}</p>
+	</div>
+	@endif
 	<form method="POST" action="{{ URL::to('contactenos') }}">
 	<div class="col-xs-12">
 		<label for="nombre" class="textoPromedio">{{ Lang::get('lang.form_name') }}</label>

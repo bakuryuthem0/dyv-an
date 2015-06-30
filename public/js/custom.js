@@ -211,10 +211,15 @@ function validarEmail(email,e) {
     {
     	e.popover('hide');
     }
+    setTimeout(quitarPopover, 5000)
+}
+function quitarPopover()
+{
+	$('.popover').hide('slow');
 }
 jQuery(document).ready(function($) {
 	$('.pais').change(function(event) {
-		console.log($(this).val())
+		
 		if ($(this).val() == 31) {
 			$('.depSel').css({'display': 'inline-block'}).attr('name', 'department').addClass('inputFondoNegro');
 			$('.depInp').css({'display': 'none'}).attr('name', '').removeClass('inputFondoNegro');
@@ -233,6 +238,7 @@ jQuery(document).ready(function($) {
 			{
 				$(this).popover('hide')
 			}
+			setTimeout(quitarPopover, 5000)
 		}else
 		{
 			if ($(this).attr('name') == 'pass') {
@@ -242,6 +248,7 @@ jQuery(document).ready(function($) {
 				{
 					$(this).popover('hide')
 				}
+				setTimeout(quitarPopover, 5000)
 			}else if ($(this).attr('name') == 'pass_confirmation')
 			{
 				if ($('.password').val() != $(this).val()) {
@@ -250,6 +257,7 @@ jQuery(document).ready(function($) {
 				{
 					$(this).popover('hide')
 				}
+				setTimeout(quitarPopover, 5000)
 			}else if($(this).attr('name') == 'email')
 			{
 				validarEmail($(this).val(),$(this));
