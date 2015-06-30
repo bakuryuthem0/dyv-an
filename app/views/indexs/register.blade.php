@@ -175,7 +175,7 @@
 						</div>
 						<div class="col-xs-6 inputRegister">
 							<select name="pais" class="form-control inputFondoNegro pais" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Alerta">
-								<option value="">{{ Lang::get('lang.form_selectDep') }}</option>
+								<option value="">{{ Lang::get('lang.form_selectPais') }}</option>
 								@foreach ($pais as $p)
 									@if(Input::old('pais') == $p->id)
 										<option value="{{ $p->id }}" selected>{{ $p->name }}</option>
