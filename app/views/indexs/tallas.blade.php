@@ -21,42 +21,43 @@
 	<p class="textoPromedio">{{ Lang::get("lang.text_mysize6") }}.</p>
 	<p class="textoPromedio">{{ Lang::get("lang.text_mysize7") }}. </p>
  	
-	<h4 style="text-align:center;" data-toggle="collapse" data-target=".tallasCollapse" class="toCollapse"><i class="fa fa-hand-o-right dedo"></i> {{ Lang::get('lang.btn_mysize') }}</h4>
+	<h4 style="text-align:center;" data-toggle="collapse" data-target=".tallasCollapse" class="toCollapse">
+		<i class="fa fa-hand-o-right dedo"></i> {{ Lang::get('lang.btn_mysize') }}</h4>
   	<div class="collapse tallasCollapse">
 		<p class="textoPromedio">TALLA “S” = MEDIDA 36</p>
 		<ul class="textoPromedio">
-			<li>PECHO = 85 cm / 88 cm</li>
-			<li>TORAX = 69 cm / 71 cm</li>
-			<li>CINTURA = 65 cm / 67 cm</li>
-			<li>CADERA = 90 cm / 93 cm</li>
-			<li>TORSO = 149 cm / 152 cm</li>
+			<li>{{ Lang::get('lang.title_mysize1') }} = 85 cm / 88 cm</li>
+			<li>{{ Lang::get('lang.title_mysize2') }} = 69 cm / 71 cm</li>
+			<li>{{ Lang::get('lang.title_mysize3') }} = 65 cm / 67 cm</li>
+			<li>{{ Lang::get('lang.title_mysize6') }} = 90 cm / 93 cm</li>
+			<li>{{ Lang::get('lang.title_mysize4') }} = 149 cm / 152 cm</li>
 		</ul>
 	 
 		<p class="textoPromedio">TALLA “M” = MEDIDA 38</p>
 		<ul class="textoPromedio">
-			<li>PECHO = 90 cm / 93 cm</li>
-			<li>TORAX = 74 cm / 76 cm</li>
-			<li>CINTURA = 70 cm / 72 cm</li>
-			<li>CADERA = 95 cm / 98 cm</li>
-			<li>TORSO = 156 cm / 160 cm</li>
+			<li>{{ Lang::get('lang.title_mysize1') }} = 90 cm / 93 cm</li>
+			<li>{{ Lang::get('lang.title_mysize2') }} = 74 cm / 76 cm</li>
+			<li>{{ Lang::get('lang.title_mysize3') }} = 70 cm / 72 cm</li>
+			<li>{{ Lang::get('lang.title_mysize6') }} = 95 cm / 98 cm</li>
+			<li>{{ Lang::get('lang.title_mysize4') }} = 156 cm / 160 cm</li>
 		</ul>
 	 
 		<p class="textoPromedio">TALLA “L” = MEDIDA 40</p>
 		<ul class="textoPromedio">
-			<li>PECHO = 97 cm / 100 cm</li>
-			<li>TORAX = 80 cm / 84 cm</li>
-			<li>CINTURA = 76 cm / 80 cm</li>
-			<li>CADERA = 102 cm / 105 cm</li>
-			<li>TORSO = 164 cm / 168 cm</li>
+			<li>{{ Lang::get('lang.title_mysize1') }} = 97 cm / 100 cm</li>
+			<li>{{ Lang::get('lang.title_mysize2') }} = 80 cm / 84 cm</li>
+			<li>{{ Lang::get('lang.title_mysize3') }} = 76 cm / 80 cm</li>
+			<li>{{ Lang::get('lang.title_mysize6') }} = 102 cm / 105 cm</li>
+			<li>{{ Lang::get('lang.title_mysize4') }} = 164 cm / 168 cm</li>
 		</ul>
 	  
 	 	<p class="textoPromedio">TALLA “XL”= MEDIDA 42</p>
 		<ul class="textoPromedio">
-			<li>PECHO = 104 cm</li>
-			<li>TORAX = 88 cm</li>
-			<li>CINTURA = 84 cm</li>
-			<li>CADERA = 109 cm</li>
-			<li>TORSO = 171 cm</li>
+			<li>{{ Lang::get('lang.title_mysize1') }} = 104 cm</li>
+			<li>{{ Lang::get('lang.title_mysize2') }} = 88 cm</li>
+			<li>{{ Lang::get('lang.title_mysize3') }} = 84 cm</li>
+			<li>{{ Lang::get('lang.title_mysize6') }} = 109 cm</li>
+			<li>{{ Lang::get('lang.title_mysize4') }} = 171 cm</li>
 		</ul>
 	</div>
 

@@ -34,8 +34,8 @@
 								'data-trigger' 					=> 'manual',
 								"data-toggle" 			=> "popover",
 								"data-placement" 		=> "left",
-								"data-content" 			=> "El email es invalido",
-								"data-original-title" 	=> "Alerta")) }}
+								"data-content" 			=> "Ejemplo@dominio.com",
+								"data-original-title" 	=> "Atención")) }}
 							@if ($errors->has('email'))
 								 @foreach($errors->get('email') as $err)
 								 	<div class="alert alert-danger">
@@ -60,7 +60,7 @@
 								"data-toggle" 			=> "popover",
 								"data-placement" 		=> "top",
 								"data-content" 			=> "La contraseña debe tener al menos 6 caracteres",
-								"data-original-title" 	=> "Alerta")) }}
+								"data-original-title" 	=> "Atención")) }}
 							@if ($errors->has('pass'))
 								 @foreach($errors->get('pass') as $err)
 								 	<div class="alert alert-danger">
@@ -85,7 +85,7 @@
 								"data-toggle" 			=> "popover",
 								"data-placement" 		=> "left",
 								"data-content" 			=> "La contraseña no concuerda",
-								"data-original-title" 	=> "Alerta")) }}
+								"data-original-title" 	=> "Atención")) }}
 							@if ($errors->has('pass_confirmation'))
 								 @foreach($errors->get('pass_confirmation') as $err)
 								 	<div class="alert alert-danger">
@@ -110,7 +110,7 @@
 								"data-toggle" 			=> "popover",
 								"data-placement" 		=> "top",
 								"data-content" 			=> "Campo requerido",
-								"data-original-title" 	=> "Alerta")) }}
+								"data-original-title" 	=> "Atención")) }}
 							@if ($errors->has('cedula'))
 								 @foreach($errors->get('cedula') as $err)
 								 	<div class="alert alert-danger">
@@ -134,7 +134,7 @@
 								"data-toggle" 			=> "popover",
 								"data-placement" 		=> "top",
 								"data-content" 			=> "Campo requerido",
-								"data-original-title" 	=> "Alerta")) }}
+								"data-original-title" 	=> "Atención")) }}
 							@if ($errors->has('name'))
 								 @foreach($errors->get('name') as $err)
 								 	<div class="alert alert-danger">
@@ -158,7 +158,7 @@
 								"data-toggle" 			=> "popover",
 								"data-placement" 		=> "left",
 								"data-content" 			=> "Campo requerido",
-								"data-original-title" 	=> "Alerta")) }}
+								"data-original-title" 	=> "Atención")) }}
 							@if ($errors->has('lastname'))
 								 @foreach($errors->get('lastname') as $err)
 								 	<div class="alert alert-danger">
@@ -174,7 +174,7 @@
 							<p class="textoPromedio">(*) País:</p>
 						</div>
 						<div class="col-xs-6 inputRegister">
-							<select name="pais" class="form-control inputFondoNegro pais" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Alerta">
+							<select name="pais" class="form-control inputFondoNegro pais" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Atención">
 								<option value="">{{ Lang::get('lang.form_selectPais') }}</option>
 								@foreach ($pais as $p)
 									@if(Input::old('pais') == $p->id)
@@ -211,7 +211,7 @@
 								class="form-control 
 							@endif 
 
-							 depSel" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Alerta">
+							 depSel" data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Atención">
 								<option value="">{{ Lang::get('lang.form_selectDep') }}</option>
 								@foreach ($departamentos as $dep)
 									@if(Input::old('department') == $dep->id)
@@ -231,7 +231,7 @@
 									"data-toggle" 			=> "popover",
 									"data-placement" 		=> "left",
 									"data-content" 			=> "Campo requerido",
-									"data-original-title" 	=> "Alerta")) }}
+									"data-original-title" 	=> "Atención")) }}
 							@else
 								{{ Form::text('', Input::old('department'),array(
 									'class' => 'form-control depInp',
@@ -242,7 +242,7 @@
 									"data-toggle" 			=> "popover",
 									"data-placement" 		=> "left",
 									"data-content" 			=> "Campo requerido",
-									"data-original-title" 	=> "Alerta")) }}
+									"data-original-title" 	=> "Atención")) }}
 							@endif
 							@if ($errors->has('department'))
 								
@@ -268,7 +268,7 @@
 								"data-toggle" 			=> "popover",
 								"data-placement" 		=> "left",
 								"data-content" 			=> "Campo requerido",
-								"data-original-title" 	=> "Alerta")) }}
+								"data-original-title" 	=> "Atención")) }}
 							@if ($errors->has('city'))
 								 @foreach($errors->get('city') as $err)
 								 	<div class="alert alert-danger">
@@ -284,7 +284,7 @@
 							<p class="textoPromedio">(*) {{ Lang::get('lang.form_dir1') }}</p>
 						</div>
 						<div class="col-xs-6 inputRegister">
-							<textarea class="form-control inputFondoNegro"  data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Alerta" placeholder="{{ Lang::get('lang.form_dir1') }}" name="dir">{{ Input::old('dir') }}</textarea>
+							<textarea class="form-control inputFondoNegro"  data-trigger="manual" data-toggle="popover" data-placement="left" data-content="Campo requerido" data-original-title="Atención" placeholder="{{ Lang::get('lang.form_dir1') }}" name="dir">{{ Input::old('dir') }}</textarea>
 							@if ($errors->has('dir'))
 								 @foreach($errors->get('dir') as $err)
 								 	<div class="alert alert-danger">

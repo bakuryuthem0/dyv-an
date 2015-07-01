@@ -324,4 +324,23 @@ class HomeController extends BaseController {
 		return View::make('user.wishList')
 		->with('title',$title);
 	}
+	public function getAboutUs()
+	{
+		$title = "Quienes Somos";
+		return View::make('indexs.about')
+		->with('title',$title);
+	}
+	public function getTerms()
+	{
+		$title = ucfirst(strtolower(Lang::get('lang.term_title0')));
+		return View::make('indexs.term')
+		->with('title',$title);
+	}
+
+	public function getPol()
+	{
+		$title = ucfirst(strtolower(Lang::get('lang.term_title13')));
+		return View::make('indexs.pol')
+		->with('title',$title);
+	}
 }

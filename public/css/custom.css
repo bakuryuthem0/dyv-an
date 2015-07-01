@@ -142,6 +142,37 @@ body.admin legend
        -o-transform: translateY(-100%);
           transform: translateY(-100%);
 }
+.peligro
+{
+  box-shadow: 0 0 6px 1px red inset;
+}
+.container-pol
+{
+  display: block;
+  margin: 0 auto;
+  text-align: justify;
+  width: 80%;
+}
+.noStyle
+{
+  list-style: none;
+}
+.point
+{
+  font-size: 1.5em;
+}
+.termol > li
+{
+  font-size: 2em;
+}
+.termol > li > p,ol > li > ul > li > p,.termol > li > ul > li > ul > li > p
+{
+  font-size: 1rem;
+}
+.termol > li > strong
+{
+  display: inline-block;
+}
 .slick-slider
 {
   margin-bottom: 0px !important;

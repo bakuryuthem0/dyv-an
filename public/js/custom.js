@@ -196,10 +196,7 @@ jQuery(document).ready(function($) {
 	});
 
 });
-function alerta(elem)
-{
-	elem.popover('show')
-}
+
 function validarEmail(email,e) {
     expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if ( !expr.test(email) )
@@ -230,43 +227,21 @@ jQuery(document).ready(function($) {
 
 		}
 	});
-	$('.inputFondoNegro').blur(function(event) {
-		if ($(this).attr('name') != 'pass' && $(this).attr('name') != 'pass_confirmation' && $(this).attr('name') != 'email') {
-			if ($(this).val().length < 1) {
-				$(this).popover('show')
-			}else
-			{
-				$(this).popover('hide')
-			}
-			setTimeout(quitarPopover, 5000)
-		}else
-		{
-			if ($(this).attr('name') == 'pass') {
-				if ($(this).val().length < 6) {
-					$(this).popover('show')
-				}else
-				{
-					$(this).popover('hide')
-				}
-				setTimeout(quitarPopover, 5000)
-			}else if ($(this).attr('name') == 'pass_confirmation')
-			{
-				if ($('.password').val() != $(this).val()) {
-					$(this).popover('show')
-				}else
-				{
-					$(this).popover('hide')
-				}
-				setTimeout(quitarPopover, 5000)
-			}else if($(this).attr('name') == 'email')
-			{
-				validarEmail($(this).val(),$(this));
-			}
+	$('.inputFondoNegro').focus(function(event) {
+		if ($(this).attr('id') != "pass2") {
+			$(this).popover('show')
+		}else{
+			$(this).next().remove();			
 		}
-		
+		$(this).removeClass('peligro')
+		console.log($(this).next(''))
+		$(this).next().next('p').remove();
+	});
+	$('.inputFondoNegro').blur(function(event) {
+		$(this).popover('hide');
 	});
 	$('#enviar').click(function(event) {
-
+		$('.errorText').remove()
 		$(this).addClass('disabled');
 		$(this).after('<img src="images/loading.gif" class="loading">')
 		$('.loading').css(
@@ -317,30 +292,11 @@ jQuery(document).ready(function($) {
 		
 	});
 });
-jQuery(document).ready(function($) {
-	$('#enviar').click(function(event) {
-		$('.errorText').remove();
-		function alerta(esto){
-			esto.css({
-				'box-shadow': '0px 0px 1px 1px red'
-			});
-			esto.after('<p class="textoPromedio errorText">Debe llenar este campo</p>')
-		}
-		$('.inputForm').click(function(event) {
-			$(this).css({
-				'box-shadow': '0px 0px 1px 1px rgba(0,0,0,0)'
-			});
-			$(this).next('p').remove()
-		});
-		$('.inputForm').each(function(){
-			if ($(this).val() == "") {
-				alerta($(this))
-			}
+function alerta(esto){
+	esto.addClass('peligro')
+	esto.after('<p class="textoPromedio errorText">Debe llenar este campo</p>')
+}
 
-		})
-		
-	});
-});
 //ajax para eliminar cosas
 jQuery(document).ready(function($) {
 	$('.elimBtn').click(function(event) {

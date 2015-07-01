@@ -49,6 +49,8 @@
                 <li><a href="{{ URL::to('mi-lista-de-deseos') }}">{{ Lang::get('lang.menu_wish_list') }}</a></li>
                 
                 @endif
+                <li><a href="{{ URL::to('quienes-somos') }}">{{ Lang::get('lang.about_title2') }}</a></li>
+
                 <li><a href="{{ URL::to('como-saber-mi-talla') }}">{{ Lang::get('lang.menu_my_size') }}</a></li>
                 <li><a href="{{ URL::to('contacto') }}">{{ Lang::get('lang.menu_contact') }}</a></li>
                 @if(Auth::check())
@@ -66,7 +68,7 @@
               <a target="_blank" href="https://twitter.com/DYVANmoda"><div class="contRed"><i class="fa fa-twitter fa-3x"></i></div></a>
               <a target="_blank" href="http://i.instagram.com/dyvanmoda/"><div class="contRed" style="padding: 1.1em 1.4em;"><i class="fa fa-instagram fa-3x"></i></div></a>
               <a target="_blank" href="https://es.pinterest.com/DYVANmoda/"><div class="contRed" style="padding:1em 1.5em;"><i class="fa fa-pinterest-p fa-3x"></i></div></a>
-              <p style="font-size:1.3em;margin-top: 2em;">{{ Lang::get('lang.delevoped') }} <a href="http://tecnographic.com.ve" target="_blank">Tecnographic Venezuela C.A.</a></p>
+              <p style="font-size:1.3em;margin-top: 2em;"><a href="{{ URL::to('terminos-y-condiciones') }}">{{ Lang::get('lang.term_title0') }}</a>/<a href="{{ URL::to('politicas-de-privacidad') }}">{{ ucfirst(strtolower(Lang::get('lang.term_title13'))) }}</a><br>{{ Lang::get('lang.delevoped') }} <a href="http://tecnographic.com.ve" target="_blank">Tecnographic Venezuela C.A.</a></p>
               
               
               
@@ -167,7 +169,7 @@
                 </div>
                 <div class="clearfix"></div>
                 <div class="col-xs-12">
-                  <label for="pass" class="textoPromedio textoNegro">{{ Lang::get('lang.login_uslogin_passrnamlogin_pass') }}</label>
+                  <label for="pass" class="textoPromedio textoNegro">{{ Lang::get('lang.login_pass') }}</label>
                   <input type="password" name="password" class="form-control" required>
                 </div>
                 <div class="col-xs-12">

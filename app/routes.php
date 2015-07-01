@@ -27,6 +27,9 @@ Route::post('buscar/colores','HomeController@getColors');
 Route::post('articulos/categoria/buscar/colores','HomeController@getColors');
 Route::post('articulos/sub-categoria/buscar/colores','HomeController@getColors');
 
+Route::get('quienes-somos','HomeController@getAboutUs');
+Route::get('terminos-y-condiciones','HomeController@getTerms');
+Route::get('politicas-de-privacidad','HomeController@getPol');
 Route::group(array('before' =>'no_auth'),function()
 {
 	Route::get('iniciar-sesion','AuthController@getLogin');
